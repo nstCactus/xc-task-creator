@@ -35,12 +35,12 @@ define([], function() {
     turnpoint : {
       allowed : {
         type : ['takeoff', 'start', 'turnpoint', 'end-of-speed-section', 'goal'],
-        goalType : ['line', 'cylinder'],
+        goalType : ['cylinder', 'line'],
         mode : ['entry', 'exit'],
       },
       default : {
         close : 0,
-        goalType : 'line',
+        goalType : 'cylinder',
         mode : 'entry',
         open : 0,
         radius : 400,
