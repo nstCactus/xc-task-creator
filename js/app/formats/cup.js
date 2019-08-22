@@ -39,7 +39,7 @@ define(['rejs!formats/export/cup'], function(exportCup) {
         x : formatLatLng(words[i][3]),
         y : formatLatLng(words[i][4]),
         z : elevation(words[i][5]),
-        name : words[i][0],
+        name : words[i][0].replace('"','').replace('"',''),
       };
       tps.push(tp);
     }
