@@ -3,10 +3,10 @@
     <% for(var i = 0;  i < turnpoints.length; i++) { %>
       <li class="taskboard-item">
         <span class="label label-default" style="background-color : <%- turnpoints[i].fillColor %>"><%- turnpoints[i].shortName %></span>
-        <%- turnpoints[i].name %>
+        <%- turnpoints[i].name  + ' [' + turnpoints[i].radius  + ' m]' %>
         <span class="turnpointDistance">
           <% if ( taskInfo.distances[i - 1] ) { %>
-            <%- taskInfo.distances[i-1] + 'Km' %> 
+            <%- taskInfo.distances[i-1] + 'km' %> 
           <% } %>
         </span>
       </li>

@@ -55,10 +55,10 @@ define([], function() {
       },
       shortName : {
         takeoff : 'to',
-        start : 'sss',
+        start : 'ss',
         turnpoint : 'tp',
-        'end-of-speed-section' : 'ess',
-        goal : 'goal',
+        'end-of-speed-section' : 'es',
+        goal : 'go',
       },
       dependencies : {
         show : {
