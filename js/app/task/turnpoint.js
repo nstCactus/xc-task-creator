@@ -14,6 +14,7 @@ define(['app/param', 'waypoints/waypoint'], function(param, Waypoint) {
     this.mode = param.turnpoint.default.mode;
     this.icon = param.turnpoint.icon[this.type];
     this.shortName = param.turnpoint.shortName[this.type];
+    this.xctrackName = param.turnpoint.xctrackName[this.type];
     this.open = 0;
     this.close = 0;
     this.fillColor = param.turnpoint.fillColor[this.type];
@@ -26,6 +27,7 @@ define(['app/param', 'waypoints/waypoint'], function(param, Waypoint) {
       }
       this.icon = param.turnpoint.icon[this.type];
       this.shortName = param.turnpoint.shortName[this.type];
+      this.xctrackName = param.turnpoint.xctrackName[this.type];
       this.fillColor = param.turnpoint.fillColor[this.type];
     }
 

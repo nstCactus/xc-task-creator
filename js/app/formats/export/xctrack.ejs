@@ -9,13 +9,16 @@
          "altSmoothed" : <%- turnpoints[i].z %>.0,
          "name" : "<%-turnpoints[i].name %>",
          "description" : "<%- turnpoints[i].id %>"
-       },
-       "type" : "<%- turnpoints[i].type %>"
+       }
+       <% if ( turnpoints[i].xctrackName != '' ) { %>
+        ,
+        "type" : "<%- turnpoints[i].xctrackName %>"
+       <% } %>
      }<% if (i < turnpoints.length - 1) { %>,<% } %><% } %>
   ],
   "sss" : {
     "type" : "<%- xcInfo.type.toUpperCase() %>",
-    "direction" : "<%- xcInfo.direction %>",
+    "direction" : "<%- xcInfo.direction.toUpperCase() %>",
     "timeGates" : ["<%- xcInfo.timeGates %>Z"]
   },  
   "goal" : {

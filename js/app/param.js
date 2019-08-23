@@ -60,6 +60,13 @@ define([], function() {
         'end-of-speed-section' : 'es',
         goal : 'go',
       },
+      xctrackName : {
+        takeoff : 'TAKEOFF',
+        start : 'SSS',
+        turnpoint : '',
+        'end-of-speed-section' : 'ESS',
+        goal : '',
+      },
       dependencies : {
         show : {
           takeoff : ['close', 'mode', 'open', 'radius'],
