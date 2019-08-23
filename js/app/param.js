@@ -11,8 +11,8 @@ define([], function() {
     allowCumulativeFiles : true,
     apiKey : 'AIzaSyDNrTc1a1WM07PlACypa2WbEAthHXIk-_A',
     map : {
-      startX : 42.514,
-      startY : 2.040,
+      startX : 43.357700,
+      startY : 12.749417,
     },
     task : {
       allowed : {

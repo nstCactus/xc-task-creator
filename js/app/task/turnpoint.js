@@ -2,13 +2,14 @@
  * @file
  * Task turnpoint module for the task creator.
  */
-define(['app/param', 'waypoints/waypoint'], function(param, Waypoint) {
-  var Turnpoint = function(waypoint) {
+define(['app/param', 'waypoints/waypoint'], function (param, Waypoint) {
+
+  var Turnpoint = function (waypoint) {
     if (!waypoint) return;
     // Inherit from the base waypoint.
     Waypoint.apply(this, arguments);
-    
     this.index = 0;
+    console.log("Task turnpoint module for the task creator ");
     this.type = param.turnpoint.default.type;
     this.radius = param.turnpoint.default.radius;
     this.mode = param.turnpoint.default.mode;
@@ -20,8 +21,8 @@ define(['app/param', 'waypoints/waypoint'], function(param, Waypoint) {
     this.fillColor = param.turnpoint.fillColor[this.type];
     this.goalType = param.turnpoint.default.goalType;
     this.mapElement = false;
-    
-    this.setTurnpoint = function(turnpointInfo) {
+
+    this.setTurnpoint = function (turnpointInfo) {
       for (var element in turnpointInfo) {
         this[element] = turnpointInfo[element];
       }
@@ -31,21 +32,21 @@ define(['app/param', 'waypoints/waypoint'], function(param, Waypoint) {
       this.fillColor = param.turnpoint.fillColor[this.type];
     }
 
-    this.generateKML = function() {
+    this.generateKML = function () {
       var output = "";
       var d2r = Math.PI / 180;   // degrees to radians 
       var r2d = 180 / Math.PI;   // radians to degrees 
       var earthsradius = 6378137; // 6378137 is the radius of the earth in meters
       var dir = 1; // clockwise
 
-      var points = 64; 
+      var points = 64;
 
       // find the raidus in lat/lon 
-      var rlat = (this.radius / earthsradius) * r2d; 
-      var rlng = rlat / Math.cos(this.latLng.lat() * d2r); 
+      var rlat = (this.radius / earthsradius) * r2d;
+      var rlng = rlat / Math.cos(this.latLng.lat() * d2r);
 
-      var extp = new Array(); 
-      if (dir == 1)   {
+      var extp = new Array();
+      if (dir == 1) {
         var start = 0;
         var end = points + 1
       } // one extra here makes sure we connect the line
@@ -53,17 +54,17 @@ define(['app/param', 'waypoints/waypoint'], function(param, Waypoint) {
         var start = points + 1;
         var end = 0
       }
-      
-      for (var j = start; (dir == 1 ? j < end : j > end); j = j + dir) { 
-        var theta = Math.PI * (j / (points / 2)); 
+
+      for (var j = start; (dir == 1 ? j < end : j > end); j = j + dir) {
+        var theta = Math.PI * (j / (points / 2));
         ey = this.latLng.lng() + (rlng * Math.cos(theta)); // center a + radius x * cos(theta) 
         ex = this.latLng.lat() + (rlat * Math.sin(theta)); // center b + radius y * sin(theta) 
-        output += ( ey + "," + ex + ",0 " );
-      } 
+        output += (ey + "," + ex + ",0 ");
+      }
       return output;
     }
 
-    this.renderTurnpoint = function(google, map, turnpoints) {
+    this.renderTurnpoint = function (google, map, turnpoints) {
       if (this.type != 'goal' || this.goalType != 'line') {
         var circleOptions = {
           strokeColor: param.turnpoint.strokeColor[this.type],
@@ -91,14 +92,14 @@ define(['app/param', 'waypoints/waypoint'], function(param, Waypoint) {
         var lastLegHeading = google.maps.geometry.spherical.computeHeading(pastTurnpoint.latLng, this.latLng);
         if (lastLegHeading < 0) lastLegHeading += 360;
         // Add 90° to this heading to have a perpendicular.
-        var heading = lastLegHeading + 90; 
+        var heading = lastLegHeading + 90;
         // Getting a first point 50m further. 
-        var firstPoint =  google.maps.geometry.spherical.computeOffset(this.latLng, 50, heading);
+        var firstPoint = google.maps.geometry.spherical.computeOffset(this.latLng, 50, heading);
         // Reversing the heading.
         heading += 180;
         // And now completing the line with a point 100m further.
-        var secondPoint =  google.maps.geometry.spherical.computeOffset(firstPoint, 100, heading);
-        
+        var secondPoint = google.maps.geometry.spherical.computeOffset(firstPoint, 100, heading);
+
         // Building the line.
         this.mapElement = new google.maps.Polyline({
           path: [firstPoint, secondPoint],
@@ -113,7 +114,7 @@ define(['app/param', 'waypoints/waypoint'], function(param, Waypoint) {
         });
       }
 
-      google.maps.event.addListener(this.mapElement, 'click', function() {
+      google.maps.event.addListener(this.mapElement, 'click', function () {
         this.marker.edit = true;
         this.marker.turnpoint = this.turnpoint;
         new google.maps.event.trigger(this.marker, 'click');

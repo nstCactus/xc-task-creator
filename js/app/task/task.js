@@ -131,7 +131,6 @@ function(taskBoard, Turnpoint, fullBoard, param, optimizer, taskAdvisor, taskExp
     var tps = e.detail.task.turnpoints;
     taskInfo = e.detail.task;
     taskInfo.turn =  taskInfo.date.substr(0, 2) % 2 == 0 ? "Right" : "Left";
-    console.log(taskInfo.turn);
     if (tps) {
       for (var i = 0; i < tps.length; i++) {
         addTurnpoint(tps[i].waypoint, tps[i]);
