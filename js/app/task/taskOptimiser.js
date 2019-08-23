@@ -148,7 +148,7 @@ define(["app/param"], function (param) {
       path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW
     };
 
-    console.log("fastWaypoints ", fastWaypoints);
+    //console.log("fastWaypoints ", fastWaypoints);
 
     if (fastTrack) fastTrack.setMap(null);
     fastTrack = new google.maps.Polyline({
@@ -199,7 +199,7 @@ define(["app/param"], function (param) {
         var currentlatLng = turnpoints[i].latLng;
         var nextlatLng = turnpoints[i + 1].latLng;
         var heading = google.maps.geometry.spherical.computeHeading(currentlatLng, nextlatLng);
-        console.log("Heading1 " + heading);
+        //console.log("Heading1 " + heading);
         // Unsure heading is always positive.
         if (heading < 0) heading += 360;
         if (headings.length >= 1) {
@@ -258,7 +258,7 @@ define(["app/param"], function (param) {
       path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW
     };
 
-    console.log("fastWaypoints ", fastWaypoints);
+    //console.log("fastWaypoints ", fastWaypoints);
 
     if (fastTrack) fastTrack.setMap(null);
 
@@ -278,7 +278,7 @@ define(["app/param"], function (param) {
 
 
 
-    console.log(fastDistance, distances, fastWaypoints);
+    //console.log(fastDistance, distances, fastWaypoints);
     return {
       distance: fastDistance,
       distances: distances,
@@ -315,7 +315,7 @@ define(["app/param"], function (param) {
       if (i < turnpoints.length - 1) {
         // Getting the heading.
         var heading = google.maps.geometry.spherical.computeHeading(turnpoints[i].latLng, turnpoints[i + 1].latLng);
-        console.log("Heading " + heading);
+        //console.log("Heading " + heading);
 
         // Unsure heading is always positive.
         if (heading < 0) heading += 360;
@@ -374,7 +374,7 @@ define(["app/param"], function (param) {
       path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW
     };
 
-    console.log("fastWaypoints ", fastWaypoints);
+    //console.log("fastWaypoints ", fastWaypoints);
 
     if (fastTrack) fastTrack.setMap(null);
     fastTrack = new google.maps.Polyline({
@@ -391,7 +391,7 @@ define(["app/param"], function (param) {
       map: map,
     });
 
-    console.log(fastDistance, distances, fastWaypoints);
+    //console.log(fastDistance, distances, fastWaypoints);
     return {
       distance: fastDistance,
       distances: distances,
@@ -411,8 +411,8 @@ define(["app/param"], function (param) {
         distances.push(Math.round(distance / 10) / 100);
 
       }
-      console.log("Distances ", distances);
-      console.log("fastDistance ", fastDistance);
+      //console.log("Distances ", distances);
+      //console.log("fastDistance ", fastDistance);
     }
 
   }
@@ -425,8 +425,8 @@ define(["app/param"], function (param) {
       );
       fastDistance += distance;
       distances.push(Math.round(distance / 10) / 100);
-      console.log("Distances ", distances);
-      console.log("fastDistance ", fastDistance);
+      //console.log("Distances ", distances);
+      //console.log("fastDistance ", fastDistance);
     }
   }
 

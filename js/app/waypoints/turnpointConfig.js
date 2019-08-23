@@ -73,25 +73,58 @@ function($, b, helper, param, turnpointTemplate) {
   }
 
   var buildForm = function(mode, info) {
-    var typeOptions = helper.formatOptions(param.turnpoint.allowed.type, info.type);
-    var goalOptions = helper.formatOptions(param.turnpoint.allowed.goalType, info.goalType);
-    var modeOptions = helper.formatOptions(param.turnpoint.allowed.mode, info.mode);
-    $("#tp-type select").html(typeOptions);
-    $("#tp-goal-type select").html(goalOptions);
-    $("#tp-mode select").html(modeOptions);
-    $("#tp-radius input").val(info.radius); 
-    $("#tp-open input").val(info.open); 
-    $("#tp-close input").val(info.close); 
-    $("#tp-index").val(info.index);
 
+    var turnpoints = require('task/task').getTurnpoints();
+
+    //console.log('buildForm',turnpoints.length);
     //handleFormDependencies(info.type, $("#turnpoint-config"));
     if (mode == 'edit') {
+
+      var typeOptions = helper.formatOptions(param.turnpoint.allowed.type, info.type);
+      var goalOptions = helper.formatOptions(param.turnpoint.allowed.goalType, info.goalType);
+      var modeOptions = helper.formatOptions(param.turnpoint.allowed.mode, info.mode);
+  
+      $("#tp-type select").html(typeOptions);
+      $("#tp-goal-type select").html(goalOptions);
+      $("#tp-mode select").html(modeOptions);
+      $("#tp-radius input").val(info.radius); 
+      $("#tp-open input").val(info.open); 
+      $("#tp-close input").val(info.close); 
+      $("#tp-index").val(info.index);
+
       $("#turnpoint-config").modal();
       $("#add-turnpoint").hide();
       $("#edit-turnpoint").show();
       $("#delete-turnpoint").show();
     }
     else {
+      var type,radius;
+      if ( turnpoints.length == 0) {
+        type = 'takeoff';
+        radius = 400;
+      } else if ( turnpoints.length == 1 ) {
+        type = 'start';
+        radius = 6000;
+      } else if ( turnpoints[turnpoints.length-1].type ==  'end-of-speed-section' ) {
+        type = 'goal';
+        radius = 400;
+      } else {
+        type = 'turnpoint';
+        radius = 1000;
+      }
+
+      var typeOptions = helper.formatOptions(param.turnpoint.allowed.type, type);
+      var goalOptions = helper.formatOptions(param.turnpoint.allowed.goalType, info.goalType);
+      var modeOptions = helper.formatOptions(param.turnpoint.allowed.mode, info.mode);
+  
+      $("#tp-type select").html(typeOptions);
+      $("#tp-goal-type select").html(goalOptions);
+      $("#tp-mode select").html(modeOptions);
+      $("#tp-radius input").val(radius); 
+      $("#tp-open input").val(info.open); 
+      $("#tp-close input").val(info.close); 
+      $("#tp-index").val(info.index);
+
       $("#add-turnpoint").show();
       $("#edit-turnpoint").hide();
       $("#delete-turnpoint").hide();

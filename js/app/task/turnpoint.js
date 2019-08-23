@@ -4,15 +4,42 @@
  */
 define(['app/param', 'waypoints/waypoint'], function (param, Waypoint) {
 
+
   var Turnpoint = function (waypoint) {
+
+    //var turnpoints = require('task/task').getTurnpoints();
+    //console.log("Task turnpoint module for the task creator ",turnpoints.length);
+
+
     if (!waypoint) return;
     // Inherit from the base waypoint.
     Waypoint.apply(this, arguments);
     this.index = 0;
-    console.log("Task turnpoint module for the task creator ");
+
+
+    // if ( turnpoints.length == 0) {
+    //   this.type = 'takeoff';
+    //   this.radius = 400;
+    //   this.mode = 'entry';
+    // } else if ( turnpoints.length == 1 ) {
+    //   this.type = 'start';
+    //   this.radius = 6000;
+    //   this.mode = 'entry';
+    // } else if ( turnpoints[turnpoints.length-1].shortName ==  'end-of-speed-section' ) {
+    //   this.type = 'goal';
+    //   this.radius = 400;
+    //   this.mode = 'entry';
+    // } else {
+    //   this.type = 'turnpoint';
+    //   this.radius = 400;
+    //   this.mode = 'entry';
+    // }
+    // console.log("waypoint type " , this.type);
+
     this.type = param.turnpoint.default.type;
     this.radius = param.turnpoint.default.radius;
     this.mode = param.turnpoint.default.mode;
+    
     this.icon = param.turnpoint.icon[this.type];
     this.shortName = param.turnpoint.shortName[this.type];
     this.xctrackName = param.turnpoint.xctrackName[this.type];
