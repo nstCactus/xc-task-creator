@@ -18,8 +18,6 @@ define(["app/param"], function (param) {
     distances = [];
 
 
-
-
     // Pushing center of first turnpoint as a fastWaypoint. 
     if (turnpoints.length > 0) {
       fastWaypoints.push(turnpoints[0].latLng);
@@ -27,8 +25,7 @@ define(["app/param"], function (param) {
 
     // Looping turnpoints.
     for (var i = 0; i < turnpoints.length; i++) {
-      var one = fastWaypoints[fastWaypoints.length - 1];
-      //console.log(fastWaypoints.length,one);
+      var one = fastWaypoints[fastWaypoints.length - 1];  // last one
       var two = null;
       var three = null;
 
@@ -53,17 +50,27 @@ define(["app/param"], function (param) {
         three = two;
       }
 
+      console.log("two.name",two.name);
+      console.log("three.name",three.name);
+
+
       // Detecting flat lines.
-      if (one.equals(two.latLng) && two.latLng.equals(three.latLng) && one.equals(three.latLng)) {
+      //if (one.equals(two.latLng) && two.latLng.equals(three.latLng) && one.equals(three.latLng)) {
         // Extreme case. Depend where to go next or any heading can be accepted.
         //fastWaypoints.push(three.latLng);
         //incrementDistance(google, fastWaypoints);
+      //}
+
+      //alert(two.type == 'start');
+      if (one.equals(two.latLng) || two.latLng.equals(three.latLng  )) {
+        //One and two are the same or two and three are the same. Take heading from three to one.
+          heading = google.maps.geometry.spherical.computeHeading(three.latLng, one);
+        //console.log(heading);
       }
 
-      if (one.equals(two.latLng) || two.latLng.equals(three.latLng)) {
-        //One and two are the same or two and three are the same. Take heading from three to one.
-        heading = google.maps.geometry.spherical.computeHeading(three.latLng, one);
-        //console.log(heading);
+      if ( two.type == 'start' ) {
+        heading = google.maps.geometry.spherical.computeHeading(two.latLng, one);
+
       }
 
       if (one.equals(three.latLng)) {
@@ -72,9 +79,12 @@ define(["app/param"], function (param) {
         //console.log(heading);
       }
 
+      console.log("heading",heading);
+
       if (heading) {
         var fastPoint = google.maps.geometry.spherical.computeOffset(two.latLng, two.radius, heading);
         fastWaypoints.push(fastPoint);
+        console.log("fastWaypoints alligbned");
         //incrementDistance(google, fastWaypoints);
         continue;
       }
@@ -119,19 +129,6 @@ define(["app/param"], function (param) {
 
 
 
-      // Debugging block. Displaying middle point on map
-      /*
-      var wp = {
-        name : 'custom',
-        id : 'M ' ,
-        x :	middlePoint.lat(),
-        y : middlePoint.lng(),
-        z : 0,
-        filename : 'middlePoints',
-      };
-      waypoints.insert(wp);
-    */
-
     }
 
     var lineSymbol = {
@@ -157,7 +154,7 @@ define(["app/param"], function (param) {
     });
 
 
-    var markerImage = new google.maps.MarkerImage('//maps.google.com/mapfiles/kml/shapes/placemark_circle.png',
+    var markerImage = new google.maps.MarkerImage('https://maps.google.com/mapfiles/kml/shapes/placemark_circle.png',
       new google.maps.Size(32, 32),
       new google.maps.Point(0, 0),
       new google.maps.Point(16, 16));
@@ -166,7 +163,7 @@ define(["app/param"], function (param) {
       if (optimizedMarkers[i]) optimizedMarkers[i].setMap(null);
     }
 
-    for (var i=1; i<fastWaypoints.length-1;i++) {
+    for (var i=0; i<fastWaypoints.length-1;i++) {
       optimizedMarkers[i] = new google.maps.Marker({
         position: fastWaypoints[i],
         map: map,
