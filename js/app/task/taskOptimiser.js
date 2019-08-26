@@ -17,6 +17,7 @@ define(["app/param"], function (param) {
     fastDistance = 0;
     distances = [];
 
+    checkStartDirection(google,turnpoints);
 
     // Pushing center of first turnpoint as a fastWaypoint. 
     if (turnpoints.length > 0) {
@@ -61,33 +62,44 @@ define(["app/param"], function (param) {
         //incrementDistance(google, fastWaypoints);
       //}
 
-      //alert(two.type == 'start');
       if (one.equals(two.latLng) || two.latLng.equals(three.latLng  )) {
         //One and two are the same or two and three are the same. Take heading from three to one.
           heading = google.maps.geometry.spherical.computeHeading(three.latLng, one);
+          var fastPoint = google.maps.geometry.spherical.computeOffset(two.latLng, two.radius, heading);
+          fastWaypoints.push(fastPoint);
+          console.log("fastWaypoints alligbned");
+          continue;
         //console.log(heading);
       }
-
-      if ( two.type == 'start' ) {
-        heading = google.maps.geometry.spherical.computeHeading(two.latLng, one);
-
-      }
-
-      if (one.equals(three.latLng)) {
+      else if (one.equals(three.latLng)) {
         // One and three are the same take heading from two to one.
         heading = google.maps.geometry.spherical.computeHeading(two.latLng, one);
-        //console.log(heading);
-      }
-
-      console.log("heading",heading);
-
-      if (heading) {
         var fastPoint = google.maps.geometry.spherical.computeOffset(two.latLng, two.radius, heading);
         fastWaypoints.push(fastPoint);
         console.log("fastWaypoints alligbned");
-        //incrementDistance(google, fastWaypoints);
-        continue;
+        continue
+        //console.log(heading);
       }
+      else if ( two.type == 'start'  ) {
+        heading = google.maps.geometry.spherical.computeHeading(three.latLng, one);
+        //var fastPoint = google.maps.geometry.spherical.computeOffset(three.latLng, two.radius, heading);
+        var fastPoint = calcStartIntersection(google, three,  two , heading )
+        if ( fastPoint != null ) {
+          fastWaypoints.push(fastPoint);
+          console.log("fastWaypoints alligbned");
+          continue;
+        }
+
+      }
+
+
+      // if (heading) {
+      //   var fastPoint = google.maps.geometry.spherical.computeOffset(two.latLng, two.radius, heading);
+      //   fastWaypoints.push(fastPoint);
+      //   console.log("fastWaypoints alligbned");
+      //   //incrementDistance(google, fastWaypoints);
+      //   continue;
+      // }
 
       // Now for most regular triangle situation.
       // Go for some bissectrix hack...
@@ -171,8 +183,7 @@ define(["app/param"], function (param) {
       });
     }
 
-    
-
+  
     recalcDistance(google, fastWaypoints);
 
     return {
@@ -181,6 +192,69 @@ define(["app/param"], function (param) {
       fastWaypoints: fastWaypoints,
     }
   }
+
+
+
+
+
+
+  function calcStartIntersection(google, three,  two , heading ) {
+    var dist = three.radius;
+    var fastPoint;
+    var n = 0;
+    while (n < 10000) {
+      n++;
+      fastPoint = google.maps.geometry.spherical.computeOffset(three.latLng, dist, heading);
+      var distance = google.maps.geometry.spherical.computeDistanceBetween(two.latLng,fastPoint);
+      if ( two.mode == "entry" && distance >= two.radius) {
+        return fastPoint;
+      }
+      if ( two.mode == "exit" && distance <= two.radius) {
+        return fastPoint;
+      } 
+      dist +=10;
+    }
+     
+    return null;
+
+  }
+
+
+  function checkStartDirection(google ,turnpoints) {
+
+    var startIndex = -1;
+    for (var i=0; i < turnpoints.length; i++ ) {
+      if ( turnpoints[i].type == "start" ) {
+        startIndex = i;
+        break;
+      }
+    }
+    if ( startIndex == -1 || startIndex == turnpoints.length-1) {
+      return;
+    }
+    var distance = google.maps.geometry.spherical.computeDistanceBetween(turnpoints[startIndex].latLng,turnpoints[startIndex+1].latLng);
+    if ( distance > turnpoints[startIndex].radius ) {
+      turnpoints[startIndex].mode = 'exit';
+    }
+    else {
+      turnpoints[startIndex].mode = 'entry';
+
+    }
+
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   //

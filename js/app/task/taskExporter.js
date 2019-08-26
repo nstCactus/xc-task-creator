@@ -3,7 +3,7 @@
  * Task Exporter module for the task creator.
  */
 define(['jquery', 'rejs!task/templates/export', 'rejs!task/templates/save', 'app/helper', 'formats/tsk', 'formats/geoJson', 'formats/kml', 'formats/xctrack', 'jquery-qrcode'], function($, taskE, taskS, helper, tsk, geoJson, kml, xctrack) {
-  var formats = [xctrack, kml, geoJson, tsk];
+  var formats = [tsk,xctrack, kml, geoJson ];
   
   var template = taskE({});
   var saveTemplate = taskS({});
