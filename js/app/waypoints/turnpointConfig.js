@@ -98,13 +98,18 @@ function($, b, helper, param, turnpointTemplate) {
       $("#delete-turnpoint").show();
     }
     else {
-      var type,radius;
+      var type,radius,open,close;
+      open = info.open;
+      close = info.close;
       if ( turnpoints.length == 0) {
         type = 'takeoff';
         radius = 400;
+        open  = '12:00:00';
+        close = '14:00:00';
       } else if ( turnpoints.length == 1 ) {
         type = 'start';
         radius = 6000;
+        open = '14:00:00';
       } else if ( turnpoints[turnpoints.length-1].type ==  'end-of-speed-section' ) {
         type = 'goal';
         radius = 400;
@@ -121,13 +126,18 @@ function($, b, helper, param, turnpointTemplate) {
       $("#tp-goal-type select").html(goalOptions);
       $("#tp-mode select").html(modeOptions);
       $("#tp-radius input").val(radius); 
-      $("#tp-open input").val(info.open); 
-      $("#tp-close input").val(info.close); 
+      $("#tp-open input").val(open); 
+      $("#tp-close input").val(close); 
       $("#tp-index").val(info.index);
 
       $("#add-turnpoint").show();
       $("#edit-turnpoint").hide();
       $("#delete-turnpoint").hide();
+
+
+      var select = $('#tp-type').val();
+      handleFormDependencies(select, false);
+
     }
   }
 

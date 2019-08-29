@@ -17,25 +17,6 @@ define(['app/param', 'waypoints/waypoint'], function (param, Waypoint) {
     this.index = 0;
 
 
-    // if ( turnpoints.length == 0) {
-    //   this.type = 'takeoff';
-    //   this.radius = 400;
-    //   this.mode = 'entry';
-    // } else if ( turnpoints.length == 1 ) {
-    //   this.type = 'start';
-    //   this.radius = 6000;
-    //   this.mode = 'entry';
-    // } else if ( turnpoints[turnpoints.length-1].shortName ==  'end-of-speed-section' ) {
-    //   this.type = 'goal';
-    //   this.radius = 400;
-    //   this.mode = 'entry';
-    // } else {
-    //   this.type = 'turnpoint';
-    //   this.radius = 400;
-    //   this.mode = 'entry';
-    // }
-    // console.log("waypoint type " , this.type);
-
     this.type = param.turnpoint.default.type;
     this.radius = param.turnpoint.default.radius;
     this.mode = param.turnpoint.default.mode;
