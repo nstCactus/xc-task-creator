@@ -14,6 +14,7 @@ function(param, turnpointConfig, markerWindow) {
     this.z = parseInt(info.z, 10);
     this.name = info.name;
     this.id = info.id ? info.id : info.filename + i;
+    this.type = info.type ? info.type : 1;
     this.index = i;
     this.drawnOnMap = info.drawnOnMap || false;
     this.marker = info.marker || false;
@@ -23,9 +24,10 @@ function(param, turnpointConfig, markerWindow) {
       return turnpointConfig.buildForm(mode, this);
     }
 
-    this.set = function(name, id) {
+    this.set = function(name, id,type) {
         this.id = id;
         this.name = name;
+        this.type = type;
         this.marker.label.text = id;
         this.marker.setLabel(this.marker.label);
     }

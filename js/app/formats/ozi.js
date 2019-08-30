@@ -38,6 +38,7 @@ define(['rejs!formats/export/ozi'], function(exportOzi) {
       var tp =  {
         filename : filename,
         id : words[i][1],
+        type : 1,
         x : words[i][2],
         y : words[i][3],
         z : ftToMeter(words[i][14]),

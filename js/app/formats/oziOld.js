@@ -62,6 +62,7 @@ define([], function() {
       var tp = {
         filename: filename,
         id : words[i][1],
+        type : 1,
         x : formatLatLng(words[i][2]),
         y : formatLatLng(words[i][3]),
         z : words[i][6],

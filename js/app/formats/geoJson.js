@@ -18,6 +18,7 @@ define([],function () {
       point.y = elem[0];
       point.filename = filename;
       point.wp = point;
+      point.type = 1;
       return point;
     });
 

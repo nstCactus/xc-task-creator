@@ -39,6 +39,7 @@ define(["rejs!formats/export/gpx"], function(exportGpx) {
         filename : filename,
         id :  wpts[i].getElementsByTagName('name')[0].childNodes[0].nodeValue,
         name : wpts[i].getElementsByTagName('desc')[0].childNodes[0].nodeValue,
+        type : 1,
         x : wpts[i].getAttribute('lat'),
         y : wpts[i].getAttribute('lon'),
         z : wpts[i].getElementsByTagName('ele')[0].childNodes[0].nodeValue,

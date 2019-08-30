@@ -35,12 +35,18 @@ define(['rejs!formats/export/wpt'], function(exportWpt) {
         x : formatLatLng(words[i][1],words[i][2],words[i][3],words[i][4]),
         y : formatLatLng(words[i][5],words[i][6],words[i][7],words[i][8]),
         z : elevation(words[i][9]),
-        name : words[i][0],
+        //name : words[i][0],
       };
-      // tp.name =  words[i][10];
-      // for (var j=11;j<words[i].length;j++) { 
-      //   tp.name += " " +  words[i][j];
-      // }
+      tp.type = 1;
+      var last_index = words[i].length-1;
+      if ( words[i][last_index] == "[A]" ) {
+        tp.type = 2;
+        last_index -=1;
+      }
+      tp.name =  words[i][10];
+      for (var j=11;j<=last_index;j++) { 
+        tp.name += " " +  words[i][j];
+      }
       tps.push(tp);
     }
     

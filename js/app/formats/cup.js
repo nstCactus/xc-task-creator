@@ -36,6 +36,7 @@ define(['rejs!formats/export/cup'], function(exportCup) {
       var tp =  {
         filename : filename,
         id : words[i][1],
+        type : words[i][6],
         x : formatLatLng(words[i][3]),
         y : formatLatLng(words[i][4]),
         z : elevation(words[i][5]),

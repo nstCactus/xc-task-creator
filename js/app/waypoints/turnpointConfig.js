@@ -135,8 +135,7 @@ function($, b, helper, param, turnpointTemplate) {
       $("#delete-turnpoint").hide();
 
 
-      var select = $('#tp-type').val();
-      handleFormDependencies(select, false);
+      handleFormDependencies(type, false);
 
     }
   }

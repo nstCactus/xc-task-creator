@@ -3,7 +3,7 @@
     <% for(var i = 0;  i < turnpoints.length; i++) { %>
       <li class="taskboard-item">
         <span class="label label-default" style="background-color : <%- turnpoints[i].fillColor %>"><%- turnpoints[i].shortName %></span>
-        <%- turnpoints[i].name  + ' [' + turnpoints[i].radius  + ' m] '     %>  
+        <%- turnpoints[i].id  + ' [' + turnpoints[i].radius  + ' m] '     %>  
         <% if ( turnpoints[i].type=="start" ) { %>
           <%- turnpoints[i].mode.toUpperCase() %> 
         <% } %>

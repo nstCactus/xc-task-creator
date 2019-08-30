@@ -105,7 +105,7 @@ function(Waypoint, param, filenameList, waypointExporter) {
   var onEditWaypoint = function(e) {
     for (var i = 0; i < waypoints.length; i++) {
       if (waypoints[i].index == e.detail.wpindex ) {
-        waypoints[i].set(e.detail.name, e.detail.id);
+        waypoints[i].set(e.detail.name, e.detail.id,e.detail.type);
         waypoints[i].marker.map.infoWindow.close();
       }
     }

@@ -19,11 +19,13 @@ define(['jquery', 'rejs!waypoints/templates/infoMarker'], function($, infoMarker
     var wpindex = $(e.target).attr('wp-index');
     var name = $('#wp-name').val();
     var id = $('#wp-id').val();
+    var type = $('#tp-type').val();
     var e = document.createEvent("CustomEvent");
     e.initCustomEvent('editWaypoint', false, false, {
       id : id,
       name : name,
       wpindex : wpindex,
+      type : type,
     }); 
     document.dispatchEvent(e);
     $("#configure-turnpoint").attr('tid', id);
@@ -31,6 +33,8 @@ define(['jquery', 'rejs!waypoints/templates/infoMarker'], function($, infoMarker
 
   var buildMarker = function(info) {
     var altitude = info.z !== undefined ? info.z : 0;
+
+    console.log("#tp-type",$("#tp-type").val()) ;
     return infoMarker({
       info : info,
       altitude : altitude,
