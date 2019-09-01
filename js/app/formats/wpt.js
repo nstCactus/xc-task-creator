@@ -21,7 +21,7 @@ define(['rejs!formats/export/wpt'], function(exportWpt) {
       lines[i] = lines[i].replace(/^\s\s*/, '').replace(/\s\s*$/, '');
       lines[i] = lines[i].replace(/  +/g, ' ');
       var word = lines[i].split(" ");
-      if (word.length > 11  ) {
+      if (word.length > 10  ) {
         words.push(word); 
       }
     }
@@ -57,30 +57,48 @@ define(['rejs!formats/export/wpt'], function(exportWpt) {
 
   var exporter = function(wps) {
     for (var i = 0; i < wps.length; i++) {
-      wps[i].dms = convertDDtoDMS(wps[i].x, wps[i].y);
+      wps[i].dms = formatdms(wps[i].x, wps[i].y,wps[i].z,wps[i].name, wps[i].type);
     }
 
-    var data = exportCup({waypoints : wps});
+    var data = exportWpt({waypoints : wps});
     return new Blob([data], {'type': "text/plain"});
   }
 
-  function convertDDtoDMS(lat, lng) {
+  function formatdms(lat, lng,z, name,type) {
+
     var convertLat = Math.abs(lat);
     var LatDeg = Math.floor(convertLat);
-    var LatSec = (Math.round((convertLat - LatDeg) * 60 * 1000) / 1000);
+    var LatMin = (Math.floor((convertLat - LatDeg) * 60 ) );
+    var LatSec = (Math.round((((convertLat - LatDeg) - (LatMin/60.)) * 3600  ) * 1000) / 1000);
     var LatCardinal = ((lat > 0) ? "N" : "S");
+
     var convertLng = Math.abs(lng);
     var LngDeg = Math.floor(convertLng);
-    var LngSec = (Math.round((convertLng - LngDeg) * 60 * 1000) / 1000);
+    var LngMin = (Math.floor((convertLng - LngDeg) * 60 ) );
+
+    var LngSec = (Math.round((((convertLng - LngDeg) - (LngMin/60.)) * 3600  ) * 1000) / 1000);
     var LngCardinal = ((lng > 0) ? "E" : "W");
-                                                                              
-    return pad(LatDeg, 2) + pad(LatSec, 2) + LatCardinal + "," + pad(LngDeg, 3) + pad(LngSec, 2) + LngCardinal;
+         
+    var ret = LatCardinal + " " + pad(LatDeg, 2) + " " + pad(LatMin, 2) + " " + padSec(LatSec)  +  "    " ;
+    ret +=    LngCardinal + " " + pad(LngDeg, 3) + " " + pad(LngMin, 2) + " " + padSec(LngSec) + " " + pad(z,5," ");
+    ret += "  " + name;
+    if ( type == 2 || type == 5) {
+      ret += " [A]";
+    }
+    return ret;
+     
   }
 
   function pad(n, width, z) {
     z = z || '0';
     num = Math.floor(n) + '';
     return num.length > width ? n : new Array(width - num.length + 1).join(z) + n;
+  }
+
+  function padSec(n) {
+    z = '0';
+    num = Math.floor(n) + '';
+    return num.length > 1 ? n.toFixed(2) : new Array(2 - num.length + 1).join(z) + n.toFixed(2);
   }
 
   function elevation(data) {
@@ -108,7 +126,7 @@ define(['rejs!formats/export/wpt'], function(exportWpt) {
     'check' : check,
     'exporter' : exporter,
     'extension' : '.wpt',
-    'name' : 'WPT',
+    'name' : 'WPT GPSDUMP',
     'parse' : parse,
   }
 });

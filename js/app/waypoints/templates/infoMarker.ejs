@@ -3,19 +3,15 @@
     <span class="label label-default">Name</span>
     <input id="wp-name" class="wp-edit form-control" type="text" value="<%- info.name %>">
   </div>
-    <ul class="list-group">
-      <li class="list-group-item id"> 
-        <span class="label label-default">Id</span>
-        <input id="wp-id" class="wp-edit form-control" inputType="id" type="text" value="<%- info.id %>">
-      </li>
-
-
-      <li class="list-group-item type">
+  <ul class="list-group">
+    <li class="list-group-item id">
+      <span class="label label-default">Id</span>
+      <input id="wp-id" class="wp-edit form-control" inputType="id" type="text" value="<%- info.id %>">
+    </li>
+    <li class="list-group-item type">
       <span class="label label-default">Type</span>
-
-
-      <select id="tp-type" class="col-sm-12" name="type" autocomplete="off">
-          <%
+      <select id="tp-type" class="col-sm-24" name="type" autocomplete="off">
+        <%
           var options = [ "Unknown", "Waypoint", "Airfield with grass surface runway" , "Outlanding" , "Gliding airfield" , "Airfield with solid surface runway" , "Mountain Pass" , "Mountain Top" , "Transmitter Mast" , "VOR" , "NDB" , "Cooling Tower" , "Dam" , "Tunnel" , "Bridge" , "Power Plant" , "Castle" ,"Intersection"   ];
           for ( var i = 0; i < options.length; i++ )
           {
@@ -25,20 +21,18 @@
           %>
       </select>
     </li>
-
-      <!-- <li class="list-group-item Type"> <span class="label label-default">Type</span>  <%- info.type %></li> -->
-
-
-      <li class="list-group-item altitude"> <span class="label label-default">Altitude</span>  <%- altitude %> m</li>
-      <li class="list-group-item lat"> <span class="label label-default">Latitude</span>  <%- info.x %></li>
-      <li class="list-group-item lon"> <span class="label label-default">Longitude</span>  <%- info.y %></li>
-      <li class="list-group-item filename"> <span class="label label-default">Source File</span>  <%- info.filename %> </li>
-    </ul>
-  </div>
-  <button id="configure-turnpoint" filename="<%- info.filename %>" tid="<%- info.id %>" class="btn btn-success" type="button" data-toggle="modal" data-target="#turnpoint-config">
-    Add To Task
-  </button>
-  <button id="edit-waypoint" wp-index="<%- info.index %>" class="btn btn-danger" type="button">
-    Edit Waypoint
-  </button>
+    <li class="list-group-item altitude"> <span class="label label-default">Altitude</span> <%- altitude %> m</li>
+    <li class="list-group-item lat"> <span class="label label-default">Latitude</span> <%- info.x %></li>
+    <li class="list-group-item lon"> <span class="label label-default">Longitude</span> <%- info.y %></li>
+    <li class="list-group-item filename"> <span class="label label-default">Source File</span> <%- info.filename %>
+    </li>
+  </ul>
+</div>
+<button id="configure-turnpoint" filename="<%- info.filename %>" tid="<%- info.id %>" class="btn btn-success"
+  type="button" data-toggle="modal" data-target="#turnpoint-config">
+  Add To Task
+</button>
+<button id="edit-waypoint" wp-index="<%- info.index %>" class="btn btn-danger" type="button">
+  Edit Waypoint
+</button>
 </div>

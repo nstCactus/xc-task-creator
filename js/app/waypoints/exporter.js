@@ -2,10 +2,10 @@
  * @file
  * Waypoints Exporter.
  */
-define(['jquery', 'rejs!waypoints/templates/export', 'rejs!waypoints/templates/exportWaypoint', 'app/helper', 'formats/cup','formats/gpx', 'formats/ozi'], 
-function($, ex, exWp, helper, cup, gpx, ozi) {
+define(['jquery', 'rejs!waypoints/templates/export', 'rejs!waypoints/templates/exportWaypoint', 'app/helper', 'formats/cup_code', 'formats/cup', 'formats/wpt' , 'formats/gpx', 'formats/ozi'], 
+function($, ex, exWp, helper, cup_code , cup, wpt, gpx, ozi) {
   
-  var formats = [cup, gpx, ozi];
+  var formats = [cup_code, cup, wpt , gpx, ozi];
   
   var template = ex({});
   $("body").append(template);
