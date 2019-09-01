@@ -41,6 +41,10 @@ function(param, turnpointConfig, markerWindow) {
     }
   
     this.drawMarker = function(map, google) {
+      var color = param.waypoints.normalColor;
+      if ( this.type == 2 ||  this.type == 5 ) {
+         color =  param.waypoints.landableColor;
+      }
       this.drawnOnMap =  true;
       this.latLng = new google.maps.LatLng(this.x, this.y);
       this.marker = new google.maps.Marker({
@@ -53,10 +57,10 @@ function(param, turnpointConfig, markerWindow) {
         },
         icon : {
           path: 'M 0,0 C -2,-20 -10,-22 -10,-30 A 10,10 0 1,1 10,-30 C 10,-22 2,-20 0,0 z M -2,-30 a 2,2 0 1,1 4,0 2,2 0 1,1 -4,0',
-          fillColor: "#FE7569",
+          fillColor: color,
           fillOpacity: 1,
-          strokeColor: '#CB4236',
-          strokeWeight: 1,
+          strokeColor: '#333333',
+          strokeWeight: 0.5,
           scale: 0.7                 ,
           labelOrigin : new google.maps.Point(0, 10),
         },

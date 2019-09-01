@@ -34,7 +34,6 @@ define(['jquery', 'rejs!waypoints/templates/infoMarker'], function($, infoMarker
   var buildMarker = function(info) {
     var altitude = info.z !== undefined ? info.z : 0;
 
-    console.log("#tp-type",$("#tp-type").val()) ;
     return infoMarker({
       info : info,
       altitude : altitude,

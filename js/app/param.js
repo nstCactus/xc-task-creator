@@ -14,6 +14,10 @@ define([], function() {
       startX : 43.357700,
       startY : 12.749417,
     },
+    waypoints : {
+      normalColor : '#FE7569',
+      landableColor : '#03fc94',
+    },
     task : {
       allowed : {
         num : [1, 2, 3, 4, 5, 6, 7, 8 , 9, 10, 11, 12, 13, 14, 15],

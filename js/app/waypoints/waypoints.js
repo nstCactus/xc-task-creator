@@ -107,6 +107,11 @@ function(Waypoint, param, filenameList, waypointExporter) {
       if (waypoints[i].index == e.detail.wpindex ) {
         waypoints[i].set(e.detail.name, e.detail.id,e.detail.type);
         waypoints[i].marker.map.infoWindow.close();
+        var color = param.waypoints.normalColor;
+        if ( e.detail.type == 2 ||  e.detail.type == 5 ) {
+           color =  param.waypoints.landableColor;
+        }
+        waypoints[i].marker.icon.fillColor = color;
       }
     }
   }
