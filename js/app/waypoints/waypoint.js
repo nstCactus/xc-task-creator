@@ -41,7 +41,7 @@ function(param, turnpointConfig, markerWindow) {
     }
   
     this.drawMarker = function(map, google) {
-      this.drawnOnMap = true;
+      this.drawnOnMap =  true;
       this.latLng = new google.maps.LatLng(this.x, this.y);
       this.marker = new google.maps.Marker({
         label: {
@@ -57,7 +57,7 @@ function(param, turnpointConfig, markerWindow) {
           fillOpacity: 1,
           strokeColor: '#CB4236',
           strokeWeight: 1,
-          scale: 1,
+          scale: 0.7                 ,
           labelOrigin : new google.maps.Point(0, 10),
         },
         position: this.latLng,
