@@ -21,6 +21,29 @@ function($, helper, param, turnpointTemplate, fullTemplate) {
      
   }
   
+  function printElement(elem) {
+
+
+    var domClone = elem;
+    var $printSection = document.getElementById("printSection");
+    if (!$printSection) {
+      var $printSection = document.createElement("div");
+      $printSection.id = "printSection";
+      document.body.appendChild($printSection);
+    }
+    $printSection.innerHTML = "";
+    $printSection.appendChild(domClone);
+    window.print();
+    
+
+  }
+
+  $(document).on('click', '#print-task', function(e) {
+    printElement(document.getElementById("task-config"));
+    $("#task-config").modal('hide')
+  });
+
+
   $(document).on('click', '#edit-task', function(e) {
     var form = collectForm();
     var e = document.createEvent("customEvent");

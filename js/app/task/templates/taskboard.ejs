@@ -1,10 +1,23 @@
 <div>
   <ul>
-    <% for(var i = 0;  i < turnpoints.length; i++) { %>
+    <% var windows_open = "";
+      var windows_close = "";
+      var start_open = "";
+      var deadline = "";
+      for(var i = 0;  i < turnpoints.length; i++) { %>
       <li class="taskboard-item">
         <span class="label label-default" style="background-color : <%- turnpoints[i].fillColor %>"><%- turnpoints[i].shortName %></span>
+        <% 
+            if (turnpoints[i].type ==  "takeoff") {
+              windows_open = turnpoints[i].open;
+              windows_close = turnpoints[i].close;
+            }  
+            if (turnpoints[i].type ==  "goal") {
+              deadline = turnpoints[i].close;
+            } 
+        %>
         <%- turnpoints[i].id  + ' [' + turnpoints[i].radius  + ' m] '     %>  
-        <% if ( turnpoints[i].type=="start" ) { %>
+        <% if ( turnpoints[i].type == "start" ) { start_open = turnpoints[i].open; %>
           <%- turnpoints[i].mode.toUpperCase() %> 
         <% } %>
         <span class="turnpointDistance">
@@ -16,4 +29,16 @@
     <% } %>
   </ul>
   <div id="task-distance"> <%- Math.round(taskInfo.distance) / 1000 %> Km </div>
+  <hr>
+  <div id="task-times">
+      <ul> 
+        <li class="taskboard-item>"class="turnpointDistance"> Window open    : <%- windows_open %></span> </li>
+        <li class="taskboard-item>"class="turnpointDistance"> Window close : <%- windows_close %></span> </li>
+        <li class="taskboard-item>"class="turnpointDistance"> Start  : <%- start_open %></span> </li>
+        <li class="taskboard-item>"class="turnpointDistance"> Task deadline  : <%- deadline %></span> </li>
+
+
+
+ </ul>
+  </div>
 </div>
