@@ -77,7 +77,7 @@ html, body {
 #sidebar {
   font-family : Consolas, Arial, sans-serif;
 
- background-color: #022b6e;
+ background-color: #3b5998;
  color : #FFF;
 }
 
@@ -210,7 +210,7 @@ gm-panel li {
 }
 
 #taskboard #task-distance {
-  margin-top: 0px;
+  margin-top: 20px;
   text-align: right;
   font-size: 1.5em;
   text-shadow : 0px 0px 10px #000;
