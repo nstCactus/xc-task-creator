@@ -22,8 +22,6 @@ function($, helper, param, turnpointTemplate, fullTemplate) {
   }
   
   function printElement(elem) {
-
-
     var domClone = elem;
     var $printSection = document.getElementById("printSection");
     if (!$printSection) {
@@ -34,8 +32,6 @@ function($, helper, param, turnpointTemplate, fullTemplate) {
     $printSection.innerHTML = "";
     $printSection.appendChild(domClone);
     window.print();
-    
-
   }
 
   $(document).on('click', '#print-task', function(e) {

@@ -31,14 +31,9 @@
   <div id="task-distance"> <%- Math.round(taskInfo.distance) / 1000 %> Km </div>
   <hr>
   <div id="task-times">
-      <ul> 
-        <li class="taskboard-item>"class="turnpointDistance"> Window open    : <%- windows_open %></span> </li>
-        <li class="taskboard-item>"class="turnpointDistance"> Window close : <%- windows_close %></span> </li>
-        <li class="taskboard-item>"class="turnpointDistance"> Start  : <%- start_open %></span> </li>
-        <li class="taskboard-item>"class="turnpointDistance"> Task deadline  : <%- deadline %></span> </li>
-
-
-
- </ul>
+        <div style="padding : 3px;"> <span class="label label-default" style="background-color : #204d74 ;font-size: 1.0em; padding : 2px;">Takeoff open : <%- windows_open %></span> </div>
+        <div style="padding : 3px;"> <span class="label label-default" style="background-color : #204d74 ;font-size: 1.0em; padding : 2px;">Window close : <%- windows_close %></span> </div>
+        <div style="padding : 3px;"> <span class="label label-default" style="background-color : #ac2925 ;font-size: 1.0em; padding : 2px;">Start : <%- start_open %></span> </div>
+        <div style="padding : 3px;"> <span class="label label-default" style="background-color : #398439 ;font-size: 1.0em; padding : 2px;">Task deadline : <%- deadline %></span> </div>
   </div>
 </div>
