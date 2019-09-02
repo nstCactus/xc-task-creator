@@ -35,7 +35,37 @@ function($, helper, param, turnpointTemplate, fullTemplate) {
   }
 
   $(document).on('click', '#print-task', function(e) {
-    printElement(document.getElementById("task-config"));
+
+
+    var mywindow = window.open('', 'PRINT', 'height=500,width=500');
+
+    mywindow.document.write('<html><head><title>' + document.title  + '</title>');
+    mywindow.document.write('<script data-main="js/app" src="bower_components/requirejs/require.js"></script>');
+    mywindow.document.write('<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">');
+    mywindow.document.write('<link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">');
+    mywindow.document.write('<link rel="stylesheet" type="text/css" href="css/style.css">');
+    mywindow.document.write('<link rel="stylesheet" type="text/css" href="bower_components/jGrowl/jquery.jgrowl.css">');
+    mywindow.document.write('<link rel="stylesheet" type="text/css" href="js/lib/jquery-ui-1.11.0.custom/jquery-ui.css">');
+    mywindow.document.write('<link rel="stylesheet" type="text/css" href="js/lib/jquery-ui-1.11.0.custom/jquery-ui.structure.css"></link>');
+
+    mywindow.document.write('</head><body >');
+
+    mywindow.document.write('<div id="task-config" >');
+
+
+    mywindow.document.write(document.getElementById("task-config").innerHTML);
+
+    mywindow.document.write('</div>');
+
+    mywindow.document.write('</body></html>');
+
+    mywindow.document.close(); // necessary for IE >= 10
+    mywindow.focus(); // necessary for IE >= 10*/
+
+    //mywindow.print();
+    //mywindow.close();
+
+    // printElement(document.getElementById("task-config"));
     $("#task-config").modal('hide')
   });
 
