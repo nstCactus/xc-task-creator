@@ -82,7 +82,7 @@ html, body {
 }
 
 #sidebar-inner {
-  padding: 0px;
+  padding-top: 10px;
 }
 
 #sidebar form {
