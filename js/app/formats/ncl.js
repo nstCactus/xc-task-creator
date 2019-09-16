@@ -52,7 +52,7 @@ define(['rejs!formats/export/ncl'], function(exportNcl) {
 
   var exporter = function(wps) {
     for (var i = 0; i < wps.length; i++) {
-      wps[i].dms = wps[i].x + "," + wps[i].y;
+      wps[i].dms = wps[i].y + "," + wps[i].x;
     }
 
     var data = exportNcl({waypoints : wps});
