@@ -9,6 +9,9 @@ define(["rejs!formats/export/gpx"], function(exportGpx) {
    * Poor check : Able to parse xml or not
    */
   var check = function(text, filename) {
+    if ( !  ( filename.split('.').pop() == 'gpx')) {
+      return false;
+    }
     if (window.DOMParser) {
       var parser = new DOMParser();
       var xmlDoc = parser.parseFromString(text, "text/xml");

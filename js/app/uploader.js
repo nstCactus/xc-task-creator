@@ -50,7 +50,7 @@ define(['Dropzone', 'app/wpParser', 'jquery'], function(Dropzone, wpParser, $) {
 
   var myDz = new Dropzone("#uploader", {
     maxFiles : 1,
-    acceptedFiles : '.txt, .TXT, .wpt, .WPT, .igc, .IGC, .cup, .CUP, .gpx, .GPX, .tsk, .TSK, .geojson, .GEOJSON',
+    acceptedFiles : '.txt, .TXT, .wpt, .WPT, .igc, .IGC, .cup, .CUP, .gpx, .GPX, .tsk, .TSK, .geojson, .GEOJSON, .xctsk , .XCTSK',
     dictDefaultMessage : "Drop files (or click) here - 'Space + rigth mouse click' to add a waypoint,"
   });
   

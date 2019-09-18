@@ -2,10 +2,10 @@
  * @file
  * Waypoint file parser module for the task creator.
  */
-define(['jquery', 'waypoints/waypoints', 'task/task', 'tracks/tracks', 'formats/wpt','formats/oziOld', 'formats/ozi', 'formats/cup', 'formats/igc', 'formats/geoJson', 'formats/tsk', 'formats/gpx', 'jgrowl'],
-function($, waypoints, task, tracks, wpt, oziOld, ozi, cup, igc, geoJson, tsk, gpx) {
+define(['jquery', 'waypoints/waypoints', 'task/task', 'tracks/tracks', 'formats/wpt','formats/oziOld', 'formats/ozi', 'formats/cup', 'formats/igc', 'formats/geoJson', 'formats/tsk', 'formats/gpx', 'formats/xctrack', 'jgrowl'],
+function($, waypoints, task, tracks, wpt, oziOld, ozi, cup, igc, geoJson, tsk, gpx, xctrack) {
  
-  var formats = [wpt, oziOld, ozi, cup, igc, geoJson, tsk, gpx]; 
+  var formats = [wpt, oziOld, ozi, cup, igc, geoJson, tsk, gpx, xctrack]; 
   var parse = function(text, filename) {
     var result = formatCheck(text, filename);
     var format = result.format;
