@@ -62,7 +62,7 @@ define(["app/param"], function (param) {
         //incrementDistance(google, fastWaypoints);
       //}
 
-      if (one.equals(two.latLng) || two.latLng.equals(three.latLng  )) {
+      if ( two.latLng.equals(three.latLng  )) {
         //One and two are the same or two and three are the same. Take heading from three to one.
           heading = google.maps.geometry.spherical.computeHeading(three.latLng, one);
           var fastPoint = google.maps.geometry.spherical.computeOffset(two.latLng, two.radius, heading);
