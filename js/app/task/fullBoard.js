@@ -5,6 +5,7 @@
 define(['jquery', 'app/helper', 'app/param', 'rejs!task/templates/fullboardTurnpoint', 'rejs!task/templates/fullboard'],
 function($, helper, param, turnpointTemplate, fullTemplate) {
   var link = $("#full-board");
+  var link1 = $("#export-task");
  
   link.click(function(e) {
     var e = document.createEvent("CustomEvent");
@@ -14,6 +15,8 @@ function($, helper, param, turnpointTemplate, fullTemplate) {
 
   var toggleLink = function(bool) {
     (bool == true) ? link.removeClass('hide') : link.addClass('hide');
+    (bool == true) ? link1.removeClass('hide') : link1.addClass('hide');
+
   }
 
   var open = function(task) {
