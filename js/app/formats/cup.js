@@ -2,61 +2,61 @@
  * @file
  * CUP format for the task creator.
  */
-define(['rejs!formats/export/cup'], function(exportCup) {
+define(['rejs!formats/export/cup'], function (exportCup) {
 
-  var check = function(text, filename) {
+  var check = function (text, filename) {
     var lines = text.split("\n");
     var words = [];
     // Replace all bad formated whitespace at the begining and end of the line..
     for (var i = 0; i < lines.length; i++) {
       lines[i] = lines[i].replace(/^\s\s*/, '').replace(/\s\s*$/, '');
       var word = lines[i].split(",");
-      if (word.length == 11 && word[0].charAt(0) == '"' ) {
+      if (word.length == 11 && word[0].charAt(0) == '"') {
         return true;
       }
     }
     return false;
   }
 
-  var parse = function(text, filename) {
+  var parse = function (text, filename) {
     var lines = text.split("\n");
     var words = [];
     // Replace all bad formated whitespace at the begining and end of the line..
     for (var i = 0; i < lines.length; i++) {
       lines[i] = lines[i].replace(/^\s\s*/, '').replace(/\s\s*$/, '');
       var word = lines[i].split(",");
-      if (word.length == 11 && word[0].charAt(0) == '"' ) {
-        words.push(word); 
+      if (word.length == 11 && word[0].charAt(0) == '"') {
+        words.push(word);
       }
     }
 
     // Storing the turnpoints.
     var tps = [];
     for (var i = 0; i < words.length; i++) {
-      var tp =  {
-        filename : filename,
-        id : words[i][1],
-        type : words[i][6],
-        x : formatLatLng(words[i][3]),
-        y : formatLatLng(words[i][4]),
-        z : elevation(words[i][5]),
-        name : words[i][0].replace('"','').replace('"',''),
+      var tp = {
+        filename: filename,
+        id: words[i][1],
+        type: words[i][6],
+        x: formatLatLng(words[i][3]),
+        y: formatLatLng(words[i][4]),
+        z: elevation(words[i][5]),
+        name: words[i][0].replace('"', '').replace('"', ''),
       };
       tps.push(tp);
     }
-    
+
     return {
-      'waypoints' : tps,
+      'waypoints': tps,
     };
   }
 
-  var exporter = function(wps) {
+  var exporter = function (wps) {
     for (var i = 0; i < wps.length; i++) {
       wps[i].dms = convertDDtoDMS(wps[i].x, wps[i].y);
     }
 
-    var data = exportCup({waypoints : wps});
-    return new Blob([data], {'type': "text/plain"});
+    var data = exportCup({ waypoints: wps });
+    return new Blob([data], { 'type': "text/plain" });
   }
 
   function convertDDtoDMS(lat, lng) {
@@ -68,7 +68,7 @@ define(['rejs!formats/export/cup'], function(exportCup) {
     var LngDeg = Math.floor(convertLng);
     var LngSec = (Math.round((convertLng - LngDeg) * 60 * 1000) / 1000);
     var LngCardinal = ((lng > 0) ? "E" : "W");
-                                                                              
+
     return pad(LatDeg, 2) + pad(LatSec, 2) + LatCardinal + "," + pad(LngDeg, 3) + pad(LngSec, 2) + LngCardinal;
   }
 
@@ -88,7 +88,7 @@ define(['rejs!formats/export/cup'], function(exportCup) {
   }
 
   function convertDMSToDD(degrees, minutes, direction) {
-    var dd = parseInt(degrees) + parseFloat(minutes)/60;
+    var dd = parseInt(degrees) + parseFloat(minutes) / 60;
     if (direction == "S" || direction == "W") {
       dd = dd * -1;
     } // Don't do anything for N or E
@@ -98,22 +98,22 @@ define(['rejs!formats/export/cup'], function(exportCup) {
   function formatLatLng(coords) {
     var direction = coords.slice(-1);
     if (direction == "E" || direction == "W") {
-      var deg = coords.substring(0, 3); 
-      var min = coords.substring(3, 9); 
+      var deg = coords.substring(0, 3);
+      var min = coords.substring(3, 9);
     }
     else {
-      var deg = coords.substring(0, 2); 
-      var min = coords.substring(2, 8); 
+      var deg = coords.substring(0, 2);
+      var min = coords.substring(2, 8);
     }
     return convertDMSToDD(deg, min, direction);
   }
 
   return {
-    'check' : check,
-    'exporter' : exporter,
-    'extension' : '.cup',
-    'name' : 'CUP',
-    'parse' : parse,
+    'check': check,
+    'exporter': exporter,
+    'extension': '.cup',
+    'name': 'CUP',
+    'parse': parse,
   }
 });
 

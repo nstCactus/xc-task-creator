@@ -2,25 +2,25 @@
  @file
  Task importer / exporter for XCTrack
  **/
-define(['rejs!formats/export/xctrack'], function(exportXCTrack) {
+define(['rejs!formats/export/xctrack'], function (exportXCTrack) {
   var converter = {
-    "race-to-goal" : "RACE",
-    "entry" : "ENTER",
+    "race-to-goal": "RACE",
+    "entry": "ENTER",
   }
-  
-  var check = function(text, filename) {
+
+  var check = function (text, filename) {
     if (filename.split('.').pop() == 'xctsk') {
       return true;
     }
     return false;
   }
 
-  var parse = function(text, filename) {
+  var parse = function (text, filename) {
     return false;
   }
-  
-  var exporter = function(turnpoints, taskInfo) {
-    var xcInfo =  {};
+
+  var exporter = function (turnpoints, taskInfo) {
+    var xcInfo = {};
     for (var i = 0; i < turnpoints.length; i++) {
       if (turnpoints[i].type == "start") {
         xcInfo.timeGates = turnpoints[i].open;
@@ -35,18 +35,18 @@ define(['rejs!formats/export/xctrack'], function(exportXCTrack) {
       }
     }
     var data = exportXCTrack({
-      turnpoints : turnpoints,
-      taskInfo : taskInfo,
-      xcInfo : xcInfo
+      turnpoints: turnpoints,
+      taskInfo: taskInfo,
+      xcInfo: xcInfo
     });
-    return new Blob([data], {'type': "text/plain"});
+    return new Blob([data], { 'type': "text/plain" });
   }
 
   return {
-    'check' : check,
-    'exporter' : exporter,
-    'extension' : '.xctsk',
-    'name' : 'XCTrack',
-    'parse' : parse,
+    'check': check,
+    'exporter': exporter,
+    'extension': '.xctsk',
+    'name': 'XCTrack',
+    'parse': parse,
   }
 });
