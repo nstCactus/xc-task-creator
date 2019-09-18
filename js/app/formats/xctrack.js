@@ -16,15 +16,16 @@ define(['rejs!formats/export/xctrack'], function (exportXCTrack) {
   }
 
   var parse = function (text, filename) {
-    var lookupType = { "TAKEOFF":"takeoff",
-                        "SSS":"start",
-                        "ESS":"end-of-speed-section"
+    var lookupType = {
+      "TAKEOFF": "takeoff",
+      "SSS": "start",
+      "ESS": "end-of-speed-section"
     }
 
-    // type : ['takeoff', 'start', 'turnpoint', 'end-of-speed-section', 'goal'],
 
     var obj = JSON.parse(text);
     var wpts = obj.turnpoints;
+
     var tps = [];
     var wps = [];
 
@@ -42,40 +43,42 @@ define(['rejs!formats/export/xctrack'], function (exportXCTrack) {
       }
 
 
+      tp['close'] = '00:00:00';
+      tp['goalType'] = 'cylinder';
+      tp['index'] = i;
+      tp['mode'] = 'entry';
+      tp['open'] = '00:00:00';
+      tp['radius'] = wpts[i].radius;
 
-
-      tp.wp = wp;
-
-      tp['close']  = '00:00:00';
-      tp['goalType']  = 'cylinder';
-      tp['index']  = i;
-      tp['mode']  = 'entry';
-      tp['open']  = '00:00:00';
-      tp['radius']  = wpts[i].radius;
-
-
-      if ( wpts[i].hasOwnProperty('type') ) {
-        tp.type = lookupType[ wpts[i].type];
+      if (wpts[i].hasOwnProperty('type')) {
+        tp.type = lookupType[wpts[i].type];
       }
       else {
-        if ( i==wpts.length-1 ) {
+        if (i == wpts.length - 1) {
           tp.type = "goal";
         }
         else {
           tp.type = "turnpoint";
         }
       }
+      if ( tp.type == "start" ) {
+        tp.open = String(obj.sss.timeGates).replace('"','').replace('Z','');
+        tp.mode =  String(obj.sss.direction).toLowerCase();
+      }
 
-      wps.push(wp);
+      wps.push(wp);;
       tp.wp = wp;
       tps.push(tp);
 
     }
 
+    // console.log(JSON.stringify(tps, undefined, 2)) 
+    // console.log(JSON.stringify(wps, undefined, 2)) 
+
 
     return {
       'task': {
-        'date': '',
+        'date': '18-8-2019',
         'type': 'race-to-goal',
         'num': 1,
         'turnpoints': tps,

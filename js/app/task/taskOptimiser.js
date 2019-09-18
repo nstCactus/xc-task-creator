@@ -51,8 +51,8 @@ define(["app/param"], function (param) {
         three = two;
       }
 
-      console.log("two.name",two.name);
-      console.log("three.name",three.name);
+      //console.log("two.name",two.name);
+      //console.log("three.name",three.name);
 
 
       // Detecting flat lines.
@@ -67,7 +67,7 @@ define(["app/param"], function (param) {
           heading = google.maps.geometry.spherical.computeHeading(three.latLng, one);
           var fastPoint = google.maps.geometry.spherical.computeOffset(two.latLng, two.radius, heading);
           fastWaypoints.push(fastPoint);
-          console.log("fastWaypoints alligbned");
+          //console.log("fastWaypoints alligbned");
           continue;
         //console.log(heading);
       }
@@ -76,7 +76,7 @@ define(["app/param"], function (param) {
         heading = google.maps.geometry.spherical.computeHeading(two.latLng, one);
         var fastPoint = google.maps.geometry.spherical.computeOffset(two.latLng, two.radius, heading);
         fastWaypoints.push(fastPoint);
-        console.log("fastWaypoints alligbned");
+        //console.log("fastWaypoints alligbned");
         continue
         //console.log(heading);
       }
@@ -86,7 +86,7 @@ define(["app/param"], function (param) {
         var fastPoint = calcStartIntersection(google, three,  two , heading )
         if ( fastPoint != null ) {
           fastWaypoints.push(fastPoint);
-          console.log("fastWaypoints alligbned");
+          //console.log("fastWaypoints alligbned");
           continue;
         }
 
@@ -185,6 +185,10 @@ define(["app/param"], function (param) {
 
   
     recalcDistance(google, fastWaypoints);
+
+    // if ( fastWaypoints.length == 7 ) {
+    //   console.log(JSON.stringify(fastWaypoints, undefined, 2)) 
+    // }
 
     return {
       distance: fastDistance,

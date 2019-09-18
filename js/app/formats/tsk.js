@@ -23,10 +23,21 @@ define(['rejs!formats/export/tsk'], function(exportTSK) {
     
     for (var i = 0; i < rtetp.length; i++) {
       var tp = {};
-      for (var y = 0; y < array.length; y++) {
-        var e = array[y]
-        tp[e] =  rtetp[i].getElementsByTagName(e)[0].childNodes[0] ? rtetp[i].getElementsByTagName(e)[0].childNodes[0].nodeValue : 0;
-      }
+
+
+      tp['close'] =  rtetp[i].getElementsByTagName('close')[0].childNodes[0] ? rtetp[i].getElementsByTagName('close')[0].childNodes[0].nodeValue : 0;
+      tp['goalType'] =  rtetp[i].getElementsByTagName('goalType')[0].childNodes[0] ? rtetp[i].getElementsByTagName('goalType')[0].childNodes[0].nodeValue : 0;
+      tp['index'] =  Number(rtetp[i].getElementsByTagName('index')[0].childNodes[0] ? rtetp[i].getElementsByTagName('index')[0].childNodes[0].nodeValue : 0);
+      tp['mode'] =  rtetp[i].getElementsByTagName('mode')[0].childNodes[0] ? rtetp[i].getElementsByTagName('mode')[0].childNodes[0].nodeValue : 0;
+      tp['open'] =  rtetp[i].getElementsByTagName('open')[0].childNodes[0] ? rtetp[i].getElementsByTagName('open')[0].childNodes[0].nodeValue : 0;
+      tp['radius'] =  Number(rtetp[i].getElementsByTagName('radius')[0].childNodes[0] ? rtetp[i].getElementsByTagName('radius')[0].childNodes[0].nodeValue : 0);
+      tp['type'] =  rtetp[i].getElementsByTagName('type')[0].childNodes[0] ? rtetp[i].getElementsByTagName('type')[0].childNodes[0].nodeValue : 0;
+
+
+      // for (var y = 0; y < array.length; y++) {
+      //   var e = array[y]
+      //   tp[e] =  rtetp[i].getElementsByTagName(e)[0].childNodes[0] ? rtetp[i].getElementsByTagName(e)[0].childNodes[0].nodeValue : 0;
+      // }
       
       if (tp.type == 'endofspeedsection') {
         tp.type = 'end-of-speed-section';
@@ -36,14 +47,18 @@ define(['rejs!formats/export/tsk'], function(exportTSK) {
         filename : filename, //rtetp[i].getElementsByTagName('filename')[0].childNodes[0].nodeValue,
         id : rtetp[i].getElementsByTagName('id')[0].childNodes[0].nodeValue,
         name : rtetp[i].getElementsByTagName('name')[0].childNodes[0].nodeValue,
-        x : rtetp[i].getAttribute('lat'),
-        y : rtetp[i].getAttribute('lon'),
-        z : rtetp[i].getElementsByTagName('z')[0].childNodes[0].nodeValue,
+        type : 1,
+        x : Number(rtetp[i].getAttribute('lat')),
+        y : Number(rtetp[i].getAttribute('lon')),
+        z : Number(rtetp[i].getElementsByTagName('z')[0].childNodes[0].nodeValue),
       }
       wps.push(wp);
       tp.wp = wp;
       tps.push(tp);
     } 
+
+    // console.log(JSON.stringify(tps, undefined, 2)) 
+    // console.log(JSON.stringify(wps, undefined, 2)) 
 
     return {
       'task' : {
