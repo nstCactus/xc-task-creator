@@ -14,12 +14,20 @@ function(taskBoard, Turnpoint, fullBoard, param, optimizer, taskAdvisor, taskExp
     turnpoint.setTurnpoint(turnpointInfo);
     turnpoints.push(turnpoint);
     taskAdvisor.turnpointCheck(turnpoint, turnpoints);
+    if ( turnpointInfo.type == 'start' ) {
+      taskInfo.ngates = turnpointInfo.ngates;
+      taskInfo.gateint = turnpointInfo.gateint;
+    }
     taskChange();
   }
 
   var editTurnpoint = function(info) {
     turnpoints[info.index].setTurnpoint(info);
     taskAdvisor.turnpointCheck(turnpoints[info.index], turnpoints);
+    if ( info.type == 'start' ) {
+      taskInfo.ngates = info.ngates;
+      taskInfo.gateint = info.gateint;
+    }
     taskChange();
   }
 

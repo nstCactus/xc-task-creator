@@ -145,7 +145,10 @@ function($, b, helper, param, turnpointTemplate) {
     var radius = !isNaN(parseInt($("#tp-radius-input").val())) ? parseInt($("#tp-radius-input").val()) : $("#tp-radius-input").attr('placeholder');
     var open = $("#tp-open-input").val() ? $("#tp-open-input").val() : $("#tp-open-input").attr('placeholder');
     var close = $("#tp-close-input").val() ? $("#tp-close-input").val() : $("#tp-close-input").attr('placeholder');
-    
+
+    var ngates = $("#tp-ngates-input").val() ? $("#tp-ngates-input").val() : $("#tp-ngates-input").attr('placeholder');
+    var gateint = $("#tp-gateint-input").val() ? $("#tp-gateint-input").val() : $("#tp-gateint-input").attr('placeholder');
+
     return {
       close : close,
       goalType : $("#tp-goal-type-select").val(),
@@ -154,6 +157,8 @@ function($, b, helper, param, turnpointTemplate) {
       open : open, 
       radius : radius,
       type : $("#tp-type-select").val(),
+      ngates : ngates,
+      gateint : gateint,
     } 
   }
  

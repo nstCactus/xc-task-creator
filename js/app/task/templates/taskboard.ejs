@@ -35,7 +35,7 @@
   <div id="task-times">
         <div style="padding : 3px;"> <span class="label label-default" style="background-color : #204d74 ;font-size: 1.0em; padding : 2px;">Takeoff open : <%- windows_open %></span> </div>
         <div style="padding : 3px;"> <span class="label label-default" style="background-color : #204d74 ;font-size: 1.0em; padding : 2px;">Window close : <%- windows_close %></span> </div>
-        <div style="padding : 3px;"> <span class="label label-default" style="background-color : #ac2925 ;font-size: 1.0em; padding : 2px;">Start : <%- start_open %></span> </div>
+        <div style="padding : 3px;"> <span class="label label-default" style="background-color : #ac2925 ;font-size: 1.0em; padding : 2px;">Start : <%- start_open %>  <% if ( taskInfo.ngates > 1 ) { %>	Gates:<%- taskInfo.ngates %>  +<%- taskInfo.gateint %> Minutes<% 	} %> </span> </div>
         <div style="padding : 3px;"> <span class="label label-default" style="background-color : #398439 ;font-size: 1.0em; padding : 2px;">Task deadline : <%- deadline %></span> </div>
   </div>
 </div>

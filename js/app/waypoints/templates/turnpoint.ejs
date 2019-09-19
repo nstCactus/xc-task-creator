@@ -2,7 +2,8 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div id="turnpoint-header" class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+            aria-hidden="true">&times;</span></button>
         <h4 class="modal-title" id="turnpoint-config-label">Turnpoint Configuration</h4>
       </div>
       <div id="turnpoint-content" class="modal-body">
@@ -21,7 +22,8 @@
             <div class="form-group row" id="tp-radius">
               <label for="tp-radius-input" class="col-sm-3 form-control-label">Radius</label>
               <div class="input-group col-sm-6">
-                <input id="tp-radius-input" class="form-control" name="radius" type="number" min="200" step="100" placeholder="400">
+                <input id="tp-radius-input" class="form-control" name="radius" type="number" min="200" step="100"
+                  placeholder="400">
                 <div class="input-group-addon">Meters</div>
               </div>
             </div>
@@ -44,6 +46,24 @@
                 <div class="input-group-addon">hh:mm:ss</div>
               </div>
             </div>
+
+
+            <div class="form-group row" id="tp-ngates">
+              <label for="tp-ngates-input" class="col-sm-3 form-control-label">N Gates</label>
+              <div class="input-group col-sm-6">
+                <input id="tp-ngates-input" class="form-control" name="ngates" type="number" placeholder="1">
+              </div>
+            </div>
+
+            <div class="form-group row" id="tp-gateint">
+                <label for="tp-gateint-input" class="col-sm-3 form-control-label">Gates Interval</label>
+                <div class="input-group col-sm-6">
+                  <input id="tp-gateint-input" class="form-control" name="gateint" type="text" placeholder="15">
+                  <div class="input-group-addon">Minutes</div>
+                </div>
+              </div>
+
+
             <input id="tp-index" type="hidden" name="country" value="">
           </div>
           <div class="modal-footer">

@@ -34,6 +34,8 @@ define([], function() {
         turn : turn,
         distance : 0,
         bbox : false,
+        ngates : 1,
+        gateint :  15
       }
     },
     turnpoint : {
@@ -74,7 +76,7 @@ define([], function() {
       dependencies : {
         show : {
           takeoff : ['close', 'open', 'radius'],
-          start : [ 'open', 'radius'],
+          start : [ 'open', 'radius', 'ngates', 'gateint'],
           turnpoint : [ 'radius'],
           'end-of-speed-section' : [ 'radius'],
           goal : ['close', 'goal-type', 'radius'],
@@ -82,11 +84,11 @@ define([], function() {
           cylinder : ['close', 'radius'],
         },
         hide : {
-          takeoff : ['goal-type', 'mode'],
+          takeoff : ['goal-type', 'mode', 'ngates', 'gateint'],
           start : ['close', 'goal-type', 'mode'],
-          turnpoint : ['close', 'goal-type', 'open' , 'mode'],
-          'end-of-speed-section' : ['close', 'mode', 'open', 'goal-type'],
-          goal : ['mode', 'open'],
+          turnpoint : ['close', 'goal-type', 'open' , 'mode', 'ngates', 'gateint'],
+          'end-of-speed-section' : ['close', 'mode', 'open', 'goal-type', 'ngates', 'gateint'],
+          goal : ['mode', 'open', 'ngates', 'gateint'],
           line : ['mode', 'open', 'radius'],
           cylinder : ['mode', 'open'],
         }
