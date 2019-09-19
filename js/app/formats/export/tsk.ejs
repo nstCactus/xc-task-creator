@@ -4,6 +4,8 @@
     <date><%- taskInfo.date %></date>
     <type><%- taskInfo.type %></type>
     <num><%- taskInfo.num %></num>
+    <ngates><%- taskInfo.ngates %></ngates>
+    <gateint><%- taskInfo.gateint %></gateint>
     <% for (var i = 0; i < turnpoints.length; i++) { %>
       <rtept lon="<%- turnpoints[i].y %>" lat="<%- turnpoints[i].x %>">
         <close><%- turnpoints[i].close %></close>

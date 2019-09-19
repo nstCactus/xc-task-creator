@@ -80,6 +80,7 @@ function($, b, helper, param, turnpointTemplate) {
     //handleFormDependencies(info.type, $("#turnpoint-config"));
     if (mode == 'edit') {
 
+      var ngates,gateint;
       var typeOptions = helper.formatOptions(param.turnpoint.allowed.type, info.type);
       var goalOptions = helper.formatOptions(param.turnpoint.allowed.goalType, info.goalType);
       var modeOptions = helper.formatOptions(param.turnpoint.allowed.mode, info.mode);
@@ -96,6 +97,15 @@ function($, b, helper, param, turnpointTemplate) {
       $("#add-turnpoint").hide();
       $("#edit-turnpoint").show();
       $("#delete-turnpoint").show();
+
+      var task = require('task/task'); 
+      var taskInfo = task.getTaskInfo();
+      ngates = taskInfo.ngates;
+      gateint = taskInfo.gateint;
+
+      $("#tp-ngates input").val(ngates);
+      $("#tp-gateint input").val(gateint);
+
     }
     else {
       var type,radius,open,close;
@@ -117,7 +127,7 @@ function($, b, helper, param, turnpointTemplate) {
         type = 'turnpoint';
         radius = 1000;
       }
-
+      
       var typeOptions = helper.formatOptions(param.turnpoint.allowed.type, type);
       var goalOptions = helper.formatOptions(param.turnpoint.allowed.goalType, info.goalType);
       var modeOptions = helper.formatOptions(param.turnpoint.allowed.mode, info.mode);
@@ -130,9 +140,13 @@ function($, b, helper, param, turnpointTemplate) {
       $("#tp-close input").val(close); 
       $("#tp-index").val(info.index);
 
+
+
+
       $("#add-turnpoint").show();
       $("#edit-turnpoint").hide();
       $("#delete-turnpoint").hide();
+
 
 
       handleFormDependencies(type, false);

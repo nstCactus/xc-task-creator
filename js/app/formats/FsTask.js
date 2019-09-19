@@ -64,7 +64,9 @@ define(['rejs!formats/export/FsTask'], function(exportFsTask) {
       'task' : {
         'date' : xmlDoc.getElementsByTagName('date')[0].childNodes[0].nodeValue,
         'type' : xmlDoc.getElementsByTagName('type')[0].childNodes[0].nodeValue,
-        'num' : xmlDoc.getElementsByTagName('num')[0].childNodes[0].nodeValue,
+        'num': 1,
+        'ngates' : 1,
+        'gateint' : 15,
         'turnpoints' : tps,
       },
       'waypoints' : wps,

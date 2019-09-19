@@ -27,6 +27,9 @@ define([],function () {
         date : geo.properties.date,
         type : geo.properties.type,
         turnpoints : points,
+        'num': 1,
+        'ngates' : 1,
+        'gateint' : 15,
       },
       waypoints : points,
     }

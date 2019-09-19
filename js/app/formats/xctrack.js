@@ -81,6 +81,8 @@ define(['rejs!formats/export/xctrack'], function (exportXCTrack) {
         'date': '18-8-2019',
         'type': 'race-to-goal',
         'num': 1,
+        'ngates' : 1,
+        'gateint' : 15,
         'turnpoints': tps,
       },
       'waypoints': wps,

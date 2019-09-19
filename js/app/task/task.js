@@ -14,7 +14,7 @@ function(taskBoard, Turnpoint, fullBoard, param, optimizer, taskAdvisor, taskExp
     turnpoint.setTurnpoint(turnpointInfo);
     turnpoints.push(turnpoint);
     taskAdvisor.turnpointCheck(turnpoint, turnpoints);
-    if ( turnpointInfo.type == 'start' ) {
+    if ( turnpointInfo.type == 'start' && turnpointInfo.ngates != undefined) {
       taskInfo.ngates = turnpointInfo.ngates;
       taskInfo.gateint = turnpointInfo.gateint;
     }
@@ -39,6 +39,10 @@ function(taskBoard, Turnpoint, fullBoard, param, optimizer, taskAdvisor, taskExp
   
   var getTurnpoints = function() {
     return turnpoints;
+  }
+
+  var getTaskInfo = function() {
+    return taskInfo;
   }
 
   function taskChange() {
@@ -176,5 +180,6 @@ function(taskBoard, Turnpoint, fullBoard, param, optimizer, taskAdvisor, taskExp
     'delete' : onTaskDelete,
     'drawCourse' : drawCourse,
     'setBbox' : setBbox,
+    'getTaskInfo' : getTaskInfo,
   }
 });

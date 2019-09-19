@@ -65,6 +65,8 @@ define(['rejs!formats/export/tsk'], function(exportTSK) {
         'date' : xmlDoc.getElementsByTagName('date')[0].childNodes[0].nodeValue,
         'type' : xmlDoc.getElementsByTagName('type')[0].childNodes[0].nodeValue,
         'num' : xmlDoc.getElementsByTagName('num')[0].childNodes[0].nodeValue,
+        'ngates' : xmlDoc.getElementsByTagName('ngates')[0].childNodes[0].nodeValue,
+        'gateint' : xmlDoc.getElementsByTagName('gateint')[0].childNodes[0].nodeValue,
         'turnpoints' : tps,
       },
       'waypoints' : wps,
