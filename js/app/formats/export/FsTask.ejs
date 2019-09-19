@@ -1,0 +1,9 @@
+<FsTask Dirty="1" id="1" name="TASK_<%- taskInfo.date %>" tracklog_folder="">
+  <FsTaskDefinition ss="1" es="2" goal="CIRCLE" groundstart="0" qnh_setting="1013.25">
+    <% for (var i = 0; i < turnpoints.length; i++) { %> <FsTurnpoint id="<%- turnpoints[i].id %>" lat="<%- turnpoints[i].x %>" lon="<%- turnpoints[i].y %>" altitude="<%- turnpoints[i].z %>" radius="<%- turnpoints[i].radius %>" open="2019-09-19T12:00:00+02:00" close="2019-09-19T20:00:00+02:00" />
+    <% } %>
+    <FsStartGate open="2019-09-19T12:00:00+02:00" />
+  </FsTaskDefinition>
+  <FsTaskState task_state="REGULAR" score_back_time="15" cancel_reason="" stop_time="2019-09-19T10:13:00+02:00" />
+</FsTask>
+
