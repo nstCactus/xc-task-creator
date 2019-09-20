@@ -138,19 +138,19 @@ function($, b, helper, param, turnpointTemplate) {
       close = info.close;
       if ( turnpoints.length == 0) {
         type = 'takeoff';
-        radius = 400;
-        open  = '12:00:00';
-        close = '14:00:00';
+        radius = param.turnpoint.default.takeoff_radius;
+        open  = '12:00';
+        close = '14:00';
       } else if ( turnpoints.length == 1 ) {
         type = 'start';
-        radius = 6000;
-        open = '14:00:00';
+        radius = param.turnpoint.default.start_radius;
+        open = '14:00';
       } else if ( turnpoints[turnpoints.length-1].type ==  'end-of-speed-section' ) {
         type = 'goal';
-        radius = 400;
+        radius = param.turnpoint.default.goal_radius;;
       } else {
         type = 'turnpoint';
-        radius = 1000;
+        radius = param.turnpoint.default.turnpoint_radius;;
       }
       
       var typeOptions = helper.formatOptions(param.turnpoint.allowed.type, type);

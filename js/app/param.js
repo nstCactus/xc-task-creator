@@ -50,6 +50,11 @@ define([], function() {
         mode : 'entry',
         open : 0,
         radius : 400,
+        takeoff_radius : 400,
+        start_radius : 6000,
+        turnpoint_radius : 1000,
+        ess_radius : 1000,
+        goal_radius : 400,
         type : 'takeoff',
       },
       icon : {
