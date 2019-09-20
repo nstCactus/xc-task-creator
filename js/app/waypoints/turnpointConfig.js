@@ -39,7 +39,7 @@ function($, b, helper, param, turnpointTemplate) {
     }
   });
 
-  var handleFormDependencies = function(select, html) {
+  var handleFormDependencies = function (select, html) {
     var toShow = param.turnpoint.dependencies.show[select];
     var toHide = param.turnpoint.dependencies.hide[select];
     if (toShow) {
@@ -50,18 +50,26 @@ function($, b, helper, param, turnpointTemplate) {
     }
 
 
-    var task = require('task/task'); 
+    var task = require('task/task');
 
     $("#tp-ngates input").val(task.getTaskInfo().ngates);
     $("#tp-gateint input").val(task.getTaskInfo().gateint);
 
-    if ( task.getTaskInfo().ngates <= 1) {
+    if (select == undefined  ) {
+      return;
+    }
+
+    if (select != 'start' ) {
       toggleDependencies(['gateint'], false, false);
     }
     else {
-      toggleDependencies(['gateint'], true, false);
+      if ((task.getTaskInfo().ngates == 1)) {
+        toggleDependencies(['gateint'], false, false);
+      }
+      else {
+        toggleDependencies(['gateint'], true, false);
+      }
     }
-
   }
 
   function toggleDependencies(dependencies, mode, html) {
