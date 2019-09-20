@@ -28,7 +28,17 @@ function($, b, helper, param, turnpointTemplate) {
     var select = $(this).val();
     handleFormDependencies(select, false);
   });
-  
+
+  $(document).on('change', '#tp-ngates input', function (e) {
+    var select = $(this).val();
+    if (select <= 1) {
+      toggleDependencies(['gateint'], false, false);
+    }
+    else {
+      toggleDependencies(['gateint'], true, false);
+    }
+  });
+
   var handleFormDependencies = function(select, html) {
     var toShow = param.turnpoint.dependencies.show[select];
     var toHide = param.turnpoint.dependencies.hide[select];
@@ -38,6 +48,20 @@ function($, b, helper, param, turnpointTemplate) {
     if (toHide) {
       toggleDependencies(toHide, false, html);
     }
+
+
+    var task = require('task/task'); 
+
+    $("#tp-ngates input").val(task.getTaskInfo().ngates);
+    $("#tp-gateint input").val(task.getTaskInfo().gateint);
+
+    if ( task.getTaskInfo().ngates <= 1) {
+      toggleDependencies(['gateint'], false, false);
+    }
+    else {
+      toggleDependencies(['gateint'], true, false);
+    }
+
   }
 
   function toggleDependencies(dependencies, mode, html) {
@@ -98,13 +122,6 @@ function($, b, helper, param, turnpointTemplate) {
       $("#edit-turnpoint").show();
       $("#delete-turnpoint").show();
 
-      var task = require('task/task'); 
-      var taskInfo = task.getTaskInfo();
-      ngates = taskInfo.ngates;
-      gateint = taskInfo.gateint;
-
-      $("#tp-ngates input").val(ngates);
-      $("#tp-gateint input").val(gateint);
 
     }
     else {
@@ -149,9 +166,11 @@ function($, b, helper, param, turnpointTemplate) {
 
 
 
-      handleFormDependencies(type, false);
 
     }
+
+    handleFormDependencies(type, false);
+
   }
 
   
