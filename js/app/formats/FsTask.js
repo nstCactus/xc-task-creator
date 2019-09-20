@@ -3,6 +3,14 @@
   Task importer for the task creator.
   **/
 define(['rejs!formats/export/FsTask'], function(exportFsTask) {
+  var date = new Date();
+  var day = date.getUTCDate();
+  Number.prototype.pad = function(size) {
+    var s = String(this);
+    while (s.length < (size || 2)) {s = "0" + s;}
+    return s;
+  }
+
   var check = function(text, filename) {
     if (filename.split('.').pop() == 'fstask') {
       return true;
@@ -76,7 +84,9 @@ define(['rejs!formats/export/FsTask'], function(exportFsTask) {
   var exporter = function(turnpoints, taskInfo) {
     var data = exportFsTask({
       turnpoints : turnpoints,
-      taskInfo : taskInfo
+      taskInfo : taskInfo,
+      thedate : date.getUTCFullYear() + '-' + date.getUTCMonth().pad(2) +  '-' + day.pad(2),
+      // UTCOffset = '2'.pad(2),
     });
     return new Blob([data], {'type': "text/xml"});
   }
