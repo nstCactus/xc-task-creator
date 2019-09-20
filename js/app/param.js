@@ -3,6 +3,13 @@
  * Param module for the task creator.
  */
 define([], function() {
+
+  Number.prototype.pad = function(size) {
+    var s = String(this);
+    while (s.length < (size || 2)) {s = "0" + s;}
+    return s;
+  }
+
   var date = new Date();
   var day = date.getUTCDate();
   var turn = (day % 2 == 0) ? 'right' : 'left';
@@ -28,7 +35,8 @@ define([], function() {
         fast : '#204d74',
       },
       default : {
-        date : day + '-' + date.getUTCMonth() + '-' + date.getUTCFullYear(),
+        // date : day + '-' + date.getUTCMonth() + '-' + date.getUTCFullYear(),
+        date : day.pad(2) + '-' + date.getUTCMonth().pad(2) + '-' + date.getUTCFullYear(),
         num : 0,
         type : 'race',
         turn : turn,

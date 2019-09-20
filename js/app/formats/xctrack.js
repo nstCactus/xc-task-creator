@@ -3,10 +3,19 @@
  Task importer / exporter for XCTrack
  **/
 define(['rejs!formats/export/xctrack'], function (exportXCTrack) {
+  var date = new Date();
+  var day = date.getUTCDate();
+  Number.prototype.pad = function(size) {
+    var s = String(this);
+    while (s.length < (size || 2)) {s = "0" + s;}
+    return s;
+  }
   var converter = {
     "race-to-goal": "RACE",
     "entry": "ENTER",
   }
+
+
 
   var check = function (text, filename) {
     if (filename.split('.').pop() == 'xctsk') {
@@ -78,7 +87,7 @@ define(['rejs!formats/export/xctrack'], function (exportXCTrack) {
 
     return {
       'task': {
-        'date': '18-8-2019',
+        'date': day.pad(2) + '-' + date.getUTCMonth().pad(2) + '-' + date.getUTCFullYear(),
         'type': 'race-to-goal',
         'num': 1,
         'ngates' : 1,
