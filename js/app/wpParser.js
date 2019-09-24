@@ -21,6 +21,9 @@ function($, waypoints, task, tracks, wpt, oziOld, ozi, cup, igc, geoJson, tsk, g
     }
 
     var fileInfo = format.parse(text, filename);
+    if (fileInfo == undefined) {
+      return;
+    }
     var parseInfo = {};
 
     if (fileInfo.waypoints) {

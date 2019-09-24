@@ -2,7 +2,7 @@
   @file
   Task importer for the task creator.
   **/
-define(['rejs!formats/export/FsTask'], function (exportFsTask) {
+define(['rejs!formats/export/FsTask', 'app/helper'], function (exportFsTask, helper) {
 
   var jsonDB = null;
 
@@ -23,8 +23,6 @@ define(['rejs!formats/export/FsTask'], function (exportFsTask) {
 
 
 
-
-
   var parse = function (text, filename) {
 
     var tps = [];
@@ -36,10 +34,23 @@ define(['rejs!formats/export/FsTask'], function (exportFsTask) {
 
     var tasks = jsonDB.Fs.FsCompetition.FsTasks.FsTask;
 
-    var retval = confirm('Do you really want to go there?');
+    // var format = helper.formatOptions(["0","1"]);
+    // $("#export-task-format-select").html(format);
+    // $("#task-exporter").modal();
+
+    var taskN = window.prompt("Tasks in file : " + tasks.length + "\nSelect task number or cancel to not load a task", "1");
+
+    if (isNaN(taskN)) {
+      return;
+    }
 
 
-    var jsonObj = tasks[0];
+    if (taskN <= 0 || taskN > tasks.length) {
+      return;
+    }
+
+
+    var jsonObj = tasks[taskN - 1];
 
     var ss = jsonObj.FsTaskDefinition._ss;
     var es = jsonObj.FsTaskDefinition._es;
@@ -81,8 +92,6 @@ define(['rejs!formats/export/FsTask'], function (exportFsTask) {
       }
 
 
-
-
       var wp = {
         filename: filename,
         id: FsTurnpoints[i]._id,
@@ -114,6 +123,12 @@ define(['rejs!formats/export/FsTask'], function (exportFsTask) {
   }
 
   var exporter = function (turnpoints, taskInfo) {
+
+    if (jsonDB == null) {
+      alert("No FsDB database loaded. Before exporting open one")
+      return;
+    }
+
     var times = [];
     var starts = [];
 
@@ -161,6 +176,9 @@ define(['rejs!formats/export/FsTask'], function (exportFsTask) {
       starts: starts,
       taskID: '1',
     });
+
+
+
     return new Blob([data], { 'type': "text/xml" });
   }
 

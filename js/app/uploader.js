@@ -14,6 +14,9 @@ define(['Dropzone', 'app/wpParser', 'jquery'], function(Dropzone, wpParser, $) {
 
   var parse = function(text) {
     var parseInfo = wpParser.parse(text, filename);
+    if (parseInfo == undefined) {
+      return;
+    }
     if (parseInfo.waypoints) {
       var e = document.createEvent("CustomEvent");
       e.initCustomEvent('newWaypointFile', false, false, {
