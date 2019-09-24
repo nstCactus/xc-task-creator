@@ -28,17 +28,23 @@ define(['rejs!formats/export/FsTask'], function (exportFsTask) {
     var ss = jsonObj.FsTask.FsTaskDefinition._ss;
     var es = jsonObj.FsTask.FsTaskDefinition._es;
     var stop_time = jsonObj.FsTask.FsTaskState._stop_time;
-
+    var thedate = stop_time.substring(8, 10) + "-" + stop_time.substring(5, 7) + "-" + stop_time.substring(0, 4);
     var FsTurnpoints = jsonObj.FsTask.FsTaskDefinition.FsTurnpoint;
     var FsStartGates = jsonObj.FsTask.FsTaskDefinition.FsStartGate;
+    var c = 15;
+    if ( FsStartGates.length > 1 ) {
+      var g1 = FsStartGates[1]._open.substring(11, 13) * 60 + FsStartGates[1]._open.substring(14, 16)
+      var g2 = FsStartGates[0]._open.substring(11, 13) * 60 + FsStartGates[0]._open.substring(14, 16)
+      gateint = g1 -g2;
+    }
 
     for (let i = 0; i < FsTurnpoints.length; i++) {
       var tp = {};
 
       tp['index'] = i;
       tp['radius'] = Number(FsTurnpoints[i]._radius);
-      tp['open'] = FsTurnpoints[i]._open;
-      tp['close'] = FsTurnpoints[i].close;
+      tp['open'] = FsTurnpoints[i]._open.substring(11, 16);
+      tp['close'] = FsTurnpoints[i]._close.substring(11, 16);
       tp['goalType'] = "cylinder";
       tp['mode'] = "entry";
 
@@ -80,11 +86,11 @@ define(['rejs!formats/export/FsTask'], function (exportFsTask) {
 
     return {
       'task': {
-        'date': '',
-        'type': '',
+        'date': thedate,
+        'type': 'race',
         'num': 1,
-        'ngates': 1,
-        'gateint': 15,
+        'ngates': FsStartGates.length,
+        'gateint': gateint,
         'turnpoints': tps,
       },
       'waypoints': wps,
