@@ -19,47 +19,56 @@ define(['rejs!formats/export/FsTask'], function (exportFsTask) {
   }
 
   var parse = function (text, filename) {
-    if (window.DOMParser) {
-      var parser = new DOMParser();
-      var xmlDoc = parser.parseFromString(text, "text/xml");
-    }
 
-    var rtetp = xmlDoc.getElementsByTagName("FsTurnpoint");
     var tps = [];
     var wps = [];
-    var array = ['close', 'goalType', 'index', 'mode', 'open', 'radius', 'type'];
 
-    for (var i = 0; i < rtetp.length; i++) {
+    var x2js = new X2JS();
+    var jsonObj = x2js.xml_str2json(text);
+    var ss = jsonObj.FsTask.FsTaskDefinition._ss;
+    var es = jsonObj.FsTask.FsTaskDefinition._es;
+    var stop_time = jsonObj.FsTask.FsTaskState._stop_time;
+
+    var FsTurnpoints = jsonObj.FsTask.FsTaskDefinition.FsTurnpoint;
+    var FsStartGates = jsonObj.FsTask.FsTaskDefinition.FsStartGate;
+
+    for (let i = 0; i < FsTurnpoints.length; i++) {
       var tp = {};
-      
 
+      tp['index'] = i;
+      tp['radius'] = Number(FsTurnpoints[i]._radius);
+      tp['open'] = FsTurnpoints[i]._open;
+      tp['close'] = FsTurnpoints[i].close;
+      tp['goalType'] = "cylinder";
+      tp['mode'] = "entry";
 
-      tp['close'] = rtetp[i].getElementsByTagName('close')[0].childNodes[0] ? rtetp[i].getElementsByTagName('close')[0].childNodes[0].nodeValue : 0;
-      tp['goalType'] = rtetp[i].getElementsByTagName('goalType')[0].childNodes[0] ? rtetp[i].getElementsByTagName('goalType')[0].childNodes[0].nodeValue : 0;
-      tp['index'] = Number(rtetp[i].getElementsByTagName('index')[0].childNodes[0] ? rtetp[i].getElementsByTagName('index')[0].childNodes[0].nodeValue : 0);
-      tp['mode'] = rtetp[i].getElementsByTagName('mode')[0].childNodes[0] ? rtetp[i].getElementsByTagName('mode')[0].childNodes[0].nodeValue : 0;
-      tp['open'] = rtetp[i].getElementsByTagName('open')[0].childNodes[0] ? rtetp[i].getElementsByTagName('open')[0].childNodes[0].nodeValue : 0;
-      tp['radius'] = Number(rtetp[i].getElementsByTagName('radius')[0].childNodes[0] ? rtetp[i].getElementsByTagName('radius')[0].childNodes[0].nodeValue : 0);
-      tp['type'] = rtetp[i].getElementsByTagName('type')[0].childNodes[0] ? rtetp[i].getElementsByTagName('type')[0].childNodes[0].nodeValue : 0;
-
-
-      // for (var y = 0; y < array.length; y++) {
-      //   var e = array[y]
-      //   tp[e] =  rtetp[i].getElementsByTagName(e)[0].childNodes[0] ? rtetp[i].getElementsByTagName(e)[0].childNodes[0].nodeValue : 0;
-      // }
-
-      if (tp.type == 'endofspeedsection') {
-        tp.type = 'end-of-speed-section';
+      if (i == 0) {
+        tp['type'] = 'takeoff';
+      }
+      else if (i + 1 == ss) {
+        tp['type'] = 'start';
+      }
+      else if (i + 1 == es) {
+        tp['type'] = 'end-of-speed-section';
+      }
+      else if (i + 1 == FsTurnpoints.length) {
+        tp['type'] = 'goal';
+      }
+      else {
+        tp['type'] = 'turnpoint';
       }
 
+
+
+
       var wp = {
-        filename: filename, //rtetp[i].getElementsByTagName('filename')[0].childNodes[0].nodeValue,
-        id: rtetp[i].getElementsByTagName('id')[0].childNodes[0].nodeValue,
-        name: rtetp[i].getElementsByTagName('name')[0].childNodes[0].nodeValue,
+        filename: filename,
+        id: FsTurnpoints[i]._id,
+        name: FsTurnpoints[i]._id,
         type: 1,
-        x: Number(rtetp[i].getAttribute('lat')),
-        y: Number(rtetp[i].getAttribute('lon')),
-        z: Number(rtetp[i].getElementsByTagName('z')[0].childNodes[0].nodeValue),
+        x: FsTurnpoints[i]._lat,
+        y: FsTurnpoints[i]._lon,
+        z: FsTurnpoints[i]._altitude,
       }
       wps.push(wp);
       tp.wp = wp;
@@ -71,8 +80,8 @@ define(['rejs!formats/export/FsTask'], function (exportFsTask) {
 
     return {
       'task': {
-        'date': xmlDoc.getElementsByTagName('date')[0].childNodes[0].nodeValue,
-        'type': xmlDoc.getElementsByTagName('type')[0].childNodes[0].nodeValue,
+        'date': '',
+        'type': '',
         'num': 1,
         'ngates': 1,
         'gateint': 15,
@@ -94,14 +103,14 @@ define(['rejs!formats/export/FsTask'], function (exportFsTask) {
 
     var time = {
       open: turnpoints[1].open,
-      close: turnpoints[turnpoints.length-1].close
+      close: turnpoints[turnpoints.length - 1].close
     };
     times.push(time);
 
-    for ( let i = 2 ; i< turnpoints.length  ; i++)  {
+    for (let i = 2; i < turnpoints.length; i++) {
       var time = {
         open: turnpoints[1].open,
-        close: turnpoints[turnpoints.length-1].close
+        close: turnpoints[turnpoints.length - 1].close
       };
       times.push(time);
     }
@@ -109,16 +118,16 @@ define(['rejs!formats/export/FsTask'], function (exportFsTask) {
     starts.push([turnpoints[1].open]);
     let h = Number(turnpoints[1].open.split(':')[0]);
     let m = Number(turnpoints[1].open.split(':')[1]);
-    for (let i= 1; i<taskInfo.ngates; i++ ){
+    for (let i = 1; i < taskInfo.ngates; i++) {
       m += Number(taskInfo.gateint);
-      if (m>=60) {
+      if (m >= 60) {
         m -= 60;
         h++;
       }
       starts.push(h.pad(2) + ":" + m.pad(2))
     }
-    
-    var theDate = date.getUTCFullYear() + '-' + (date.getUTCMonth()+ 1).pad(2)  + '-' + day.pad(2)
+
+    var theDate = date.getUTCFullYear() + '-' + (date.getUTCMonth() + 1).pad(2) + '-' + day.pad(2)
 
     var data = exportFsTask({
       turnpoints: turnpoints,
