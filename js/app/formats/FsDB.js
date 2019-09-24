@@ -3,6 +3,9 @@
   Task importer for the task creator.
   **/
 define(['rejs!formats/export/FsTask'], function (exportFsTask) {
+
+  var jsonDB = null;
+
   var date = new Date();
   var day = date.getUTCDate();
   Number.prototype.pad = function (size) {
@@ -26,18 +29,24 @@ define(['rejs!formats/export/FsTask'], function (exportFsTask) {
 
     var tps = [];
     var wps = [];
+    var gateint;
 
     var x2js = new X2JS();
-    var jsonObj = x2js.xml_str2json(text);
+    jsonDB = x2js.xml_str2json(text);
+
+    var tasks = jsonDB.Fs.FsCompetition.FsTasks.FsTask;
+
+    var retval = confirm('Do you really want to go there?');
 
 
+    var jsonObj = tasks[0];
 
-    var ss = jsonObj.FsTask.FsTaskDefinition._ss;
-    var es = jsonObj.FsTask.FsTaskDefinition._es;
-    var stop_time = jsonObj.FsTask.FsTaskState._stop_time;
+    var ss = jsonObj.FsTaskDefinition._ss;
+    var es = jsonObj.FsTaskDefinition._es;
+    var stop_time = jsonObj.FsTaskState._stop_time;
     var thedate = stop_time.substring(8, 10) + "-" + stop_time.substring(5, 7) + "-" + stop_time.substring(0, 4);
-    var FsTurnpoints = jsonObj.FsTask.FsTaskDefinition.FsTurnpoint;
-    var FsStartGates = jsonObj.FsTask.FsTaskDefinition.FsStartGate;
+    var FsTurnpoints = jsonObj.FsTaskDefinition.FsTurnpoint;
+    var FsStartGates = jsonObj.FsTaskDefinition.FsStartGate;
     var c = 15;
     if (FsStartGates.length > 1) {
       var g1 = FsStartGates[1]._open.substring(11, 13) * 60 + FsStartGates[1]._open.substring(14, 16)
