@@ -24,13 +24,14 @@ define(['rejs!formats/export/FsTask'], function (exportFsTask) {
       var xmlDoc = parser.parseFromString(text, "text/xml");
     }
 
-    var rtetp = xmlDoc.getElementsByTagName("rtept");
+    var rtetp = xmlDoc.getElementsByTagName("FsTurnpoint");
     var tps = [];
     var wps = [];
     var array = ['close', 'goalType', 'index', 'mode', 'open', 'radius', 'type'];
 
     for (var i = 0; i < rtetp.length; i++) {
       var tp = {};
+      
 
 
       tp['close'] = rtetp[i].getElementsByTagName('close')[0].childNodes[0] ? rtetp[i].getElementsByTagName('close')[0].childNodes[0].nodeValue : 0;
