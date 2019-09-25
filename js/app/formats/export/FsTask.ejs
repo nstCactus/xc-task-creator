@@ -1,6 +1,6 @@
       <FsTask Dirty="1" id="<%- taskID %>" name="Task<%- taskID %>" tracklog_folder="">
         <%- FsScoreFormula %>
-        <FsTaskDefinition ss="2" es="<%- turnpoints.length-1 %>" goal="CIRCLE" groundstart="0" qnh_setting="1013.25">
+        <FsTaskDefinition ss="2" es="<%- es %>" goal="CIRCLE" groundstart="0" qnh_setting="1013.25">
           <% for (var i = 0; i < turnpoints.length; i++) { %><FsTurnpoint id="<%- turnpoints[i].id %>" lat="<%- turnpoints[i].x %>" lon="<%- turnpoints[i].y %>" altitude="<%- turnpoints[i].z %>" radius="<%- turnpoints[i].radius %>" open="<%- thedate %>T<%- times[i].open %>:00<%- UTCOffset %>:00" close="<%- thedate %>T<%- times[i].close %>:00<%- UTCOffset %>:00" />
           <% } %> 
           <% for (var i = 0; i < starts.length; i++) { %><FsStartGate open="<%- thedate %>T<%- starts[i] %>:00<%- UTCOffset %>:00" /> 

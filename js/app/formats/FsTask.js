@@ -5,7 +5,7 @@
 define(['rejs!formats/export/FsTask'], function (exportFsTask) {
   var date = new Date();
   var day = date.getUTCDate();
-  
+
   Number.prototype.pad = function (size) {
     var s = String(this);
     while (s.length < (size || 2)) { s = "0" + s; }
@@ -101,7 +101,7 @@ define(['rejs!formats/export/FsTask'], function (exportFsTask) {
     var x2js = new X2JS();
     var jsonObj = x2js.xml_str2json(text);
 
-    return parseTask(jsonObj,filename);
+    return parseTask(jsonObj, filename);
 
   }
 
@@ -121,7 +121,11 @@ define(['rejs!formats/export/FsTask'], function (exportFsTask) {
     };
     times.push(time);
 
+    var es = turnpoints.length;
     for (let i = 2; i < turnpoints.length; i++) {
+      if (turnpoints[i].type == 'end-of-speed-section') {
+        es = i+1;
+      }
       var time = {
         open: turnpoints[1].open,
         close: turnpoints[turnpoints.length - 1].close
@@ -152,6 +156,8 @@ define(['rejs!formats/export/FsTask'], function (exportFsTask) {
       FsScoreFormula: '',
       starts: starts,
       taskID: '1',
+      ss: 2,
+      es: es,
     });
     return new Blob([data], { 'type': "text/xml" });
   }

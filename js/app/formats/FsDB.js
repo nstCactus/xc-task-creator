@@ -2,7 +2,7 @@
   @file
   Task importer for the task creator.
   **/
-define(['rejs!formats/export/FsTask', 'app/helper', 'jgrowl'], function (exportFsTask, helper , jgrowl) {
+define(['rejs!formats/export/FsTask', 'app/helper', 'jgrowl'], function (exportFsTask, helper, jgrowl) {
 
   Number.prototype.pad = function (size) {
     var s = String(this);
@@ -40,17 +40,17 @@ define(['rejs!formats/export/FsTask', 'app/helper', 'jgrowl'], function (exportF
     jsonDB = x2js.xml_str2json(text);
 
     $.jGrowl(' Competirion DB  succesfully imported from file : ' + filename + ' !!', {
-      header : 'success',
-      theme : 'success',
-      sticky : false,
-      position : 'top-left',
+      header: 'success',
+      theme: 'success',
+      sticky: false,
+      position: 'top-left',
     });
 
     var tasks = jsonDB.Fs.FsCompetition.FsTasks.FsTask;
 
     var taskN = window.prompt("Tasks in file : " + tasks.length + "\nSelect task number or cancel not to load a task and just load the competition DB", "1");
 
-    if ( isNaN(taskN) || taskN <= 0 || taskN > tasks.length) {
+    if (isNaN(taskN) || taskN <= 0 || taskN > tasks.length) {
       return;
     }
 
@@ -126,28 +126,27 @@ define(['rejs!formats/export/FsTask', 'app/helper', 'jgrowl'], function (exportF
   }
 
 
-  var prettifyXml = function(sourceXml)
-  {
-      var xmlDoc = new DOMParser().parseFromString(sourceXml, 'application/xml');
-      var xsltDoc = new DOMParser().parseFromString([
-          // describes how we want to modify the XML - indent everything
-          '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
-          '  <xsl:strip-space elements="*"/>',
-          '  <xsl:template match="para[content-style][not(text())]">', // change to just text() to strip space in text nodes
-          '    <xsl:value-of select="normalize-space(.)"/>',
-          '  </xsl:template>',
-          '  <xsl:template match="node()|@*">',
-          '    <xsl:copy><xsl:apply-templates select="node()|@*"/></xsl:copy>',
-          '  </xsl:template>',
-          '  <xsl:output indent="yes"/>',
-          '</xsl:stylesheet>',
-      ].join('\n'), 'application/xml');
-  
-      var xsltProcessor = new XSLTProcessor();    
-      xsltProcessor.importStylesheet(xsltDoc);
-      var resultDoc = xsltProcessor.transformToDocument(xmlDoc);
-      var resultXml = new XMLSerializer().serializeToString(resultDoc);
-      return resultXml;
+  var prettifyXml = function (sourceXml) {
+    var xmlDoc = new DOMParser().parseFromString(sourceXml, 'application/xml');
+    var xsltDoc = new DOMParser().parseFromString([
+      // describes how we want to modify the XML - indent everything
+      '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
+      '  <xsl:strip-space elements="*"/>',
+      '  <xsl:template match="para[content-style][not(text())]">', // change to just text() to strip space in text nodes
+      '    <xsl:value-of select="normalize-space(.)"/>',
+      '  </xsl:template>',
+      '  <xsl:template match="node()|@*">',
+      '    <xsl:copy><xsl:apply-templates select="node()|@*"/></xsl:copy>',
+      '  </xsl:template>',
+      '  <xsl:output indent="yes"/>',
+      '</xsl:stylesheet>',
+    ].join('\n'), 'application/xml');
+
+    var xsltProcessor = new XSLTProcessor();
+    xsltProcessor.importStylesheet(xsltDoc);
+    var resultDoc = xsltProcessor.transformToDocument(xmlDoc);
+    var resultXml = new XMLSerializer().serializeToString(resultDoc);
+    return resultXml;
   };
 
   var exporter = function (turnpoints, taskInfo) {
@@ -158,31 +157,38 @@ define(['rejs!formats/export/FsTask', 'app/helper', 'jgrowl'], function (exportF
     }
 
     var UTCOffset = Number(jsonDB.Fs.FsCompetition._utc_offset)
-    if ( UTCOffset > 0 ) {
+    if (UTCOffset > 0) {
       UTCOffset = "+" + UTCOffset.pad(2);
     }
     else {
       UTCOffset = "+" + UTCOffset.pad(2);
     }
-    var FsScoreFormula = x2js.json2xml_str( {FsScoreFormula: jsonDB.Fs.FsCompetition.FsScoreFormula} );
-    var taskID = jsonDB.Fs.FsCompetition.FsTasks.FsTask.length+1;
+    var FsScoreFormula = x2js.json2xml_str({ FsScoreFormula: jsonDB.Fs.FsCompetition.FsScoreFormula });
+    var taskID = jsonDB.Fs.FsCompetition.FsTasks.FsTask.length + 1;
 
     var times = [];
     var starts = [];
 
+    // turnpoints[0] is assumend as Takeoff
     var time = {
       open: turnpoints[0].open,
       close: turnpoints[0].close
     };
     times.push(time);
 
+    // turnpoints[0] is assumend as Start
     var time = {
       open: turnpoints[1].open,
       close: turnpoints[turnpoints.length - 1].close
     };
     times.push(time);
 
+    var es = turnpoints.length;
+
     for (let i = 2; i < turnpoints.length; i++) {
+      if (turnpoints[i].type == 'end-of-speed-section') {
+        es = i+1;
+      }
       var time = {
         open: turnpoints[1].open,
         close: turnpoints[turnpoints.length - 1].close
@@ -213,13 +219,15 @@ define(['rejs!formats/export/FsTask', 'app/helper', 'jgrowl'], function (exportF
       FsScoreFormula: FsScoreFormula,
       starts: starts,
       taskID: taskID,
+      ss: 2,
+      es: es,
     });
 
-    var jsonTask =  x2js.xml_str2json(data);
+    var jsonTask = x2js.xml_str2json(data);
     var tasks = jsonDB.Fs.FsCompetition.FsTasks.FsTask;
     tasks.push(jsonTask.FsTask)
 
-    var xmlAsStr = prettifyXml(x2js.json2xml_str( jsonDB ));
+    var xmlAsStr = prettifyXml(x2js.json2xml_str(jsonDB));
     return new Blob([xmlAsStr], { 'type': "text/xml" });
   }
 
