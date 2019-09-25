@@ -12,12 +12,11 @@ define(["app/param"], function (param) {
 
 
   let optimizeTask = function (google, map, turnpoints) {
-    var headings = [];
     fastWaypoints = [];
     fastDistance = 0;
     distances = [];
 
-    checkStartDirection(google,turnpoints);
+    checkStartDirection(google, turnpoints);
 
     // Pushing center of first turnpoint as a fastWaypoint. 
     if (turnpoints.length > 0) {
@@ -57,18 +56,18 @@ define(["app/param"], function (param) {
 
       // Detecting flat lines.
       //if (one.equals(two.latLng) && two.latLng.equals(three.latLng) && one.equals(three.latLng)) {
-        // Extreme case. Depend where to go next or any heading can be accepted.
-        //fastWaypoints.push(three.latLng);
-        //incrementDistance(google, fastWaypoints);
+      // Extreme case. Depend where to go next or any heading can be accepted.
+      //fastWaypoints.push(three.latLng);
+      //incrementDistance(google, fastWaypoints);
       //}
 
-      if ( two.latLng.equals(three.latLng  )) {
+      if (two.latLng.equals(three.latLng)) {
         //One and two are the same or two and three are the same. Take heading from three to one.
-          heading = google.maps.geometry.spherical.computeHeading(three.latLng, one);
-          var fastPoint = google.maps.geometry.spherical.computeOffset(two.latLng, two.radius, heading);
-          fastWaypoints.push(fastPoint);
-          //console.log("fastWaypoints alligbned");
-          continue;
+        heading = google.maps.geometry.spherical.computeHeading(three.latLng, one);
+        var fastPoint = google.maps.geometry.spherical.computeOffset(two.latLng, two.radius, heading);
+        fastWaypoints.push(fastPoint);
+        //console.log("fastWaypoints alligbned");
+        continue;
         //console.log(heading);
       }
       else if (one.equals(three.latLng)) {
@@ -80,11 +79,11 @@ define(["app/param"], function (param) {
         continue
         //console.log(heading);
       }
-      else if ( two.type == 'start'  ) {
+      else if (two.type == 'start') {
         heading = google.maps.geometry.spherical.computeHeading(three.latLng, one);
         //var fastPoint = google.maps.geometry.spherical.computeOffset(three.latLng, two.radius, heading);
-        var fastPoint = calcStartIntersection(google, three,  two , heading )
-        if ( fastPoint != null ) {
+        var fastPoint = calcStartIntersection(google, three, two, heading)
+        if (fastPoint != null) {
           fastWaypoints.push(fastPoint);
           //console.log("fastWaypoints alligbned");
           continue;
@@ -152,7 +151,7 @@ define(["app/param"], function (param) {
 
     if (fastTrack) fastTrack.setMap(null);
     fastTrack = new google.maps.Polyline({
-      path: fastWaypoints.slice(0,-1),
+      path: fastWaypoints.slice(0, -1),
       geodesic: true,
       strokeColor: param.task.courseColor.fast,
       strokeOpacity: 1.0,
@@ -171,11 +170,11 @@ define(["app/param"], function (param) {
       new google.maps.Point(0, 0),
       new google.maps.Point(16, 16));
 
-    for ( var i=0; i<100;i++) {
+    for (var i = 0; i < 100; i++) {
       if (optimizedMarkers[i]) optimizedMarkers[i].setMap(null);
     }
 
-    for (var i=0; i<fastWaypoints.length-1;i++) {
+    for (var i = 0; i < fastWaypoints.length - 1; i++) {
       optimizedMarkers[i] = new google.maps.Marker({
         position: fastWaypoints[i],
         map: map,
@@ -183,8 +182,8 @@ define(["app/param"], function (param) {
       });
     }
 
-  
-    recalcDistance(google, fastWaypoints);
+
+    recalcDistance(google, fastWaypoints, turnpoints[0].radius);
 
     // if ( fastWaypoints.length == 7 ) {
     //   console.log(JSON.stringify(fastWaypoints, undefined, 2)) 
@@ -197,47 +196,41 @@ define(["app/param"], function (param) {
     }
   }
 
-
-
-
-
-
-  function calcStartIntersection(google, three,  two , heading ) {
+  function calcStartIntersection(google, three, two, heading) {
     var dist = three.radius;
     var fastPoint;
     var n = 0;
     while (n < 10000) {
       n++;
       fastPoint = google.maps.geometry.spherical.computeOffset(three.latLng, dist, heading);
-      var distance = google.maps.geometry.spherical.computeDistanceBetween(two.latLng,fastPoint);
-      if ( two.mode == "entry" && distance >= two.radius) {
+      var distance = google.maps.geometry.spherical.computeDistanceBetween(two.latLng, fastPoint);
+      if (two.mode == "entry" && distance >= two.radius) {
         return fastPoint;
       }
-      if ( two.mode == "exit" && distance <= two.radius) {
+      if (two.mode == "exit" && distance <= two.radius) {
         return fastPoint;
-      } 
-      dist +=10;
+      }
+      dist += 10;
     }
-     
+
     return null;
 
   }
 
-
-  function checkStartDirection(google ,turnpoints) {
+  function checkStartDirection(google, turnpoints) {
 
     var startIndex = -1;
-    for (var i=0; i < turnpoints.length; i++ ) {
-      if ( turnpoints[i].type == "start" ) {
+    for (var i = 0; i < turnpoints.length; i++) {
+      if (turnpoints[i].type == "start") {
         startIndex = i;
         break;
       }
     }
-    if ( startIndex == -1 || startIndex == turnpoints.length-1) {
+    if (startIndex == -1 || startIndex == turnpoints.length - 1) {
       return;
     }
-    var distance = google.maps.geometry.spherical.computeDistanceBetween(turnpoints[startIndex].latLng,turnpoints[startIndex+1].latLng);
-    if ( distance > turnpoints[startIndex].radius ) {
+    var distance = google.maps.geometry.spherical.computeDistanceBetween(turnpoints[startIndex].latLng, turnpoints[startIndex + 1].latLng);
+    if (distance > turnpoints[startIndex].radius) {
       turnpoints[startIndex].mode = 'exit';
     }
     else {
@@ -401,7 +394,7 @@ define(["app/param"], function (param) {
 
     if (fastTrack) fastTrack.setMap(null);
     fastTrack = new google.maps.Polyline({
-      path: fastWaypoints.slice(0,-1),
+      path: fastWaypoints.slice(0, -1),
       geodesic: true,
       strokeColor: param.task.courseColor.fast,
       strokeOpacity: 1.0,
@@ -414,7 +407,7 @@ define(["app/param"], function (param) {
       map: map,
     });
 
-    recalcDistance(google, fastWaypoints);
+    recalcDistance(google, fastWaypoints, turnpoints[0].radius);
 
     return {
       distance: fastDistance,
@@ -650,12 +643,15 @@ define(["app/param"], function (param) {
 
 
 
-  function recalcDistance(google, waypoints) {
+  function recalcDistance(google, waypoints, radius) {
     fastDistance = 0;
     distances = [];
     if (waypoints.length > 1) {
-      for (var  i=0; i< waypoints.length-2 ;i++) {
-        var distance = google.maps.geometry.spherical.computeDistanceBetween(waypoints[i],waypoints[i+1]);
+      for (var i = 0; i < waypoints.length - 2; i++) {
+        var distance = google.maps.geometry.spherical.computeDistanceBetween(waypoints[i], waypoints[i + 1]);
+        if (i == 0) {
+          distance -= radius ;
+        }
         fastDistance += distance;
         distances.push(Math.round(distance / 10) / 100);
 
