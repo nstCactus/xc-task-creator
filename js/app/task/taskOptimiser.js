@@ -183,7 +183,7 @@ define(["app/param"], function (param) {
     }
 
 
-    recalcDistance(google, fastWaypoints, turnpoints[0].radius);
+    recalcDistance(google, fastWaypoints, turnpoints[0] != undefined ? turnpoints[0].radius : 0 );
 
     // if ( fastWaypoints.length == 7 ) {
     //   console.log(JSON.stringify(fastWaypoints, undefined, 2)) 
@@ -407,7 +407,7 @@ define(["app/param"], function (param) {
       map: map,
     });
 
-    recalcDistance(google, fastWaypoints, turnpoints[0].radius);
+    recalcDistance(google, fastWaypoints, turnpoints[0] != undefined ? turnpoints[0].radius : 0 );
 
     return {
       distance: fastDistance,
