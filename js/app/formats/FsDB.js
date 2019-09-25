@@ -152,7 +152,7 @@ define(['rejs!formats/export/FsTask', 'app/helper', 'jgrowl'], function (exportF
   var exporter = function (turnpoints, taskInfo) {
 
     if (jsonDB == null) {
-      alert("No FsDB database loaded. Before exporting please open one\nThe task will be added to that database")
+      alert("No FsDB database loaded. Before exporting please open one (without loading a task)\nThe task will be added to that database")
       return;
     }
 
@@ -227,7 +227,7 @@ define(['rejs!formats/export/FsTask', 'app/helper', 'jgrowl'], function (exportF
     var tasks = jsonDB.Fs.FsCompetition.FsTasks.FsTask;
     tasks.push(jsonTask.FsTask)
 
-    var xmlAsStr = prettifyXml(x2js.json2xml_str(jsonDB));
+    var xmlAsStr = (x2js.json2xml_str(jsonDB));
     return new Blob([xmlAsStr], { 'type': "text/xml" });
   }
 
