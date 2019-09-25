@@ -2,7 +2,15 @@
   @file
   Task importer for the task creator.
   **/
-define(['rejs!formats/export/FsTask', 'app/helper'], function (exportFsTask, helper) {
+define(['rejs!formats/export/FsTask', 'app/helper', 'jgrowl'], function (exportFsTask, helper , jgrowl) {
+
+  Number.prototype.pad = function (size) {
+    var s = String(this);
+    while (s.length < (size || 2)) { s = "0" + s; }
+    return s;
+  }
+
+  var x2js = new X2JS();
 
   var jsonDB = null;
 
@@ -29,26 +37,22 @@ define(['rejs!formats/export/FsTask', 'app/helper'], function (exportFsTask, hel
     var wps = [];
     var gateint;
 
-    var x2js = new X2JS();
     jsonDB = x2js.xml_str2json(text);
+
+    $.jGrowl(' Competirion DB  succesfully imported from file : ' + filename + ' !!', {
+      header : 'success',
+      theme : 'success',
+      sticky : false,
+      position : 'top-left',
+    });
 
     var tasks = jsonDB.Fs.FsCompetition.FsTasks.FsTask;
 
-    // var format = helper.formatOptions(["0","1"]);
-    // $("#export-task-format-select").html(format);
-    // $("#task-exporter").modal();
+    var taskN = window.prompt("Tasks in file : " + tasks.length + "\nSelect task number or cancel not to load a task and just load the competition DB", "1");
 
-    var taskN = window.prompt("Tasks in file : " + tasks.length + "\nSelect task number or cancel to not load a task", "1");
-
-    if (isNaN(taskN)) {
+    if ( isNaN(taskN) || taskN <= 0 || taskN > tasks.length) {
       return;
     }
-
-
-    if (taskN <= 0 || taskN > tasks.length) {
-      return;
-    }
-
 
     var jsonObj = tasks[taskN - 1];
 
@@ -91,7 +95,6 @@ define(['rejs!formats/export/FsTask', 'app/helper'], function (exportFsTask, hel
         tp['type'] = 'turnpoint';
       }
 
-
       var wp = {
         filename: filename,
         id: FsTurnpoints[i]._id,
@@ -125,9 +128,19 @@ define(['rejs!formats/export/FsTask', 'app/helper'], function (exportFsTask, hel
   var exporter = function (turnpoints, taskInfo) {
 
     if (jsonDB == null) {
-      alert("No FsDB database loaded. Before exporting open one")
+      alert("No FsDB database loaded. Before exporting please open one")
       return;
     }
+
+    var UTCOffset = Number(jsonDB.Fs.FsCompetition._utc_offset)
+    if ( UTCOffset > 0 ) {
+      UTCOffset = "+" + UTCOffset.pad(2);
+    }
+    else {
+      UTCOffset = "+" + UTCOffset.pad(2);
+    }
+    var FsScoreFormula = x2js.json2xml_str( {FsScoreFormula: jsonDB.Fs.FsCompetition.FsScoreFormula} );
+    var taskID = jsonDB.Fs.FsCompetition.FsTasks.FsTask.length+1;
 
     var times = [];
     var starts = [];
@@ -170,16 +183,19 @@ define(['rejs!formats/export/FsTask', 'app/helper'], function (exportFsTask, hel
       turnpoints: turnpoints,
       taskInfo: taskInfo,
       thedate: theDate,
-      UTCOffset: '+02',
+      UTCOffset: UTCOffset,
       times: times,
-      FsScoreFormula: '',
+      FsScoreFormula: FsScoreFormula,
       starts: starts,
-      taskID: '1',
+      taskID: taskID,
     });
 
+    var jsonTask =  x2js.xml_str2json(data);
+    var tasks = jsonDB.Fs.FsCompetition.FsTasks.FsTask;
+    tasks.push(jsonTask.FsTask)
 
-
-    return new Blob([data], { 'type': "text/xml" });
+    var xmlAsStr = x2js.json2xml_str( jsonDB );
+    return new Blob([xmlAsStr], { 'type': "text/xml" });
   }
 
   return {

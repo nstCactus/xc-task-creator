@@ -5,6 +5,7 @@
 define(['rejs!formats/export/FsTask'], function (exportFsTask) {
   var date = new Date();
   var day = date.getUTCDate();
+  
   Number.prototype.pad = function (size) {
     var s = String(this);
     while (s.length < (size || 2)) { s = "0" + s; }

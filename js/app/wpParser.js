@@ -14,7 +14,7 @@ function($, waypoints, task, tracks, wpt, oziOld, ozi, cup, igc, geoJson, tsk, g
       $.jGrowl(result.message, {
         header : result.state,
         theme : result.state,
-        sticky : true,
+        sticky : false,
         position : 'top-left',
       });
       return;
@@ -43,14 +43,14 @@ function($, waypoints, task, tracks, wpt, oziOld, ozi, cup, igc, geoJson, tsk, g
         $.jGrowl(l + ' waypoints succesfully imported from file : ' + filename + ' !!', {
           header : 'success',
           theme : 'success',
-          sticky : true,
+          sticky : false,
           position : 'top-left',
         });
       } else {
         $.jGrowl('No waypoint were found from file  : ' + filename + ' !!', {
           header : 'warning',
           theme : 'warning',
-          sticky : true,
+          sticky : false,
           position : 'top-left',
         }); 
       }
