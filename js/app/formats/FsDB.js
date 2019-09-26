@@ -210,9 +210,9 @@ define(['rejs!formats/export/FsTask', 'app/helper', 'jgrowl', 'xml-formatter' ],
 
     var format = require('xml-formatter');
     var options = {indentation: '  '};
-    var formattedXml = format(xmlAsStr, options);
+    var formattedXml = format(xmlAsStr, options).replace(/\n/g, "\r\n");;
 
-    return new Blob([formattedXml], { 'type': "text/xml" });
+    return new Blob([new Uint8Array([0xEF, 0xBB, 0xBF]),formattedXml], { 'type': "text/xml" });
   }
 
   return {
