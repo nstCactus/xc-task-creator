@@ -2,7 +2,7 @@
   @file
   Task importer for the task creator.
   **/
-define(['rejs!formats/export/FsTask', 'app/helper', 'jgrowl'], function (exportFsTask, helper, jgrowl) {
+define(['rejs!formats/export/FsTask', 'app/helper', 'jgrowl', 'xml-formatter' ], function (exportFsTask, helper, jgrowl, xml_formatter) {
 
   Number.prototype.pad = function (size) {
     var s = String(this);
@@ -126,29 +126,6 @@ define(['rejs!formats/export/FsTask', 'app/helper', 'jgrowl'], function (exportF
   }
 
 
-  var prettifyXml = function (sourceXml) {
-    var xmlDoc = new DOMParser().parseFromString(sourceXml, 'application/xml');
-    var xsltDoc = new DOMParser().parseFromString([
-      // describes how we want to modify the XML - indent everything
-      '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
-      '  <xsl:strip-space elements="*"/>',
-      '  <xsl:template match="para[content-style][not(text())]">', // change to just text() to strip space in text nodes
-      '    <xsl:value-of select="normalize-space(.)"/>',
-      '  </xsl:template>',
-      '  <xsl:template match="node()|@*">',
-      '    <xsl:copy><xsl:apply-templates select="node()|@*"/></xsl:copy>',
-      '  </xsl:template>',
-      '  <xsl:output indent="yes"/>',
-      '</xsl:stylesheet>',
-    ].join('\n'), 'application/xml');
-
-    var xsltProcessor = new XSLTProcessor();
-    xsltProcessor.importStylesheet(xsltDoc);
-    var resultDoc = xsltProcessor.transformToDocument(xmlDoc);
-    var resultXml = new XMLSerializer().serializeToString(resultDoc);
-    return resultXml;
-  };
-
   var exporter = function (turnpoints, taskInfo) {
 
     if (jsonDB == null) {
@@ -227,8 +204,15 @@ define(['rejs!formats/export/FsTask', 'app/helper', 'jgrowl'], function (exportF
     var tasks = jsonDB.Fs.FsCompetition.FsTasks.FsTask;
     tasks.push(jsonTask.FsTask)
 
-    var xmlAsStr = (x2js.json2xml_str(jsonDB));
-    return new Blob([xmlAsStr], { 'type': "text/xml" });
+
+    var xmlAsStr = '<?xml version="1.0" encoding="utf-8"?>' + (x2js.json2xml_str(jsonDB));
+
+
+    var format = require('xml-formatter');
+    var options = {indentation: '  '};
+    var formattedXml = format(xmlAsStr, options);
+
+    return new Blob([formattedXml], { 'type': "text/xml" });
   }
 
   return {

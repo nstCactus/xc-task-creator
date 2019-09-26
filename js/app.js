@@ -31,6 +31,7 @@ requirejs.config({
     tracks : "../js/app/tracks",
     waypoints : "../js/app/waypoints",
     jgrowl : "jGrowl/jquery.jgrowl.min",
+    'xml-formatter': 'xml-formatter/xml-formatter'
   },
   shim : {
     bootstrap : {
