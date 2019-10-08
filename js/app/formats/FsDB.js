@@ -2,7 +2,7 @@
   @file
   Task importer for the task creator.
   **/
-define(['rejs!formats/export/FsTask', 'app/helper', 'jgrowl', 'xml-formatter' ], function (exportFsTask, helper, jgrowl, xml_formatter) {
+define(['rejs!formats/export/FsTask', 'app/helper', 'jgrowl', 'xml-formatter'], function (exportFsTask, helper, jgrowl, xml_formatter) {
 
   Number.prototype.pad = function (size) {
     var s = String(this);
@@ -35,7 +35,8 @@ define(['rejs!formats/export/FsTask', 'app/helper', 'jgrowl', 'xml-formatter' ],
 
     var tps = [];
     var wps = [];
-    var gateint;
+    var gateint = 15;
+    var ngates = 1 ;
 
     jsonDB = x2js.xml_str2json(text);
 
@@ -62,8 +63,12 @@ define(['rejs!formats/export/FsTask', 'app/helper', 'jgrowl', 'xml-formatter' ],
     var thedate = stop_time.substring(8, 10) + "-" + stop_time.substring(5, 7) + "-" + stop_time.substring(0, 4);
     var FsTurnpoints = jsonObj.FsTaskDefinition.FsTurnpoint;
     var FsStartGates = jsonObj.FsTaskDefinition.FsStartGate;
-    var c = 15;
-    if (FsStartGates.length > 1) {
+
+    if ( Array.isArray(FsStartGates) ) {
+      ngates = FsStartGates.length;
+    }
+    
+    if ( ngates > 1 && FsStartGates.length > 1) {
       var g1 = FsStartGates[1]._open.substring(11, 13) * 60 + FsStartGates[1]._open.substring(14, 16)
       var g2 = FsStartGates[0]._open.substring(11, 13) * 60 + FsStartGates[0]._open.substring(14, 16)
       gateint = g1 - g2;
@@ -117,7 +122,7 @@ define(['rejs!formats/export/FsTask', 'app/helper', 'jgrowl', 'xml-formatter' ],
         'date': thedate,
         'type': 'race',
         'num': 1,
-        'ngates': FsStartGates.length,
+        'ngates': ngates,
         'gateint': gateint,
         'turnpoints': tps,
       },
@@ -164,7 +169,7 @@ define(['rejs!formats/export/FsTask', 'app/helper', 'jgrowl', 'xml-formatter' ],
 
     for (let i = 2; i < turnpoints.length; i++) {
       if (turnpoints[i].type == 'end-of-speed-section') {
-        es = i+1;
+        es = i + 1;
       }
       var time = {
         open: turnpoints[1].open,
@@ -209,10 +214,10 @@ define(['rejs!formats/export/FsTask', 'app/helper', 'jgrowl', 'xml-formatter' ],
 
 
     var format = require('xml-formatter');
-    var options = {indentation: '  '};
+    var options = { indentation: '  ' };
     var formattedXml = format(xmlAsStr, options).replace(/\n/g, "\r\n");;
 
-    return new Blob([new Uint8Array([0xEF, 0xBB, 0xBF]),formattedXml], { 'type': "text/xml" });
+    return new Blob([new Uint8Array([0xEF, 0xBB, 0xBF]), formattedXml], { 'type': "text/xml" });
   }
 
   return {
