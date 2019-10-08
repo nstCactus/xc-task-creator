@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lk-task type="Race">
+  <options auto-advance="Auto">
+    <time-gate number="<%- taskInfo.ngates %>" open-time="<%- turnpoints[1].open %>"  close-time="<%- turnpoints[1].close %>" interval-time="<%- taskInfo.gateint %>" />
+    <rules>
+      <finish fai-height="true" min-height="0" />
+      <start max-height="0" max-height-margin="0" max-speed="69444" max-speed-margin="13889" height-ref="AGL" />
+    </rules>
+  </options>
+
+  <taskpoints>
+    <% for (var i = 1; i < turnpoints.length; i++) {
+      var type = 'circle';
+      if ( turnpoints[i].type == 'end-of-speed-section' ) {
+        type = 'ess_circle';
+      }  %>
+      <point idx="<%- i-1 %>" name="<%- turnpoints[i].id %>" type="<%- type %>" radius="<%- turnpoints[i].radius %>" Exit="false" />
+    <% } %>
+  </taskpoints>
+
+  <waypoints>
+    <% for (var i = 1; i < turnpoints.length; i++) { %>
+    <point name="<%- turnpoints[i].id %>" latitude="<%- turnpoints[i].x%>" longitude="<%- turnpoints[i].y%>" altitude="<%- turnpoints[i].z%>" flags="2" code="<%- turnpoints[i].name %>" comment="" format="2" style="1" />
+    <% } %>
+  </waypoints>
+
+</lk-task>
