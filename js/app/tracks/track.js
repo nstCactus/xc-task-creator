@@ -2,14 +2,16 @@
  * @file
  * Track module for the task creator.
  */
-define(['app/helper'], function(helper) {
+define(['app/helper'], function (helper) {
+
+
 
   var Track = function (info) {
     this.points = info.points;
     this.filename = info.filename;
     this.polyline;
 
-    this.drawPolyline = function(map, google) {
+    this.drawPolyline = function (map, google) {
       var coords = [];
       for (var i = 0; i < this.points.length; i++) {
         coords.push(new google.maps.LatLng(this.points[i].x, this.points[i].y));
@@ -23,7 +25,15 @@ define(['app/helper'], function(helper) {
         strokeWeight: 2
       });
 
+
+      google.maps.event.addListener(this.polyline, 'click', function (evt) {
+        this.setOptions({
+          strokeColor: helper.randomColor(true)
+        });
+      });
       this.polyline.setMap(map);
+
+
     }
   }
 
