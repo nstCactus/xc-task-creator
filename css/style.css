@@ -132,7 +132,15 @@ select {
 /**
  * Filename List.
  */
-#file-handler .populated {
+#file-handler  .populated {
+  /*background : repeating-linear-gradient(45deg, #575F4E, #575F4E 20px, #879279 20px, #879279 40px);*/
+  background :  rgb(20, 20, 20);
+  border: 1px solid #FFF;
+  margin-top: 10px;
+  padding-left : 5px;
+}
+
+#track-handler  .populated {
   /*background : repeating-linear-gradient(45deg, #575F4E, #575F4E 20px, #879279 20px, #879279 40px);*/
   background :  rgb(20, 20, 20);
   border: 1px solid #FFF;
@@ -146,8 +154,18 @@ select {
  cursor: pointer;
 }
 
+#tracknameList {
+  list-style: none;
+  padding : 5px 0px 5px 20px;
+  cursor: pointer;
+ }
+
 
 #filenameList:hover {
+  text-decoration : underline;
+}
+
+#tracknameList:hover {
   text-decoration : underline;
 }
 
