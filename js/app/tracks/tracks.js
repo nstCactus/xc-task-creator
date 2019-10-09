@@ -15,6 +15,9 @@ define(['tracks/track', 'tracks/trackList'], function(Track, TrackList) {
      var track = new Track(info);
      tracks.push(track);
      TrackList.rebuild(tracks);
+
+
+
      return track;
   }
 
@@ -39,7 +42,12 @@ define(['tracks/track', 'tracks/trackList'], function(Track, TrackList) {
     }
   }
 
+  var onRebuildTask = function(e) {
+    TrackList.rebuild(tracks);
+  }
+
   document.addEventListener('tracknameRemoved', onTracknameRemoved);
+  document.addEventListener('rebuildTask', onRebuildTask);
 
 
   return {

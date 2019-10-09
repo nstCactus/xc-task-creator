@@ -18,7 +18,9 @@ define(['jquery'], function ($) {
     if (tracks.length > 0) {
       var html = '';
       for (var i = 0; i < tracks.length; i++) {
-        html += '<li id="tracknameList" class="' + tracks[i].filename + '"><i class="fa fa-trash"></i> ' + tracks[i].filename + '</li>';
+        let color = tracks[i].color; 
+
+        html += '<li id="tracknameList" style="color:' +  color  +  ';" class="' + tracks[i].filename + '"><i class="fa fa-trash"></i> ' + tracks[i].filename + '</li>';
       }
       container.html(html);
       container.addClass('populated');
