@@ -179,8 +179,6 @@ geoXML3.parser = function (options) {
          contentType = JSIO.FileType.XML;
       } else if (/^data:/.test(doc.baseUrl)) {
          contentType = JSIO.FileType.Unknown;
-      } else if (parserOptions.forceZip) {	
-         contentType = JSIO.FileType.Binary;
       } else {
          contentType = JSIO.guessFileType(doc.baseUrl);
       }
@@ -699,12 +697,15 @@ function processStyleUrl(node) {
           }
         }
 
+      ///////////////////////////////////////////////////
+
 	// parse MultiTrack/Track
-        var TrackNodes = getElementsByTagNameNS(node,gxNS,"Track");
-        var coordListA = [];
+          var MultiTrackNodes = getElementsByTagNameNS(node,gxNS,"MultiTrack");
+          var TrackNodes = getElementsByTagNameNS(node,gxNS,"Track");
+          var coordListA = [];
         if (TrackNodes.length > 0) {  
           for (var i=0; i<TrackNodes.length; i++) {
-            var coordNodes = getElementsByTagNameNS(TrackNodes[i],gxNS,"coord");
+              var coordNodes = getElementsByTagNameNS(TrackNodes[i],gxNS,"coord");
             var coordList = [];
             for (var j=0; j<coordNodes.length;j++) { 
               var coords = geoXML3.nodeValue(coordNodes[j]).trim();
@@ -722,6 +723,8 @@ function processStyleUrl(node) {
           placemark.Track = coordListA;
         }
 	      
+
+      ///////////////////////////////////////////////////
         // call the custom placemark parse function if it is defined
         if (!!parserOptions.pmParseFn) parserOptions.pmParseFn(node, placemark);
         doc.placemarks.push(placemark);
@@ -783,6 +786,7 @@ function processStyleUrl(node) {
 	if (placemark.Track) { // gx:Track polyline
           line = lineCreateFunc(placemark,doc);
           if (line) line.active = placemark.visibility;
+
         }
         if (!!google.maps) {
           doc.bounds = doc.bounds || new google.maps.LatLngBounds();
@@ -804,7 +808,6 @@ function processStyleUrl(node) {
         }
       }
 
-      var overlayCreateFunc = parserOptions.createOverlay || createOverlay;
       // Parse ground overlays
       if (!!doc.reload && !!doc.groundoverlays) {
         for (i = 0; i < doc.groundoverlays.length; i++) {
@@ -835,8 +838,7 @@ function processStyleUrl(node) {
             east:  parseFloat(nodeValue(getElementsByTagName(node, 'east')[0])),
             south: parseFloat(nodeValue(getElementsByTagName(node, 'south')[0])),
             west:  parseFloat(nodeValue(getElementsByTagName(node, 'west')[0]))
-          },
-          rotation: -1 * parseFloat(nodeValue(getElementsByTagName(node, 'rotation')[0]))
+          }
         };
         if (!!google.maps) {
           doc.bounds = doc.bounds || new google.maps.LatLngBounds();
@@ -855,27 +857,33 @@ function processStyleUrl(node) {
         }
 
         doc.groundoverlays.push(groundOverlay);
-        // Check to see if this overlay was created on a previous load of this document
-        var found = false;
-        if (!!doc) {
-          doc.groundoverlays = doc.groundoverlays || [];
-          if (doc.reload) {
-            overlayBounds = new google.maps.LatLngBounds(
-              new google.maps.LatLng(groundOverlay.latLonBox.south, groundOverlay.latLonBox.west),
-              new google.maps.LatLng(groundOverlay.latLonBox.north, groundOverlay.latLonBox.east)
-            );
-            var overlays = doc.groundoverlays;
-            for (i = overlays.length; i--;) {
-              if ((overlays[i].bounds().equals(overlayBounds)) &&
-                  (overlays.url_ === groundOverlay.icon.href)) {
-                found = overlays[i].active = true;
-                break;
+        if (!!parserOptions.createOverlay) {
+          // User-defined overlay handler
+          parserOptions.createOverlay(groundOverlay, doc);
+        } else {
+          // Check to see if this overlay was created on a previous load of this document
+          var found = false;
+          if (!!doc) {
+            doc.groundoverlays = doc.groundoverlays || [];
+            if (doc.reload) {
+              overlayBounds = new google.maps.LatLngBounds(
+                new google.maps.LatLng(groundOverlay.latLonBox.south, groundOverlay.latLonBox.west),
+                new google.maps.LatLng(groundOverlay.latLonBox.north, groundOverlay.latLonBox.east)
+              );
+              var overlays = doc.groundoverlays;
+              for (i = overlays.length; i--;) {
+                if ((overlays[i].bounds().equals(overlayBounds)) &&
+                    (overlays.url_ === groundOverlay.icon.href)) {
+                  found = overlays[i].active = true;
+                  break;
+                }
               }
             }
           }
 
           if (!found) {
-            overlay = overlayCreateFunc(groundOverlay, doc);
+            // Call the built-in overlay creator
+            overlay = createOverlay(groundOverlay, doc);
             overlay.active = true;
           }
         }
@@ -1077,14 +1085,14 @@ function processStyleUrl(node) {
     }
 
     var scaled = {
-      x: icon.dim.x     * icon.scale,
+      x:  icon.dim.x     * icon.scale,
       y: y * icon.scale,
-      w: icon.dim.w     * icon.scale,
-      h: icon.dim.h     * icon.scale,
-      aX:icon.hotSpot.x * icon.scale,
-      aY:icon.hotSpot.y * icon.scale,
-      iW:(icon.img ? icon.img.width  : icon.dim.w) * icon.scale,
-      iH:(icon.img ? icon.img.height : icon.dim.h) * icon.scale
+      w:  icon.dim.w     * icon.scale,
+      h:  icon.dim.h     * icon.scale,
+      aX: icon.hotSpot.x * icon.scale,
+      aY: icon.hotSpot.y * icon.scale,
+      iW: (icon.img ? icon.img.width  : icon.dim.w) * icon.scale,
+      iH: (icon.img ? icon.img.height : icon.dim.h) * icon.scale
     };
 
     // Figure out the anchor spot
@@ -1094,13 +1102,9 @@ function processStyleUrl(node) {
     switch (icon.hotSpot.xunits) {
       case 'fraction':    aX = rnd(scaled.aX * icon.dim.w); break;
       case 'insetPixels': aX = rnd(icon.dim.w * icon.scale - scaled.aX); break;
-      default:            aX = rnd(scaled.aX); break; // already pixels
+      default:            aX = rnd(scaled.aX); break;  // already pixels
     }
-    switch(icon.hotSpot.yunits) {
-      case 'fraction':    aY = scaled.h - rnd(icon.dim.h * scaled.aY);   break;
-      case 'insetPixels': aY = rnd(scaled.aY); break; 
-      default:            aY = rnd(icon.dim.h * icon.scale - scaled.aY); break;
-    }
+    aY = scaled.h - rnd( ((icon.hotSpot.yunits === 'fraction') ? icon.dim.h : 1) * scaled.aY );  // insetPixels Y = pixels Y
     var iconAnchor = new google.maps.Point(aX, aY);
 
     // Sizes
@@ -1207,10 +1211,7 @@ function processStyleUrl(node) {
         new google.maps.LatLng(groundOverlay.latLonBox.south, groundOverlay.latLonBox.west),
         new google.maps.LatLng(groundOverlay.latLonBox.north, groundOverlay.latLonBox.east)
     );
-    var overlayOptions = geoXML3.combineOptions(parserOptions.overlayOptions, {
-      percentOpacity: groundOverlay.opacity*100,
-      rotation: groundOverlay.rotation
-    });
+    var overlayOptions = geoXML3.combineOptions(parserOptions.overlayOptions, {percentOpacity: groundOverlay.opacity*100});
     var overlay = new ProjectedOverlay(parserOptions.map, groundOverlay.icon.href, bounds, overlayOptions);
 
     if (!!doc) {
@@ -1828,7 +1829,7 @@ geoXML3.fetchZIP = function (url, callback, parser) {
       if (ext === "kml") entry.extract(kmlExtractCb);
       else               entry.extract(extractCb);
     }
-  }); //,3 for most verbose logging
+  },3);
 
 };
 
