@@ -2,7 +2,9 @@
  * @file
  * Track module for the task creator.
  */
-define(['app/helper','jquery' , 'jgrowl'], function (helper , $) {
+define(['app/helper', 'jquery', 'jgrowl'], function (helper, $) {
+
+  var helpColor = true;
 
   var Track = function (info) {
     this.points = info.points;
@@ -47,12 +49,15 @@ define(['app/helper','jquery' , 'jgrowl'], function (helper , $) {
 
 
     this.polyline.addListener('mouseover', function (e) {
-      $.jGrowl('Click Track to change color', {
-        header : 'help',
-        theme : '',
-        sticky : false,
-        position : 'top-left',
-      });
+      if (helpColor) {
+        $.jGrowl('Click Track to change color', {
+          header: 'help',
+          theme: '',
+          sticky: false,
+          position: 'top-left',
+        });
+        helpColor = false;
+      }
 
 
     });
