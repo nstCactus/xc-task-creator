@@ -53,6 +53,20 @@ function(param, geolocation, google, task, keyboard) {
     }
   }
 
+  var onNewKmlLayer = function(e) {
+    var kml = e.detail.KmlLayer;
+
+    infowindow = new google.maps.InfoWindow({});
+    geoXml = new geoXML3.parser({
+      map: map,
+      infoWindow: infowindow,
+      singleInfoWindow: true
+    });
+    geoXml.parseKmlString(kml.kml);
+
+  }
+  
+
   var closeInfoWindow = function() {
     if (map.infoWindow) {
       map.infoWindow.close();
@@ -164,6 +178,8 @@ function(param, geolocation, google, task, keyboard) {
   document.addEventListener('geolocation', onGeolocation);
   document.addEventListener('taskChange', onTaskChange);
   document.addEventListener('openMapTurnpointConfig', onOpenMapTurnpointConfig);
+  document.addEventListener('newKmlLayer', onNewKmlLayer);
+
   //geolocation.check();
   
   return map;

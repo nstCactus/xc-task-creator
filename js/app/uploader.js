@@ -42,6 +42,14 @@ define(['Dropzone', 'app/wpParser', 'jquery'], function(Dropzone, wpParser, $) {
       document.dispatchEvent(e); 
     }
 
+    if (parseInfo.KmlLayer) {
+      var e = document.createEvent("CustomEvent");
+      e.initCustomEvent('newKmlLayer', false, false, {
+        KmlLayer : parseInfo.KmlLayer,
+      });
+      document.dispatchEvent(e); 
+    }
+
   }
 
   reader.onload = function(e) {
@@ -53,7 +61,7 @@ define(['Dropzone', 'app/wpParser', 'jquery'], function(Dropzone, wpParser, $) {
 
   var myDz = new Dropzone("#uploader", {
     maxFiles : 1,
-    acceptedFiles : '.txt, .TXT, .wpt, .WPT, .igc, .IGC, .cup, .CUP, .gpx, .GPX, .tsk, .TSK, .geojson, .GEOJSON, .xctsk , .XCTSK , .fstask , .FSTASK , .fsdb , .FSDB',
+    acceptedFiles : '.txt, .TXT, .wpt, .WPT, .igc, .IGC, .cup, .CUP, .gpx, .GPX, .tsk, .TSK, .geojson, .GEOJSON, .xctsk , .XCTSK , .fstask , .FSTASK , .fsdb , .FSDB , .kml , .KML,', 
     dictDefaultMessage : "Drop files (or click) here - 'Space + rigth mouse click' to add a waypoint,"
   });
   
