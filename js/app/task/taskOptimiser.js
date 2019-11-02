@@ -16,142 +16,174 @@ define(["app/param"], function (param) {
 
   let optimizeTask = function (google, map, turnpoints) {
 
-    // var points = [];
-    // for (var i = 0; i < turnpoints.length; i++) {
-    //   points.push(createPoint(turnpoints[i].x, turnpoints[i].y, turnpoints[i].radius))
-    // }
-    // var d = getShortestPath(points, 3, []);
-
-
     fastWaypoints = [];
     fastDistance = 0;
     distances = [];
 
+
     checkStartDirection(google, turnpoints);
 
-    // Pushing center of first turnpoint as a fastWaypoint. 
+    var zone = "33"
     if (turnpoints.length > 0) {
-      fastWaypoints.push(turnpoints[0].latLng);
+      zone = getUtmZoneFromPosition(turnpoints[0].latLng.lng(), turnpoints[0].latLng.lat());
     }
 
-    // Looping turnpoints.
-    for (var i = 0; i < turnpoints.length; i++) {
-      var one = fastWaypoints[fastWaypoints.length - 1];  // last one
-      var two = null;
-      var three = null;
-
-      var heading = null;
-
-      if (turnpoints[i + 1]) {
-        two = turnpoints[i + 1];
+    var es = turnpoints.length - 1;
+    var ss = 1;
+    for (let i = 0; i < turnpoints.length; i++) {
+      if (turnpoints[i].type == 'end-of-speed-section') {
+        es = i;
       }
-      else {
-        // There is only one turnpoint. Nothing to do.
-        var tp = turnpoints[turnpoints.length - 1];
-        fastWaypoints.push(tp.latLng);
+      if (turnpoints[i].type == 'start') {
+        ss = i;
+      }
+    }
+
+    var points = [];
+    if (true) {
+      for (var i = 0; i < turnpoints.length; i++) {
+        var p = degrees2utm(turnpoints[i].latLng.lng(), turnpoints[i].latLng.lat(), zone);
+        points.push(createPoint(p[0], p[1], turnpoints[i].radius))
+      }
+      var d = getShortestPath(points, es, []);
+      console.log("Distance : " + d);
+
+      for (var i = 0; i < turnpoints.length; i++) {
+        var fl = utm2degress(points[i].fx, points[i].fy, zone);
+        fastWaypoints.push(new google.maps.LatLng(fl[1], fl[0]))
+      }
+    }
+
+    else {
+      // Pushing center of first turnpoint as a fastWaypoint. 
+      if (turnpoints.length > 0) {
+        fastWaypoints.push(turnpoints[0].latLng);
+      }
+
+      // Looping turnpoints.
+      for (var i = 0; i < turnpoints.length; i++) {
+        var one = fastWaypoints[fastWaypoints.length - 1];  // last one
+        var two = null;
+        var three = null;
+
+        var heading = null;
+
+        if (turnpoints[i + 1]) {
+          two = turnpoints[i + 1];
+        }
+        else {
+          // There is only one turnpoint. Nothing to do.
+          var tp = turnpoints[turnpoints.length - 1];
+          fastWaypoints.push(tp.latLng);
+          //incrementDistance(google, fastWaypoints);
+
+          break;
+        }
+
+        if (turnpoints[i + 2]) {
+          three = turnpoints[i + 2];
+        } else {
+          // If there is no turnpoints 3 then act as if 3 was again a turnpoint 2.
+          three = two;
+        }
+
+        //console.log("two.name",two.name);
+        //console.log("three.name",three.name);
+
+
+        // Detecting flat lines.
+        //if (one.equals(two.latLng) && two.latLng.equals(three.latLng) && one.equals(three.latLng)) {
+        // Extreme case. Depend where to go next or any heading can be accepted.
+        //fastWaypoints.push(three.latLng);
         //incrementDistance(google, fastWaypoints);
+        //}
 
-        break;
-      }
-
-      if (turnpoints[i + 2]) {
-        three = turnpoints[i + 2];
-      } else {
-        // If there is no turnpoints 3 then act as if 3 was again a turnpoint 2.
-        three = two;
-      }
-
-      //console.log("two.name",two.name);
-      //console.log("three.name",three.name);
-
-
-      // Detecting flat lines.
-      //if (one.equals(two.latLng) && two.latLng.equals(three.latLng) && one.equals(three.latLng)) {
-      // Extreme case. Depend where to go next or any heading can be accepted.
-      //fastWaypoints.push(three.latLng);
-      //incrementDistance(google, fastWaypoints);
-      //}
-
-      if (two.latLng.equals(three.latLng)) {
-        //One and two are the same or two and three are the same. Take heading from three to one.
-        heading = google.maps.geometry.spherical.computeHeading(three.latLng, one);
-        var fastPoint = google.maps.geometry.spherical.computeOffset(two.latLng, two.radius, heading);
-        fastWaypoints.push(fastPoint);
-        //console.log("fastWaypoints alligbned");
-        continue;
-        //console.log(heading);
-      }
-      else if (one.equals(three.latLng)) {
-        // One and three are the same take heading from two to one.
-        heading = google.maps.geometry.spherical.computeHeading(two.latLng, one);
-        var fastPoint = google.maps.geometry.spherical.computeOffset(two.latLng, two.radius, heading);
-        fastWaypoints.push(fastPoint);
-        //console.log("fastWaypoints alligbned");
-        continue
-        //console.log(heading);
-      }
-      else if (two.type == 'start') {
-        heading = google.maps.geometry.spherical.computeHeading(three.latLng, one);
-        //var fastPoint = google.maps.geometry.spherical.computeOffset(three.latLng, two.radius, heading);
-        var fastPoint = calcStartIntersection(google, three, two, heading)
-        if (fastPoint != null) {
+        if (two.latLng.equals(three.latLng)) {
+          //One and two are the same or two and three are the same. Take heading from three to one.
+          heading = google.maps.geometry.spherical.computeHeading(three.latLng, one);
+          var fastPoint = google.maps.geometry.spherical.computeOffset(two.latLng, two.radius, heading);
           fastWaypoints.push(fastPoint);
           //console.log("fastWaypoints alligbned");
           continue;
+          //console.log(heading);
         }
+        else if (one.equals(three.latLng)) {
+          // One and three are the same take heading from two to one.
+          heading = google.maps.geometry.spherical.computeHeading(two.latLng, one);
+          var fastPoint = google.maps.geometry.spherical.computeOffset(two.latLng, two.radius, heading);
+          fastWaypoints.push(fastPoint);
+          //console.log("fastWaypoints alligbned");
+          continue
+          //console.log(heading);
+        }
+        else if (two.type == 'start') {
+          heading = google.maps.geometry.spherical.computeHeading(three.latLng, one);
+          //var fastPoint = google.maps.geometry.spherical.computeOffset(three.latLng, two.radius, heading);
+          var fastPoint = calcStartIntersection(google, three, two, heading)
+          if (fastPoint != null) {
+            fastWaypoints.push(fastPoint);
+            //console.log("fastWaypoints alligbned");
+            continue;
+          }
+
+        }
+
+
+        // if (heading) {
+        //   var fastPoint = google.maps.geometry.spherical.computeOffset(two.latLng, two.radius, heading);
+        //   fastWaypoints.push(fastPoint);
+        //   console.log("fastWaypoints alligbned");
+        //   //incrementDistance(google, fastWaypoints);
+        //   continue;
+        // }
+
+        // Now for most regular triangle situation.
+        // Go for some bissectrix hack...
+        var aHeading = google.maps.geometry.spherical.computeHeading(two.latLng, one);
+        var bHeading = google.maps.geometry.spherical.computeHeading(two.latLng, three.latLng);
+        // Getting the angle difference between two headings.
+        var angle = Math.min((aHeading - bHeading + 360) % 360, (bHeading - aHeading + 360) % 360);
+        // Getting the bissectrix heading.
+        var legHeading;
+        //var test;
+        if (((aHeading - bHeading + 360) % 360) > ((bHeading - aHeading + 360) % 360)) {
+          // We're going counter clockwise
+          //test = 'counterclock';
+          legHeading = aHeading + (angle * 0.5);
+          if (legHeading > 180) {
+            legHeading = 360 - legHeading;
+          }
+        } else {
+          // Go Clockwise.
+          //test = 'clock';
+          legHeading = aHeading - (angle * 0.5);
+          if (legHeading < -180) {
+            legHeading = legHeading + 360;
+          }
+        }
+        //console.log(two.wp.name, aHeading, bHeading,  angle, legHeading, test);
+        // Calculating bissectrix length (2 * AB * Cos(two/2)) / (A+B).
+        var aDistance = google.maps.geometry.spherical.computeDistanceBetween(one, two.latLng);
+        var bDistance = google.maps.geometry.spherical.computeDistanceBetween(two.latLng, three.latLng);
+        var leg = (2 * aDistance * bDistance * Math.cos((angle * 0.5) * (Math.PI / 180))) / (aDistance + bDistance);
+        var middlePoint = google.maps.geometry.spherical.computeOffset(two.latLng, leg, legHeading);
+        // Choosing beetween this length or radius length.
+        var minLeg = Math.min(leg, two.radius);
+        // Finally getting the fastPoint. Projecting the bissectrix.
+        var fastPoint = google.maps.geometry.spherical.computeOffset(two.latLng, minLeg, legHeading);
+        // Storing this hardly gained fastPoint.
+        fastWaypoints.push(fastPoint);
+        //incrementDistance(google, fastWaypoints);
+
+
 
       }
-
-
-      // if (heading) {
-      //   var fastPoint = google.maps.geometry.spherical.computeOffset(two.latLng, two.radius, heading);
-      //   fastWaypoints.push(fastPoint);
-      //   console.log("fastWaypoints alligbned");
-      //   //incrementDistance(google, fastWaypoints);
-      //   continue;
-      // }
-
-      // Now for most regular triangle situation.
-      // Go for some bissectrix hack...
-      var aHeading = google.maps.geometry.spherical.computeHeading(two.latLng, one);
-      var bHeading = google.maps.geometry.spherical.computeHeading(two.latLng, three.latLng);
-      // Getting the angle difference between two headings.
-      var angle = Math.min((aHeading - bHeading + 360) % 360, (bHeading - aHeading + 360) % 360);
-      // Getting the bissectrix heading.
-      var legHeading;
-      //var test;
-      if (((aHeading - bHeading + 360) % 360) > ((bHeading - aHeading + 360) % 360)) {
-        // We're going counter clockwise
-        //test = 'counterclock';
-        legHeading = aHeading + (angle * 0.5);
-        if (legHeading > 180) {
-          legHeading = 360 - legHeading;
-        }
-      } else {
-        // Go Clockwise.
-        //test = 'clock';
-        legHeading = aHeading - (angle * 0.5);
-        if (legHeading < -180) {
-          legHeading = legHeading + 360;
-        }
-      }
-      //console.log(two.wp.name, aHeading, bHeading,  angle, legHeading, test);
-      // Calculating bissectrix length (2 * AB * Cos(two/2)) / (A+B).
-      var aDistance = google.maps.geometry.spherical.computeDistanceBetween(one, two.latLng);
-      var bDistance = google.maps.geometry.spherical.computeDistanceBetween(two.latLng, three.latLng);
-      var leg = (2 * aDistance * bDistance * Math.cos((angle * 0.5) * (Math.PI / 180))) / (aDistance + bDistance);
-      var middlePoint = google.maps.geometry.spherical.computeOffset(two.latLng, leg, legHeading);
-      // Choosing beetween this length or radius length.
-      var minLeg = Math.min(leg, two.radius);
-      // Finally getting the fastPoint. Projecting the bissectrix.
-      var fastPoint = google.maps.geometry.spherical.computeOffset(two.latLng, minLeg, legHeading);
-      // Storing this hardly gained fastPoint.
-      fastWaypoints.push(fastPoint);
-      //incrementDistance(google, fastWaypoints);
-
-
-
     }
+
+
+
+
+
 
     var lineSymbol = {
       path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW
@@ -162,7 +194,7 @@ define(["app/param"], function (param) {
 
     if (fastTrack) fastTrack.setMap(null);
     fastTrack = new google.maps.Polyline({
-      path: fastWaypoints.slice(0, -1),
+      path: fastWaypoints,//.slice(0, -1),
       geodesic: true,
       strokeColor: param.task.courseColor.fast,
       strokeOpacity: 1.0,
@@ -181,15 +213,26 @@ define(["app/param"], function (param) {
       new google.maps.Point(0, 0),
       new google.maps.Point(16, 16));
 
+    var markerImageSS = new google.maps.MarkerImage('https://maps.google.com/mapfiles/kml/pal5/icon26.png',
+      new google.maps.Size(32, 32),
+      new google.maps.Point(0, 0),
+      new google.maps.Point(16, 16));
+
+      var markerImageES = new google.maps.MarkerImage('https://maps.google.com/mapfiles/kml/pal5/icon60.png',
+      new google.maps.Size(32, 32),
+      new google.maps.Point(0, 0),
+      new google.maps.Point(16, 16));
+
+      
     for (var i = 0; i < 100; i++) {
       if (optimizedMarkers[i]) optimizedMarkers[i].setMap(null);
     }
 
-    for (var i = 0; i < fastWaypoints.length - 1; i++) {
+    for (var i = 0; i < fastWaypoints.length; i++) {
       optimizedMarkers[i] = new google.maps.Marker({
         position: fastWaypoints[i],
         map: map,
-        icon: markerImage
+        icon: i==ss  ? markerImageSS : i==es ? markerImageES : markerImage
       });
     }
 
@@ -201,7 +244,7 @@ define(["app/param"], function (param) {
     // }
 
     return {
-      distance: fastDistance,
+      distance: d - (turnpoints[0] != undefined ? turnpoints[0].radius : 0),
       distances: distances,
       fastWaypoints: fastWaypoints,
     }
@@ -256,7 +299,7 @@ define(["app/param"], function (param) {
     fastDistance = 0;
     distances = [];
     if (waypoints.length > 1) {
-      for (var i = 0; i < waypoints.length - 2; i++) {
+      for (var i = 0; i < waypoints.length - 1; i++) {
         var distance = google.maps.geometry.spherical.computeDistanceBetween(waypoints[i], waypoints[i + 1]);
         if (i == 0) {
           distance -= radius;
@@ -271,18 +314,7 @@ define(["app/param"], function (param) {
 
   }
 
-  function incrementDistance(google, waypoints) {
-    if (waypoints.length > 1) {
-      var distance = google.maps.geometry.spherical.computeDistanceBetween(
-        waypoints[fastWaypoints.length - 1],
-        waypoints[fastWaypoints.length - 2]
-      );
-      fastDistance += distance;
-      distances.push(Math.round(distance / 10) / 100);
-      //console.log("Distances ", distances);
-      //console.log("fastDistance ", fastDistance);
-    }
-  }
+
 
   function createPoint(x, y, radius = 0) {
     // Using ECMAScript object literals to convey object creation
@@ -315,6 +347,7 @@ define(["app/param"], function (param) {
       finished = lastDistance - distance < tolerance;
       lastDistance = distance;
     }
+    return lastDistance;
   }
 
 
@@ -328,8 +361,8 @@ define(["app/param"], function (param) {
     hasLine = (line.length) == 2;
     for (index = 1; index < count; index++) {
       // Get the target cylinder c and its preceding and succeeding points
-      var a,b,c;
-      var ret =  getTargetPoints(points, count, index, esIndex);
+      var a, b, c;
+      var ret = getTargetPoints(points, count, index, esIndex);
       c = ret[0];
       a = ret[1];
       b = ret[2];
@@ -370,7 +403,7 @@ define(["app/param"], function (param) {
   // c, a, b - target cylinder, previous point, next point
   function processCylinder(c, a, b) {
     var distAC, distBC, distAB, distCtoAB;
-    var ret =  getRelativeDistances(c, a, b);
+    var ret = getRelativeDistances(c, a, b);
     distAC = ret[0];
     distBC = ret[1];
     distAB = ret[2];
@@ -498,7 +531,11 @@ define(["app/param"], function (param) {
   // distAB - AB line segment length
   function setIntersection1(c, a, b, distAB) {
     // Get the intersection points (s1, s2)
-    s1, s2, e = getIntersectionPoints(c, a, b, distAB);
+    var s1, s2, e;
+    var ret = getIntersectionPoints(c, a, b, distAB);
+    s1 = ret[0];
+    s2 = ret[1];
+    e = ret[2];
     as1 = Math.hypot(a.x - s1.x, a.y - s1.y);
     bs1 = Math.hypot(b.x - s1.x, b.y - s1.y);
     // Find the intersection lying between points a and b
@@ -516,7 +553,11 @@ define(["app/param"], function (param) {
   // distAB - AB line segment length
   function setIntersection2(c, a, b, distAB) {
     // Get the intersection points (s1, s2) and midpoint (e)
-    s1, s2, e = getIntersectionPoints(c, a, b, distAB);
+    var s1, s2, e, ret;
+    ret = getIntersectionPoints(c, a, b, distAB);
+    s1 = ret[0];
+    s2 = ret[1];
+    e = ret[2];
     as1 = Math.hypot(a.x - s1.x, a.y - s1.y);
     es1 = Math.hypot(e.x - s1.x, e.y - s1.y);
     ae = Math.hypot(a.x - e.x, a.y - e.y);
@@ -574,6 +615,34 @@ define(["app/param"], function (param) {
     }
   }
 
+  var degrees2meters = function (lon, lat) {
+    var x = lon * 20037508.34 / 180;
+    var y = Math.log(Math.tan((90 + lat) * Math.PI / 360)) / (Math.PI / 180);
+    y = y * 20037508.34 / 180;
+    return [x, y]
+  }
+
+  var meters2degress = function (x, y) {
+    var lon = x * 180 / 20037508.34;
+    var lat = Math.atan(Math.exp(y * Math.PI / 20037508.34)) * 360 / Math.PI - 90;
+    return [lon, lat]
+  }
+
+  var degrees2utm = function (lon, lat, zone) {
+    var utm = "+proj=utm +zone=" + zone;
+    var wgs84 = "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs";
+    return proj4(wgs84, utm, [lon, lat]);
+  }
+
+  var utm2degress = function (x, y, zone) {
+    var utm = "+proj=utm +zone=" + zone;
+    var wgs84 = "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs";
+    return proj4(utm, wgs84, [x, y]);
+  }
+
+  function getUtmZoneFromPosition(lon, lat) {
+    return (Math.floor((lon + 180) / 6) % 60) + 1;
+  }
 
   return {
     optimize: optimizeTask,
