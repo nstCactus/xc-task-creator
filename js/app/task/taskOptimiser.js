@@ -23,7 +23,7 @@ define(["app/param"], function (param) {
 
     checkStartDirection(google, turnpoints);
 
-    var zone = "33"; // just default if not vait turnpoits yet
+    var zone = "33"; // just default if not valid turnpoits yet
     if (turnpoints.length > 0) {
       zone = getUtmZoneFromPosition(turnpoints[0].latLng.lng(), turnpoints[0].latLng.lat());
     }
@@ -45,7 +45,7 @@ define(["app/param"], function (param) {
       points.push(createPoint(p[0], p[1], turnpoints[i].radius))
     }
     var d = getShortestPath(points, es, []);
-    console.log("Distance : " + d);
+    //console.log("Distance : " + d);
 
     for (var i = 0; i < turnpoints.length; i++) {
       var fl = utm2degress(points[i].fx, points[i].fy, zone);

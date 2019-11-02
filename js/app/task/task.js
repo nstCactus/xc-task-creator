@@ -46,6 +46,10 @@ function(taskBoard, Turnpoint, fullBoard, param, optimizer, taskAdvisor, taskExp
   }
 
   function taskChange() {
+    for(let i=0; i < turnpoints.length; i++) {
+      taskAdvisor.turnpointCheck(turnpoints[i], turnpoints);
+    }
+
     (turnpoints.length > 0) ? fullBoard.toggleLink(true) : fullBoard.toggleLink(false);
     var e = document.createEvent("CustomEvent");
     e.initCustomEvent('taskChange', false, false, {

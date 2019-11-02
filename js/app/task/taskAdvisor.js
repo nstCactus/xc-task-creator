@@ -3,9 +3,9 @@
  * task advisor module for the task Creator.
  */
 define(['jquery', 'task/checks/first', 'task/checks/emptyTimes', 'task/checks/unique', 'task/checks/last',  'jgrowl'],
-function($, firstIsTakeoff, emptyTimes, unique, lastIsGoal) {
+function($, firstIsTakeoff, emptyTimes, unique, last) {
   var turnpointTests = Array(firstIsTakeoff, emptyTimes, unique);
-  var taskTests = Array(firstIsTakeoff, emptyTimes, unique, lastIsGoal);
+  var taskTests = Array(firstIsTakeoff, emptyTimes, unique, last);
 
   var turnpointCheck = function(turnpoint, turnpoints) {
     for (var i = 0; i < turnpointTests.length; i++) {
