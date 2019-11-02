@@ -23,7 +23,7 @@ define(["app/param"], function (param) {
 
     checkStartDirection(google, turnpoints);
 
-    var zone = "33"
+    var zone = "33"; // just default if not vait turnpoits yet
     if (turnpoints.length > 0) {
       zone = getUtmZoneFromPosition(turnpoints[0].latLng.lng(), turnpoints[0].latLng.lat());
     }
@@ -40,147 +40,17 @@ define(["app/param"], function (param) {
     }
 
     var points = [];
-    if (true) {
-      for (var i = 0; i < turnpoints.length; i++) {
-        var p = degrees2utm(turnpoints[i].latLng.lng(), turnpoints[i].latLng.lat(), zone);
-        points.push(createPoint(p[0], p[1], turnpoints[i].radius))
-      }
-      var d = getShortestPath(points, es, []);
-      console.log("Distance : " + d);
-
-      for (var i = 0; i < turnpoints.length; i++) {
-        var fl = utm2degress(points[i].fx, points[i].fy, zone);
-        fastWaypoints.push(new google.maps.LatLng(fl[1], fl[0]))
-      }
+    for (var i = 0; i < turnpoints.length; i++) {
+      var p = degrees2utm(turnpoints[i].latLng.lng(), turnpoints[i].latLng.lat(), zone);
+      points.push(createPoint(p[0], p[1], turnpoints[i].radius))
     }
+    var d = getShortestPath(points, es, []);
+    console.log("Distance : " + d);
 
-    else {
-      // Pushing center of first turnpoint as a fastWaypoint. 
-      if (turnpoints.length > 0) {
-        fastWaypoints.push(turnpoints[0].latLng);
-      }
-
-      // Looping turnpoints.
-      for (var i = 0; i < turnpoints.length; i++) {
-        var one = fastWaypoints[fastWaypoints.length - 1];  // last one
-        var two = null;
-        var three = null;
-
-        var heading = null;
-
-        if (turnpoints[i + 1]) {
-          two = turnpoints[i + 1];
-        }
-        else {
-          // There is only one turnpoint. Nothing to do.
-          var tp = turnpoints[turnpoints.length - 1];
-          fastWaypoints.push(tp.latLng);
-          //incrementDistance(google, fastWaypoints);
-
-          break;
-        }
-
-        if (turnpoints[i + 2]) {
-          three = turnpoints[i + 2];
-        } else {
-          // If there is no turnpoints 3 then act as if 3 was again a turnpoint 2.
-          three = two;
-        }
-
-        //console.log("two.name",two.name);
-        //console.log("three.name",three.name);
-
-
-        // Detecting flat lines.
-        //if (one.equals(two.latLng) && two.latLng.equals(three.latLng) && one.equals(three.latLng)) {
-        // Extreme case. Depend where to go next or any heading can be accepted.
-        //fastWaypoints.push(three.latLng);
-        //incrementDistance(google, fastWaypoints);
-        //}
-
-        if (two.latLng.equals(three.latLng)) {
-          //One and two are the same or two and three are the same. Take heading from three to one.
-          heading = google.maps.geometry.spherical.computeHeading(three.latLng, one);
-          var fastPoint = google.maps.geometry.spherical.computeOffset(two.latLng, two.radius, heading);
-          fastWaypoints.push(fastPoint);
-          //console.log("fastWaypoints alligbned");
-          continue;
-          //console.log(heading);
-        }
-        else if (one.equals(three.latLng)) {
-          // One and three are the same take heading from two to one.
-          heading = google.maps.geometry.spherical.computeHeading(two.latLng, one);
-          var fastPoint = google.maps.geometry.spherical.computeOffset(two.latLng, two.radius, heading);
-          fastWaypoints.push(fastPoint);
-          //console.log("fastWaypoints alligbned");
-          continue
-          //console.log(heading);
-        }
-        else if (two.type == 'start') {
-          heading = google.maps.geometry.spherical.computeHeading(three.latLng, one);
-          //var fastPoint = google.maps.geometry.spherical.computeOffset(three.latLng, two.radius, heading);
-          var fastPoint = calcStartIntersection(google, three, two, heading)
-          if (fastPoint != null) {
-            fastWaypoints.push(fastPoint);
-            //console.log("fastWaypoints alligbned");
-            continue;
-          }
-
-        }
-
-
-        // if (heading) {
-        //   var fastPoint = google.maps.geometry.spherical.computeOffset(two.latLng, two.radius, heading);
-        //   fastWaypoints.push(fastPoint);
-        //   console.log("fastWaypoints alligbned");
-        //   //incrementDistance(google, fastWaypoints);
-        //   continue;
-        // }
-
-        // Now for most regular triangle situation.
-        // Go for some bissectrix hack...
-        var aHeading = google.maps.geometry.spherical.computeHeading(two.latLng, one);
-        var bHeading = google.maps.geometry.spherical.computeHeading(two.latLng, three.latLng);
-        // Getting the angle difference between two headings.
-        var angle = Math.min((aHeading - bHeading + 360) % 360, (bHeading - aHeading + 360) % 360);
-        // Getting the bissectrix heading.
-        var legHeading;
-        //var test;
-        if (((aHeading - bHeading + 360) % 360) > ((bHeading - aHeading + 360) % 360)) {
-          // We're going counter clockwise
-          //test = 'counterclock';
-          legHeading = aHeading + (angle * 0.5);
-          if (legHeading > 180) {
-            legHeading = 360 - legHeading;
-          }
-        } else {
-          // Go Clockwise.
-          //test = 'clock';
-          legHeading = aHeading - (angle * 0.5);
-          if (legHeading < -180) {
-            legHeading = legHeading + 360;
-          }
-        }
-        //console.log(two.wp.name, aHeading, bHeading,  angle, legHeading, test);
-        // Calculating bissectrix length (2 * AB * Cos(two/2)) / (A+B).
-        var aDistance = google.maps.geometry.spherical.computeDistanceBetween(one, two.latLng);
-        var bDistance = google.maps.geometry.spherical.computeDistanceBetween(two.latLng, three.latLng);
-        var leg = (2 * aDistance * bDistance * Math.cos((angle * 0.5) * (Math.PI / 180))) / (aDistance + bDistance);
-        var middlePoint = google.maps.geometry.spherical.computeOffset(two.latLng, leg, legHeading);
-        // Choosing beetween this length or radius length.
-        var minLeg = Math.min(leg, two.radius);
-        // Finally getting the fastPoint. Projecting the bissectrix.
-        var fastPoint = google.maps.geometry.spherical.computeOffset(two.latLng, minLeg, legHeading);
-        // Storing this hardly gained fastPoint.
-        fastWaypoints.push(fastPoint);
-        //incrementDistance(google, fastWaypoints);
-
-
-
-      }
+    for (var i = 0; i < turnpoints.length; i++) {
+      var fl = utm2degress(points[i].fx, points[i].fy, zone);
+      fastWaypoints.push(new google.maps.LatLng(fl[1], fl[0]))
     }
-
-
 
 
 
@@ -208,31 +78,40 @@ define(["app/param"], function (param) {
     });
 
 
-    var markerImage = new google.maps.MarkerImage('https://maps.google.com/mapfiles/kml/shapes/placemark_circle.png',
-      new google.maps.Size(32, 32),
-      new google.maps.Point(0, 0),
-      new google.maps.Point(16, 16));
 
-    var markerImageSS = new google.maps.MarkerImage('https://maps.google.com/mapfiles/kml/pal5/icon26.png',
-      new google.maps.Size(32, 32),
-      new google.maps.Point(0, 0),
-      new google.maps.Point(16, 16));
 
-      var markerImageES = new google.maps.MarkerImage('https://maps.google.com/mapfiles/kml/pal5/icon60.png',
-      new google.maps.Size(32, 32),
-      new google.maps.Point(0, 0),
-      new google.maps.Point(16, 16));
+    var markerImageSS = {
+      url: "https://maps.google.com/mapfiles/kml/pal5/icon26.png", // url
+      scaledSize: new google.maps.Size(16, 16), // scaled size
+      origin: new google.maps.Point(0, 0), // origin
+      anchor: new google.maps.Point(8, 8) // anchor
+    };
 
-      
+    var markerImage = {
+      url: "https://maps.google.com/mapfiles/kml/shapes/placemark_circle.png", // url
+      scaledSize: new google.maps.Size(16, 16), // scaled size
+      origin: new google.maps.Point(0, 0), // origin
+      anchor: new google.maps.Point(8, 8) // anchor
+    };
+
+    var markerImageES = {
+      url: "https://maps.google.com/mapfiles/kml/pal5/icon60.png", // url
+      scaledSize: new google.maps.Size(16, 16), // scaled size
+      origin: new google.maps.Point(0, 0), // origin
+      anchor: new google.maps.Point(8, 8) // anchor
+    };
+
+
     for (var i = 0; i < 100; i++) {
       if (optimizedMarkers[i]) optimizedMarkers[i].setMap(null);
     }
 
     for (var i = 0; i < fastWaypoints.length; i++) {
       optimizedMarkers[i] = new google.maps.Marker({
+        scaledSize: new google.maps.Size(8, 8), // scaled size
         position: fastWaypoints[i],
         map: map,
-        icon: i==ss  ? markerImageSS : i==es ? markerImageES : markerImage
+        icon: i == ss ? markerImageSS : i == es ? markerImageES : markerImage,
       });
     }
 
