@@ -40,14 +40,14 @@ define(["app/param"], function (param) {
     }
 
     var points = [];
-    for (var i = 0; i < turnpoints.length; i++) {
+    for (let i = 0; i < turnpoints.length; i++) {
       var p = degrees2utm(turnpoints[i].latLng.lng(), turnpoints[i].latLng.lat(), zone);
       points.push(createPoint(p[0], p[1], turnpoints[i].radius))
     }
     var d = getShortestPath(points, es, []);
     //console.log("Distance : " + d);
 
-    for (var i = 0; i < turnpoints.length; i++) {
+    for (let i = 0; i < turnpoints.length; i++) {
       var fl = utm2degress(points[i].fx, points[i].fy, zone);
       fastWaypoints.push(new google.maps.LatLng(fl[1], fl[0]))
     }

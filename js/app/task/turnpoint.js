@@ -102,11 +102,11 @@ define(['app/param', 'waypoints/waypoint'], function (param, Waypoint) {
         // Add 90° to this heading to have a perpendicular.
         var heading = lastLegHeading + 90;
         // Getting a first point 50m further. 
-        var firstPoint = google.maps.geometry.spherical.computeOffset(this.latLng, 50, heading);
+        var firstPoint = google.maps.geometry.spherical.computeOffset(this.latLng, this.radius, heading);
         // Reversing the heading.
         heading += 180;
         // And now completing the line with a point 100m further.
-        var secondPoint = google.maps.geometry.spherical.computeOffset(firstPoint, 100, heading);
+        var secondPoint = google.maps.geometry.spherical.computeOffset(firstPoint, 2*this.radius, heading);
 
         // Building the line.
         this.mapElement = new google.maps.Polyline({
