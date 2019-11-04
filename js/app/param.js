@@ -93,7 +93,7 @@ define([], function() {
           turnpoint : [ 'radius'],
           'end-of-speed-section' : [ 'radius'],
           goal : ['close', 'goal-type', 'radius'],
-          line : ['close'],
+          line : ['close','radius'],
           cylinder : ['close', 'radius'],
         },
         hide : {
@@ -102,7 +102,7 @@ define([], function() {
           turnpoint : ['close', 'goal-type', 'open' , 'mode', 'ngates', 'gateint'],
           'end-of-speed-section' : ['close', 'mode', 'open', 'goal-type', 'ngates', 'gateint'],
           goal : ['mode', 'open', 'ngates', 'gateint'],
-          line : ['mode', 'open', 'radius'],
+          line : ['mode', 'open'],
           cylinder : ['mode', 'open'],
         }
       },

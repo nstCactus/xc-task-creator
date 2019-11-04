@@ -5,6 +5,47 @@
 define(['app/param', 'waypoints/waypoint'], function (param, Waypoint) {
 
 
+  // function drawSector(lat, lng, r, azimuth, width,map) { 
+  //   var centerPoint = new google.maps.LatLng(lat, lng); 
+  //   var PRlat = (r/3963) * (180 / Math.PI); // using 3963 miles as earth's radius 
+  //   var PRlng = PRlat/Math.cos(lat*((Math.PI / 180))); 
+  //   var PGpoints = []; 
+  //   PGpoints.push(centerPoint); 
+   
+  //   with (Math) { 
+  //     lat1 = lat + (PRlat * cos( ((Math.PI / 180)) * (azimuth  - width/2 ))); 
+  //     lon1 = lng + (PRlng * sin( ((Math.PI / 180)) * (azimuth  - width/2 ))); 
+  //     PGpoints.push( new google.maps.LatLng(lat1,lon1)); 
+   
+  //     lat2 = lat + (PRlat * cos( ((Math.PI / 180)) * (azimuth  + width/2 ))); 
+  //     lon2 = lng + (PRlng * sin( ((Math.PI / 180)) * (azimuth  + width/2 ))); 
+   
+  //     var theta = 0; 
+  //     var gamma = ((Math.PI / 180)) * (azimuth  + width/2 ); 
+   
+  //     for (var a = 1; theta < gamma ; a++ ) { 
+  //     theta = ((Math.PI / 180)) * (azimuth  - width/2 +a); 
+  //     PGlon = lng + (PRlng * sin( theta )); 
+  //     PGlat = lat + (PRlat * cos( theta )); 
+   
+  //     PGpoints.push(new google.maps.LatLng(PGlat,PGlon)); 
+  //   }
+   
+  //   PGpoints.push( new google.maps.LatLng(lat2,lon2)); 
+  //   PGpoints.push(centerPoint);
+  // } 
+   
+  //   var poly = new google.maps.Polygon({
+  //     path:PGpoints,
+  //     strokeColor: '#4B0082',
+  //     strokeOpacity: .2,
+  //     map: map
+  //   });
+    
+  //   poly.setMap(map);
+  //   return poly; 
+  // } 
+
   var Turnpoint = function (waypoint) {
 
     //var turnpoints = require('task/task').getTurnpoints();
@@ -108,7 +149,9 @@ define(['app/param', 'waypoints/waypoint'], function (param, Waypoint) {
         // And now completing the line with a point 100m further.
         var secondPoint = google.maps.geometry.spherical.computeOffset(firstPoint, 2*this.radius, heading);
 
-        // Building the line.
+        //this.mapElement = drawSector(this.latLng.lat, this.latLng.lng, this.radius, heading, 180 ,map)
+
+        //Building the line.
         this.mapElement = new google.maps.Polyline({
           path: [firstPoint, secondPoint],
           geodesic: true,

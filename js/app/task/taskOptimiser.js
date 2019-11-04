@@ -30,12 +30,16 @@ define(["app/param"], function (param) {
 
     var es = turnpoints.length - 1;
     var ss = 1;
+    var g = turnpoints.length - 1;
     for (let i = 0; i < turnpoints.length; i++) {
       if (turnpoints[i].type == 'end-of-speed-section') {
         es = i;
       }
       if (turnpoints[i].type == 'start') {
         ss = i;
+      }
+      if (turnpoints[i].type == 'goal') {
+        g = i;
       }
     }
 
@@ -44,7 +48,41 @@ define(["app/param"], function (param) {
       var p = degrees2utm(turnpoints[i].latLng.lng(), turnpoints[i].latLng.lat(), zone);
       points.push(createPoint(p[0], p[1], turnpoints[i].radius))
     }
-    var d = getShortestPath(points, es, []);
+
+    var goalLine=[]
+    if (g>0 && turnpoints[g].type == 'goal' && turnpoints[g].goalType == 'line')  {
+
+      var i = g-1;
+      var pastTurnpoint = turnpoints[g-1];
+      while (i > 0 && pastTurnpoint.latLng == turnpoints[g].latLng) {
+        i--;
+        pastTurnpoint = turnpoints[i];
+      }
+
+      var lastLegHeading = google.maps.geometry.spherical.computeHeading(pastTurnpoint.latLng, turnpoints[g].latLng);
+      if (lastLegHeading < 0) lastLegHeading += 360;
+      // Add 90° to this heading to have a perpendicular.
+      var heading = lastLegHeading + 90;
+      // Getting a first point 50m further. 
+      var firstPoint = google.maps.geometry.spherical.computeOffset(turnpoints[g].latLng, turnpoints[g].radius, heading);
+      // Reversing the heading.
+      heading += 180;
+      // And now completing the line with a point 100m further.
+      var secondPoint = google.maps.geometry.spherical.computeOffset(firstPoint, 2*turnpoints[g].radius, heading);
+
+      var p1 = degrees2utm(firstPoint.lng(), firstPoint.lat(), zone);
+      var p2 = degrees2utm(secondPoint.lng(), secondPoint.lat(), zone);
+
+      goalLine.push({x:p1[0],y:p1[1]});
+      goalLine.push({x:p2[0],y:p2[1]});
+
+ 
+
+    }
+
+
+
+    var d = getShortestPath(points, es, goalLine);
     //console.log("Distance : " + d);
 
     for (let i = 0; i < turnpoints.length; i++) {
@@ -205,7 +243,6 @@ define(["app/param"], function (param) {
   function createPointFromFix(point) {
     return createPoint(point.fx, point.fy, point.radius)
   }
-  5
 
 
   // Inputs:
