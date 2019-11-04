@@ -3,6 +3,9 @@
  * Task optimiser module for the task creator.
  */
 define(["app/param"], function (param) {
+
+
+
   // Fast Polyline
   var fastTrack;
   var optimizedMarkers = [];
@@ -49,11 +52,11 @@ define(["app/param"], function (param) {
       points.push(createPoint(p[0], p[1], turnpoints[i].radius))
     }
 
-    var goalLine=[]
-    if (g>0 && turnpoints[g].type == 'goal' && turnpoints[g].goalType == 'line')  {
+    var goalLine = []
+    if (g > 0 && turnpoints[g].type == 'goal' && turnpoints[g].goalType == 'line') {
 
-      var i = g-1;
-      var pastTurnpoint = turnpoints[g-1];
+      var i = g - 1;
+      var pastTurnpoint = turnpoints[g - 1];
       while (i > 0 && pastTurnpoint.latLng == turnpoints[g].latLng) {
         i--;
         pastTurnpoint = turnpoints[i];
@@ -68,15 +71,15 @@ define(["app/param"], function (param) {
       // Reversing the heading.
       heading += 180;
       // And now completing the line with a point 100m further.
-      var secondPoint = google.maps.geometry.spherical.computeOffset(firstPoint, 2*turnpoints[g].radius, heading);
+      var secondPoint = google.maps.geometry.spherical.computeOffset(firstPoint, 2 * turnpoints[g].radius, heading);
 
       var p1 = degrees2utm(firstPoint.lng(), firstPoint.lat(), zone);
       var p2 = degrees2utm(secondPoint.lng(), secondPoint.lat(), zone);
 
-      goalLine.push({x:p1[0],y:p1[1]});
-      goalLine.push({x:p2[0],y:p2[1]});
+      goalLine.push({ x: p1[0], y: p1[1] });
+      goalLine.push({ x: p2[0], y: p2[1] });
 
- 
+
 
     }
 
@@ -164,6 +167,7 @@ define(["app/param"], function (param) {
       distance: d - (turnpoints[0] != undefined ? turnpoints[0].radius : 0),
       distances: distances,
       fastWaypoints: fastWaypoints,
+      cumulativeDistance: cumulativeDistance,
     }
   }
 
@@ -215,14 +219,26 @@ define(["app/param"], function (param) {
   function recalcDistance(google, waypoints, radius) {
     fastDistance = 0;
     distances = [];
+    cumulativeDistance = [];
     if (waypoints.length > 1) {
       for (var i = 0; i < waypoints.length - 1; i++) {
-        var distance = google.maps.geometry.spherical.computeDistanceBetween(waypoints[i], waypoints[i + 1]);
+        var distance;
+        //distance = google.maps.geometry.spherical.computeDistanceBetween(waypoints[i], waypoints[i + 1]);
+        distance = distVincenty(waypoints[i].lat(), waypoints[i].lng(), waypoints[i + 1].lat(), waypoints[i + 1].lng())
+
+
         if (i == 0) {
           distance -= radius;
         }
         fastDistance += distance;
-        distances.push(Math.round(distance / 10) / 100);
+        if ( param.showCumulativeDistances ) {
+          distances.push(Math.round(fastDistance / 10) / 100)
+
+        }
+        else {
+          distances.push(Math.round(distance / 10) / 100);
+
+        }
 
       }
       //console.log("Distances ", distances);
@@ -559,6 +575,67 @@ define(["app/param"], function (param) {
   function getUtmZoneFromPosition(lon, lat) {
     return (Math.floor((lon + 180) / 6) % 60) + 1;
   }
+
+
+
+
+  function toRad(n) {
+    return n * Math.PI / 180;
+   };
+
+   function distVincenty(lat1, lon1, lat2, lon2) {
+    var a = 6378137,
+        b = 6356752.3142,
+        f = 1 / 298.257223563, // WGS-84 ellipsoid params
+        L = toRad(lon2-lon1),
+        U1 = Math.atan((1 - f) * Math.tan(toRad(lat1))),
+        U2 = Math.atan((1 - f) * Math.tan(toRad(lat2))),
+        sinU1 = Math.sin(U1),
+        cosU1 = Math.cos(U1),
+        sinU2 = Math.sin(U2),
+        cosU2 = Math.cos(U2),
+        lambda = L,
+        lambdaP,
+        iterLimit = 100;
+    do {
+     var sinLambda = Math.sin(lambda),
+         cosLambda = Math.cos(lambda),
+         sinSigma = Math.sqrt((cosU2 * sinLambda) * (cosU2 * sinLambda) + (cosU1 * sinU2 - sinU1 * cosU2 * cosLambda) * (cosU1 * sinU2 - sinU1 * cosU2 * cosLambda));
+     if (0 === sinSigma) {
+      return 0; // co-incident points
+     };
+     var cosSigma = sinU1 * sinU2 + cosU1 * cosU2 * cosLambda,
+         sigma = Math.atan2(sinSigma, cosSigma),
+         sinAlpha = cosU1 * cosU2 * sinLambda / sinSigma,
+         cosSqAlpha = 1 - sinAlpha * sinAlpha,
+         cos2SigmaM = cosSigma - 2 * sinU1 * sinU2 / cosSqAlpha,
+         C = f / 16 * cosSqAlpha * (4 + f * (4 - 3 * cosSqAlpha));
+     if (isNaN(cos2SigmaM)) {
+      cos2SigmaM = 0; // equatorial line: cosSqAlpha = 0 (§6)
+     };
+     lambdaP = lambda;
+     lambda = L + (1 - C) * f * sinAlpha * (sigma + C * sinSigma * (cos2SigmaM + C * cosSigma * (-1 + 2 * cos2SigmaM * cos2SigmaM)));
+    } while (Math.abs(lambda - lambdaP) > 1e-12 && --iterLimit > 0);
+   
+    if (!iterLimit) {
+     return NaN; // formula failed to converge
+    };
+   
+    var uSq = cosSqAlpha * (a * a - b * b) / (b * b),
+        A = 1 + uSq / 16384 * (4096 + uSq * (-768 + uSq * (320 - 175 * uSq))),
+        B = uSq / 1024 * (256 + uSq * (-128 + uSq * (74 - 47 * uSq))),
+        deltaSigma = B * sinSigma * (cos2SigmaM + B / 4 * (cosSigma * (-1 + 2 * cos2SigmaM * cos2SigmaM) - B / 6 * cos2SigmaM * (-3 + 4 * sinSigma * sinSigma) * (-3 + 4 * cos2SigmaM * cos2SigmaM))),
+        s = b * A * (sigma - deltaSigma);
+    return s; // round to 1mm precision
+   };
+
+
+
+
+
+
+
+
 
   return {
     optimize: optimizeTask,

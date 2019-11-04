@@ -8,6 +8,22 @@ function(taskBoard, Turnpoint, fullBoard, param, optimizer, taskAdvisor, taskExp
   var taskInfo = param.task.default;
   taskInfo.id = 0;
 
+  var link2 = $("#show-cumulative");
+
+  link2.click(function(e) {
+    param.showCumulativeDistances = ! param.showCumulativeDistances;
+    if ( param.showCumulativeDistances ) {
+      link2.html("Cumulative distances");
+      taskChange();
+    }
+    else {
+      link2.html("Partial distances");
+      taskChange();
+
+    }
+  });
+
+
   var addTurnpoint = function(waypoint, turnpointInfo) {
     var turnpoint = new Turnpoint(waypoint);
     turnpointInfo.index = turnpoints.length;

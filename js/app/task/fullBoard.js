@@ -13,10 +13,12 @@ function($, helper, param, turnpointTemplate, fullTemplate) {
     document.dispatchEvent(e);
   });
 
+
+
   var toggleLink = function(bool) {
     (bool == true) ? link.removeClass('hide') : link.addClass('hide');
     (bool == true) ? link1.removeClass('hide') : link1.addClass('hide');
-
+    
   }
 
   var open = function(task) {

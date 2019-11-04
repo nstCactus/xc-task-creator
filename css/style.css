@@ -231,11 +231,8 @@ gm-panel li {
   margin-top: 20px;
   text-align: right;
   font-size: 1.5em;
-  text-shadow : 0px 0px 10px #000;
-  font-style: italic;
   padding-right: 10px;
-  font-weight: bold;
-  clear: both;
+
 }
 
 #taskboard .turnpointDistance {

@@ -15,6 +15,7 @@ define([], function() {
   var turn = (day % 2 == 0) ? 'right' : 'left';
 
   return {
+    showCumulativeDistances: true,
     allowCumulativeFiles : true,
     apiKey : 'AIzaSyDNrTc1a1WM07PlACypa2WbEAthHXIk-_A',
     map : {
