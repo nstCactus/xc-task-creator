@@ -178,7 +178,7 @@ define(["app/param"], function (param) {
     while (n < 10000) {
       n++;
       fastPoint = google.maps.geometry.spherical.computeOffset(three.latLng, dist, heading);
-      var distance = google.maps.geometry.spherical.computeDistanceBetween(two.latLng, fastPoint);
+      var distance = computeDistanceBetween(two.latLng, fastPoint);
       if (two.mode == "entry" && distance >= two.radius) {
         return fastPoint;
       }
@@ -204,7 +204,7 @@ define(["app/param"], function (param) {
     if (startIndex == -1 || startIndex == turnpoints.length - 1) {
       return;
     }
-    var distance = google.maps.geometry.spherical.computeDistanceBetween(turnpoints[startIndex].latLng, turnpoints[startIndex + 1].latLng);
+    var distance = computeDistanceBetween(turnpoints[startIndex].latLng, turnpoints[startIndex + 1].latLng);
     if (distance > turnpoints[startIndex].radius) {
       turnpoints[startIndex].mode = 'exit';
     }
@@ -224,7 +224,8 @@ define(["app/param"], function (param) {
       for (var i = 0; i < waypoints.length - 1; i++) {
         var distance;
         //distance = google.maps.geometry.spherical.computeDistanceBetween(waypoints[i], waypoints[i + 1]);
-        distance = distVincenty(waypoints[i].lat(), waypoints[i].lng(), waypoints[i + 1].lat(), waypoints[i + 1].lng())
+        distance = computeDistanceBetween(waypoints[i], waypoints[i + 1]);
+        //distance = distVincenty(waypoints[i].lat(), waypoints[i].lng(), waypoints[i + 1].lat(), waypoints[i + 1].lng());
 
 
         if (i == 0) {
@@ -574,13 +575,17 @@ define(["app/param"], function (param) {
 
   function getUtmZoneFromPosition(lon, lat) {
     return (Math.floor((lon + 180) / 6) % 60) + 1;
-  }
+  };
 
 
 
 
   function toRad(n) {
     return n * Math.PI / 180;
+   };
+
+   function computeDistanceBetween(wpt1,wpt2){
+     return distVincenty(wpt1.lat(), wpt1.lng(),wpt2.lat(), wpt2.lng())
    };
 
    function distVincenty(lat1, lon1, lat2, lon2) {
