@@ -14,14 +14,6 @@ define(['rejs!task/templates/taskboard', 'jquery', 'jquery-ui'], function(taskBo
   });
 
 
-  $(document).on('click', '#decrease-task', function(e) {
-    var e = document.createEvent("CustomEvent");
-    e.initCustomEvent('changeTaskNumber', false, false, {
-      forward: false,
-    });    
-    document.dispatchEvent(e);
-  });
-
   $(document).on('click', '#increase-task', function(e) {
     var e = document.createEvent("CustomEvent");
     e.initCustomEvent('changeTaskNumber', false, false, {
@@ -30,6 +22,24 @@ define(['rejs!task/templates/taskboard', 'jquery', 'jquery-ui'], function(taskBo
     document.dispatchEvent(e);
   });
 
+
+
+  $(document).on('click', '#decrease-task', function(e) {
+    var e = document.createEvent("CustomEvent");
+    e.initCustomEvent('changeTaskNumber', false, false, {
+      forward: false,
+    });    
+    document.dispatchEvent(e);
+  });
+
+  
+
+  // $(document).on('click', '#change_task_date', function(e) {
+  //   $( "#change_task_date" ).datepicker({
+  //     showOn: "button",
+  //       buttonText: "day"
+  //   });
+  // });
 
   function makeItSortable () {
     $("#taskboard ul").sortable({
