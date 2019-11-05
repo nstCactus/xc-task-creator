@@ -121,7 +121,7 @@ define(['rejs!formats/export/FsTask', 'app/helper', 'jgrowl', 'xml-formatter'], 
       'task': {
         'date': thedate,
         'type': 'race',
-        'num': 1,
+        'num': taskN,
         'ngates': ngates,
         'gateint': gateint,
         'turnpoints': tps,
