@@ -4,6 +4,7 @@
  */
 define(['jquery', 'app/helper', 'app/param', 'rejs!task/templates/fullboardTurnpoint', 'rejs!task/templates/fullboard'],
 function($, helper, param, turnpointTemplate, fullTemplate) {
+
   var link = $("#full-board");
   var link1 = $("#export-task");
  

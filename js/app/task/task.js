@@ -8,33 +8,35 @@ function(taskBoard, Turnpoint, fullBoard, param, optimizer, taskAdvisor, taskExp
   var taskInfo = param.task.default;
   taskInfo.id = 0;
 
-  var link2 = $("#show-cumulative");
-
   //localStorage.clear()
 
+
+  var link_show_cumulative = $("#show-cumulative");
   let showCumulativeDistances = localStorage.getItem('showCumulativeDistances');
   if ( showCumulativeDistances != null) {
     param.showCumulativeDistances = showCumulativeDistances;
   }
   if ( param.showCumulativeDistances ) {
-    link2.html("Cumulative distances");
+    link_show_cumulative.html("Cumulative distances");
   }
   else {
-    link2.html("Partial distances");
+    link_show_cumulative.html("Partial distances");
   }
-
-  link2.click(function(e) {
+  link_show_cumulative.click(function(e) {
     param.showCumulativeDistances = ! param.showCumulativeDistances;
     if ( param.showCumulativeDistances ) {
-      link2.html("Cumulative distances");
+      link_show_cumulative.html("Cumulative distances");
       taskChange();
     }
     else {
-      link2.html("Partial distances");
+      link_show_cumulative.html("Partial distances");
       taskChange();
     }
     localStorage.setItem('showCumulativeDistances', param.showCumulativeDistances);
   });
+
+
+
 
 
   var addTurnpoint = function(waypoint, turnpointInfo) {
@@ -143,6 +145,20 @@ function(taskBoard, Turnpoint, fullBoard, param, optimizer, taskAdvisor, taskExp
     });
   }
 
+
+  var onchangeTaskNumber = function(e) {
+    var forward = e.detail.forward;
+    if ( forward ) {
+      taskInfo.num++;
+    }
+    else {
+      taskInfo.num--;
+    }
+    taskChange();
+  }
+
+
+
   var onTaskEdit = function(e) {
     var newTask = e.detail.newTask;
     taskInfo.num = newTask.num;
@@ -204,6 +220,9 @@ function(taskBoard, Turnpoint, fullBoard, param, optimizer, taskAdvisor, taskExp
   document.addEventListener('finalExportTask', onFinalExportTask);
   document.addEventListener('newTask', onNewTask);
   document.addEventListener('saveTask', onTaskSave);
+  document.addEventListener('changeTaskNumber', onchangeTaskNumber);
+
+
 
   return {
     'addTurnpoint' : addTurnpoint,

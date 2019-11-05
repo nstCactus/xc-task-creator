@@ -13,6 +13,26 @@ define(['rejs!task/templates/taskboard', 'jquery', 'jquery-ui'], function(taskBo
     document.dispatchEvent(e);
   });
 
+
+  $(document).on('click', '#decrease-task', function(e) {
+    var e = document.createEvent("CustomEvent");
+    e.initCustomEvent('changeTaskNumber', false, false, {
+      forward: false,
+    });    
+    document.dispatchEvent(e);
+  });
+
+  $(document).on('click', '#increase-task', function(e) {
+    var e = document.createEvent("CustomEvent");
+    e.initCustomEvent('changeTaskNumber', false, false, {
+      forward: true,
+    });    
+    document.dispatchEvent(e);
+  });
+
+
+
+
   function makeItSortable () {
     $("#taskboard ul").sortable({
       start: function(event, ui) {
