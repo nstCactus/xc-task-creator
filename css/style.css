@@ -211,12 +211,20 @@ gm-panel li {
   font-size: 2.0em;
   text-align: center;
   margin-bottom : 10px;
+
 }
 
-#show-cumulative {
-  margin-top : 5px;
-  margin-right: 5px;
+a:hover {
+  cursor:pointer;
+ }
 
+#show-cumulative {
+  color : #FFF;
+  margin-top : 0px;
+  margin-right: 5px;
+  font-size: 1.0em;
+  text-decoration: underline;
+  text-shadow : 0px 0px 10px #000;
 }
 
 #taskboard-content ul {
