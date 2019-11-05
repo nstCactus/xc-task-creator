@@ -157,7 +157,16 @@ function(taskBoard, Turnpoint, fullBoard, param, optimizer, taskAdvisor, taskExp
     taskChange();
   }
 
-
+  
+  var onchangeTaskTurn = function(e) {
+    if ( taskInfo.turn == "left" ) {
+      taskInfo.turn = "right";
+    }
+    else {
+      taskInfo.turn = "left";
+    }
+    taskChange();
+  }
 
   var onTaskEdit = function(e) {
     var newTask = e.detail.newTask;
@@ -221,8 +230,9 @@ function(taskBoard, Turnpoint, fullBoard, param, optimizer, taskAdvisor, taskExp
   document.addEventListener('newTask', onNewTask);
   document.addEventListener('saveTask', onTaskSave);
   document.addEventListener('changeTaskNumber', onchangeTaskNumber);
+  document.addEventListener('changeTaskTurn', onchangeTaskTurn);
 
-
+  
 
   return {
     'addTurnpoint' : addTurnpoint,
