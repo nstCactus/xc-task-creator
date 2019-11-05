@@ -10,6 +10,19 @@ function(taskBoard, Turnpoint, fullBoard, param, optimizer, taskAdvisor, taskExp
 
   var link2 = $("#show-cumulative");
 
+  //localStorage.clear()
+
+  let showCumulativeDistances = localStorage.getItem('showCumulativeDistances');
+  if ( showCumulativeDistances != null) {
+    param.showCumulativeDistances = showCumulativeDistances;
+  }
+  if ( param.showCumulativeDistances ) {
+    link2.html("Cumulative distances");
+  }
+  else {
+    link2.html("Partial distances");
+  }
+
   link2.click(function(e) {
     param.showCumulativeDistances = ! param.showCumulativeDistances;
     if ( param.showCumulativeDistances ) {
@@ -19,8 +32,8 @@ function(taskBoard, Turnpoint, fullBoard, param, optimizer, taskAdvisor, taskExp
     else {
       link2.html("Partial distances");
       taskChange();
-
     }
+    localStorage.setItem('showCumulativeDistances', param.showCumulativeDistances);
   });
 
 
