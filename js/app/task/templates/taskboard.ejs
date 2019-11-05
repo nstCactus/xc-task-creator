@@ -38,6 +38,9 @@
           <button id="decrease-task" class="btn btn-primary btn-xs pull-right">-</button>
         </div>
 
+        <div style="padding : 3px;"> <span class="label label-default" style="font-size: 1.0em; padding : 2px;">Date : <%- taskInfo.date %></span> 
+          <!-- <button id="change_task_date" class="btn btn-primary btn-xs pull-right">c</button> -->
+        </div>
         <div style="padding : 3px;"> <span class="label label-default" style="background-color : #204d74 ;font-size: 1.0em; padding : 2px;">Takeoff open : <%- windows_open %></span> </div>
         <div style="padding : 3px;"> <span class="label label-default" style="background-color : #204d74 ;font-size: 1.0em; padding : 2px;">Window close : <%- windows_close %></span> </div>
         <div style="padding : 3px;"> <span class="label label-default" style="background-color : #ac2925 ;font-size: 1.0em; padding : 2px;">Start : <%- start_open %>  <% if ( taskInfo.ngates > 1 ) { %>	Gates:<%- taskInfo.ngates %>  +<%- taskInfo.gateint %> Minutes<% 	} %> </span> </div>

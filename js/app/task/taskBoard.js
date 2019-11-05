@@ -31,8 +31,6 @@ define(['rejs!task/templates/taskboard', 'jquery', 'jquery-ui'], function(taskBo
   });
 
 
-
-
   function makeItSortable () {
     $("#taskboard ul").sortable({
       start: function(event, ui) {
