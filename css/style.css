@@ -36,6 +36,9 @@
     left:0;
     top:0;
   }
+  #show-cumulative {
+    visibility:hidden;
+  }
 
   /* #taskboard {
     page-break-before: always;
@@ -208,7 +211,7 @@ gm-panel li {
   text-shadow: 0px 0px 10px #000;
   font-style: italic;
   font-family: cursive;
-  font-size: 2.0em;
+  font-size: 1.5em;
   text-align: center;
   margin-bottom : 10px;
 
@@ -244,7 +247,7 @@ a:hover {
 }
 
 #taskboard #task-distance {
-  margin-top: 20px;
+  margin-top: 5px;
   text-align: right;
   font-size: 1.2em;
   padding-right: 10px;
