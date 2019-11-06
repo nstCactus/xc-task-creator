@@ -82,8 +82,17 @@
     </div>
     <hr>
     <div style="padding : 3px;">
-      <textarea id="taskInfo" style="width:100%;height:75px;background-color : #383838 ;font-size: 1.0em; padding : 2px;"><%- taskInfo.info %></textarea>
+      <textarea id="taskInfo" onchange="javascript:taskInfoChanged();"
+        style="width:100%;height:75px;background-color : #383838 ;font-size: 1.0em; padding : 2px;"><%- taskInfo.info %></textarea>
     </div>
-
+    <script>
+      function taskInfoChanged() {
+        var info = document.getElementById("taskInfo").value;
+        var e = document.createEvent("CustomEvent");
+              e.initCustomEvent('changeTaskInfo', false, false, {
+                info: info,
+              });
+              document.dispatchEvent(e);      }
+    </script>
   </div>
 </div>

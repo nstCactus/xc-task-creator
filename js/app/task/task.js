@@ -8,8 +8,13 @@ function(taskBoard, Turnpoint, fullBoard, param, optimizer, taskAdvisor, taskExp
   var taskInfo = param.task.default;
   taskInfo.id = 0;
 
-  //localStorage.clear()
+  localStorage.clear()
 
+
+  var taskInformation = localStorage.getItem('taskInformation');
+  if ( taskInformation != null) {
+    param.task.default.info = taskInformation;
+  }
 
   var link_show_cumulative = $("#show-cumulative");
   let showCumulativeDistances = localStorage.getItem('showCumulativeDistances');
@@ -174,6 +179,13 @@ function(taskBoard, Turnpoint, fullBoard, param, optimizer, taskAdvisor, taskExp
     taskChange();
   }
 
+  var onchangeTaskInfo = function(e) {
+    var info = e.detail.info;
+    taskInfo.info = info;
+    localStorage.setItem('taskInformation', info);
+    //taskChange();
+  }
+  
   
 
   var onTaskEdit = function(e) {
@@ -243,6 +255,7 @@ function(taskBoard, Turnpoint, fullBoard, param, optimizer, taskAdvisor, taskExp
   document.addEventListener('changeTaskNumber', onchangeTaskNumber);
   document.addEventListener('changeTaskTurn', onchangeTaskTurn);
   document.addEventListener('changeTaskDate', onchangeTaskDate);
+  document.addEventListener('changeTaskInfo', onchangeTaskInfo);
 
   
 
