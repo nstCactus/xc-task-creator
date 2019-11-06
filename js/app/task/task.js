@@ -168,6 +168,14 @@ function(taskBoard, Turnpoint, fullBoard, param, optimizer, taskAdvisor, taskExp
     taskChange();
   }
 
+  var onchangeTaskDate = function(e) {
+    var date = e.detail.date;
+    taskInfo.date =date;
+    taskChange();
+  }
+
+  
+
   var onTaskEdit = function(e) {
     var newTask = e.detail.newTask;
     taskInfo.num = newTask.num;
@@ -231,6 +239,7 @@ function(taskBoard, Turnpoint, fullBoard, param, optimizer, taskAdvisor, taskExp
   document.addEventListener('saveTask', onTaskSave);
   document.addEventListener('changeTaskNumber', onchangeTaskNumber);
   document.addEventListener('changeTaskTurn', onchangeTaskTurn);
+  document.addEventListener('changeTaskDate', onchangeTaskDate);
 
   
 

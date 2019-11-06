@@ -14,6 +14,9 @@ define(['rejs!task/templates/taskboard', 'jquery', 'jquery-ui'], function (taskB
   });
 
 
+
+
+
   $(document).on('click', '#increase-task', function (e) {
     var e = document.createEvent("CustomEvent");
     e.initCustomEvent('changeTaskNumber', false, false, {
@@ -21,6 +24,8 @@ define(['rejs!task/templates/taskboard', 'jquery', 'jquery-ui'], function (taskB
     });
     document.dispatchEvent(e);
   });
+
+
 
 
   $(document).on('click', '#toggle-turn', function (e) {

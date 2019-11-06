@@ -5,9 +5,10 @@
       var start_open = "";
       var deadline = "";
       for(var i = 0;  i < turnpoints.length; i++) { %>
-      <li class="taskboard-item">
-        <span class="label label-default" style="background-color : <%- turnpoints[i].fillColor %>"><%- turnpoints[i].shortName %></span>
-        <% 
+    <li class="taskboard-item">
+      <span class="label label-default"
+        style="background-color : <%- turnpoints[i].fillColor %>"><%- turnpoints[i].shortName %></span>
+      <% 
             if (turnpoints[i].type ==  "takeoff") {
               windows_open = turnpoints[i].open;
               windows_close = turnpoints[i].close;
@@ -16,40 +17,68 @@
               deadline = turnpoints[i].close;
             } 
         %>
-        <%- turnpoints[i].id  + ' [' + turnpoints[i].radius  + ' m] '     %>  
-        <% if ( turnpoints[i].type == "start" ) { start_open = turnpoints[i].open; %>
-          <%- turnpoints[i].mode.toUpperCase() %> 
+      <%- turnpoints[i].id  + ' [' + turnpoints[i].radius  + ' m] '     %>
+      <% if ( turnpoints[i].type == "start" ) { start_open = turnpoints[i].open; %>
+      <%- turnpoints[i].mode.toUpperCase() %>
+      <% } %>
+      <span class="turnpointDistance">
+        <% if ( taskInfo.distances[i - 1] ) { %>
+        <%- taskInfo.distances[i-1].toFixed(1) + ' km' %>
         <% } %>
-        <span class="turnpointDistance">
-          <% if ( taskInfo.distances[i - 1] ) { %>
-            <%- taskInfo.distances[i-1].toFixed(1) + ' km' %> 
-          <% } %>
-        </span>
-      </li>
+      </span>
+    </li>
     <% } %>
   </ul>
   <hr>
-  
+
   <div id="task-distance"> Task optimized distance: <%- (Math.round(taskInfo.distance) / 1000).toFixed(1) %> Km </div>
   <hr>
   <div id="task-times">
-        <div style="padding : 3px;"> <span class="label label-default" style="font-size: 1.0em; padding : 2px;">Task N. : <%- taskInfo.num %></span> 
-          <button id="increase-task" class="btn btn-primary btn-xs pull-right">+</button>
-          <button id="decrease-task" class="btn btn-primary btn-xs pull-right">-</button>
-        </div>
+    <div style="padding : 3px;"> <span class="label label-default"
+        style="background-color : #383838 ;font-size: 1.0em; padding : 2px;">Task N. :
+        <%- taskInfo.num %></span>
+      <button id="increase-task" class="btn btn-primary btn-xs pull-right">+</button>
+      <button id="decrease-task" class="btn btn-primary btn-xs pull-right">-</button>
+    </div>
 
-        <div style="padding : 3px;"> <span class="label label-default" style="font-size: 1.0em; padding : 2px;">Date : <%- taskInfo.date %></span> 
-          <!-- <button id="change_task_date" class="btn btn-primary btn-xs pull-right">c</button> -->
-          <!-- <input type="input" id="hiddenField" class="datepicker" value=<%- taskInfo.date %>/>  -->
-        </div>
+    <div style="padding : 3px;"> <span class="label label-default"
+        style="background-color : #383838 ;font-size: 1.0em; padding : 2px;">Date :
+        <input type="input" id="taskDate" class="datepicker" value="<%- taskInfo.date %>"
+          style="background-color : #383838 ;font-size: 1.0em; padding : 2px;" />
+        <script>
+          $("#taskDate").datepicker({
+            dateFormat: 'dd-mm-yy',
+            onSelect: function (dateText, inst) {
+              var e = document.createEvent("CustomEvent");
+              e.initCustomEvent('changeTaskDate', false, false, {
+                date: dateText,
+              });
+              document.dispatchEvent(e);
+            }
+          });
+        </script>
+      </span>
+    </div>
 
-        <div style="padding : 3px;"> <span class="label label-default" style="font-size: 1.0em; padding : 2px;">Turn : <%- taskInfo.turn %></span> 
-          <button id="toggle-turn" class="btn btn-primary btn-xs pull-right">T</button>
-        </div>
+    <div style="padding : 3px;"> <span class="label label-default"
+        style="background-color : #383838 ;font-size: 1.0em; padding : 2px;">Turn :
+        <%- taskInfo.turn %></span>
+      <button id="toggle-turn" class="btn btn-primary btn-xs pull-right">T</button>
 
-        <div style="padding : 3px;"> <span class="label label-default" style="background-color : #204d74 ;font-size: 1.0em; padding : 2px;">Takeoff open : <%- windows_open %></span> </div>
-        <div style="padding : 3px;"> <span class="label label-default" style="background-color : #204d74 ;font-size: 1.0em; padding : 2px;">Window close : <%- windows_close %></span> </div>
-        <div style="padding : 3px;"> <span class="label label-default" style="background-color : #ac2925 ;font-size: 1.0em; padding : 2px;">Start : <%- start_open %>  <% if ( taskInfo.ngates > 1 ) { %>	Gates:<%- taskInfo.ngates %>  +<%- taskInfo.gateint %> Minutes<% 	} %> </span> </div>
-        <div style="padding : 3px;"> <span class="label label-default" style="background-color : #398439 ;font-size: 1.0em; padding : 2px;">Task deadline : <%- deadline %></span> </div>
+    </div>
+
+    <div style="padding : 3px;"> <span class="label label-default"
+        style="background-color : #204d74 ;font-size: 1.0em; padding : 2px;">Takeoff open : <%- windows_open %></span>
+    </div>
+    <div style="padding : 3px;"> <span class="label label-default"
+        style="background-color : #204d74 ;font-size: 1.0em; padding : 2px;">Window close : <%- windows_close %></span>
+    </div>
+    <div style="padding : 3px;"> <span class="label label-default"
+        style="background-color : #ac2925 ;font-size: 1.0em; padding : 2px;">Start : <%- start_open %>
+        <% if ( taskInfo.ngates > 1 ) { %> Gates:<%- taskInfo.ngates %> +<%- taskInfo.gateint %> Minutes<% 	} %> </span>
+    </div>
+    <div style="padding : 3px;"> <span class="label label-default"
+        style="background-color : #398439 ;font-size: 1.0em; padding : 2px;">Task deadline : <%- deadline %></span>
+    </div>
   </div>
 </div>

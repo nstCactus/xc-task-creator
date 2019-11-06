@@ -134,6 +134,13 @@ select {
   font-size: 0.9em;
 }
 
+
+#taskDate {
+  color : #FFFFFF;
+  border: 0;
+  cursor:pointer;
+
+}
 /**
  * Filename List.
  */
