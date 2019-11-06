@@ -37,8 +37,8 @@ define([], function() {
       },
       default : {
         // date : day + '-' + date.getUTCMonth() + '-' + date.getUTCFullYear(),
-        date : day.pad(2) + '-' + date.getUTCMonth().pad(2) + '-' + date.getUTCFullYear(),
-        num : 0,
+        date : day.pad(2) + '-' + (date.getUTCMonth()+1).pad(2) + '-' + date.getUTCFullYear(),
+        num : 1,
         type : 'race',
         turn : turn,
         distance : 0,
