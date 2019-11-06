@@ -8,7 +8,7 @@ function(taskBoard, Turnpoint, fullBoard, param, optimizer, taskAdvisor, taskExp
   var taskInfo = param.task.default;
   taskInfo.id = 0;
 
-  localStorage.clear()
+  //localStorage.clear()
 
 
   var taskInformation = localStorage.getItem('taskInformation');
