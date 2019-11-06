@@ -36,9 +36,7 @@
     left:0;
     top:0;
   }
-  #show-cumulative {
-    visibility:hidden;
-  }
+
 
   /* #taskboard {
     page-break-before: always;
@@ -232,15 +230,22 @@ gm-panel li {
 
 }
 
+hr{
+  padding: 0px;
+  margin: 3px;    
+}
+
 a:hover {
   cursor:pointer;
  }
 
 #show-cumulative {
   color : #FFF;
-  margin-top : 0px;
+  font-style: italic;
+  font-family: cursive;
+  margin-top : 5px;
   margin-right: 5px;
-  font-size: 1.0em;
+  font-size: 0.7em;
   text-decoration: underline;
   text-shadow : 0px 0px 10px #000;
 }
@@ -284,8 +289,8 @@ a:hover {
 /**
  * Fullboard
  */
-#full-board #print{
-  margin-top : 10px;
+#full-board {
+  margin-top : 5px;
 }
 
 #task-config .container-fluid {
