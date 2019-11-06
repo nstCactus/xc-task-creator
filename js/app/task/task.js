@@ -190,7 +190,9 @@ function(taskBoard, Turnpoint, fullBoard, param, optimizer, taskAdvisor, taskExp
 
   var drawCourse = function(google, map) {
     var opti =  optimizer.optimize(google, map, turnpoints);
-    for (var e in opti) { taskInfo[e] = opti[e]; }
+    for (var e in opti) { 
+      taskInfo[e] = opti[e]; 
+    }
     taskBoard.rebuildTask(turnpoints, taskInfo);
   }
 
@@ -208,6 +210,7 @@ function(taskBoard, Turnpoint, fullBoard, param, optimizer, taskAdvisor, taskExp
     var waypoints = e.detail.waypoints;
     var tps = e.detail.task.turnpoints;
     taskInfo = e.detail.task;
+    taskInfo.info = param.task.default.info;
     taskInfo.turn =  taskInfo.date.substr(0, 2) % 2 == 0 ? "Right" : "Left";
     if (tps) {
       for (var i = 0; i < tps.length; i++) {

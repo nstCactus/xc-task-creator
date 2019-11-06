@@ -44,7 +44,8 @@ define([], function() {
         distance : 0,
         bbox : false,
         ngates : 1,
-        gateint :  15
+        gateint :  15,
+        info: "TaskInfo:"
       }
     },
     turnpoint : {

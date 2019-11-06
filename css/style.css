@@ -131,7 +131,8 @@ select {
 }
 
 .jGrowl-message {
-  font-size: 0.9em;
+  font-size: 1.0em;
+  color : #FFFFFF;
 }
 
 
@@ -141,6 +142,13 @@ select {
   cursor:pointer;
 
 }
+
+
+#taskInfo{
+  color : #FFFFFF;
+  border: 0;
+}
+
 /**
  * Filename List.
  */

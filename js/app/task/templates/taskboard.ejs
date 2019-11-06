@@ -35,7 +35,7 @@
   <hr>
   <div id="task-times">
     <div style="padding : 3px;"> <span class="label label-default"
-        style="background-color : #383838 ;font-size: 1.0em; padding : 2px;">Task N. :
+        style="background-color : #383838 ;font-size: 1.0em; padding : 2px;">Task N :
         <%- taskInfo.num %></span>
       <button id="increase-task" class="btn btn-primary btn-xs pull-right">+</button>
       <button id="decrease-task" class="btn btn-primary btn-xs pull-right">-</button>
@@ -80,5 +80,10 @@
     <div style="padding : 3px;"> <span class="label label-default"
         style="background-color : #398439 ;font-size: 1.0em; padding : 2px;">Task deadline : <%- deadline %></span>
     </div>
+    <hr>
+    <div style="padding : 3px;">
+      <textarea id="taskInfo" style="width:100%;height:75px;background-color : #383838 ;font-size: 1.0em; padding : 2px;"><%- taskInfo.info %></textarea>
+    </div>
+
   </div>
 </div>
