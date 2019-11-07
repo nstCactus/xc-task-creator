@@ -5,9 +5,13 @@
   <title>Task creator</title>
   <script type='text/javascript' src="js/lib/x2js/xml2json.js"></script>
   <script type='text/javascript' src="js/lib/proj4/proj4.js"></script>
+  <script type='text/javascript' src="js/lib/html2canvas/html2canvas.min.js"></script>
+  <script type='text/javascript' src="js/lib/jspdf/jspdf.min.js"></script>
+
 
   <script data-main="js/app" src="bower_components/requirejs/require.js"></script>
   <script type="text/javascript" src="bower_components/geoxml3/geoxml3.js"></script>
+
   <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
   <link rel="stylesheet" type="text/css" href="css/style.css">
@@ -66,7 +70,7 @@
           <button id="export-task" class="btn btn-primary hide pull-left" style="margin-top : 5px;">
             <span class="glyphicon glyphicon-save-file" aria-hidden="true"></span> Save task
           </button>
-          <!-- <button id="print" type="button" class="btn btn-primary hide pull-right" onclick="">Print</button> -->
+          <!-- <button id="print-task" type="button" class="btn btn-primary hide pull-right" style="margin-top : 5px;">Print</button> -->
 
           <div id="tracks">
           </div>
