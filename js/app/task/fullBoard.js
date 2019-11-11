@@ -7,7 +7,7 @@ define(['jquery', 'app/helper', 'app/param', 'rejs!task/templates/fullboardTurnp
 
     var link = $("#full-board");
     var link1 = $("#export-task");
-    var linkPrint = $("#print-task");
+    var linkPrint = $("#print");
 
     link.click(function (e) {
       var e = document.createEvent("CustomEvent");
@@ -17,13 +17,7 @@ define(['jquery', 'app/helper', 'app/param', 'rejs!task/templates/fullboardTurnp
 
 
     linkPrint.click(function (e) {
-      console.log("print");
-      // html2canvas(document.body).then(function (canvas) {
-      //   document.body.appendChild(canvas);
-      // });  task-config
-
-
-
+      window.print();
     });
 
 
@@ -39,33 +33,59 @@ define(['jquery', 'app/helper', 'app/param', 'rejs!task/templates/fullboardTurnp
     }
 
 
+    function printElement(elem) {
+      var domClone = elem.cloneNode(true);
+      
+      var $printSection = document.getElementById("printSection");
+      
+      if (!$printSection) {
+          var $printSection = document.createElement("div");
+          $printSection.id = "printSection";
+          document.body.appendChild($printSection);
+      }
+      
+      $printSection.innerHTML = "";
+      $printSection.appendChild(domClone);
+      window.print();
+      $printSection.innerHTML = '';
+
+  }
+
+
     $(document).on('click', '#print-task', function (e) {
 
-      const filename = 'task.pdf';
       var tc = document.querySelector('#task-config');
-      // tc.style.left = "0px"; 
-      $('#task-config').css({
-        position: 'fixed',
-        left: 0,
-        top: 0,
-      });
-      html2canvas(tc, {
-        // scale: 3,
-        width: 2481,
-        height: 3507,
-        backgroundColor: "#FFFFFF",
-        // x: 630,
-        // y: 20,
-      }
+      document.body.style.visibility = "hidden";
+      printElement(tc);
+      document.body.style.visibility = "visible";
+      $("#task-config").modal('hide')
 
-      ).then(canvas => {
-        //document.body.appendChild(canvas);
-        var image = canvas.toDataURL('image/png');
-        window.open(image);
-        let pdf = new jsPDF('p', 'mm', 'a4');
-        // pdf.addImage(image, 'PNG', 0, 0, 297, 210);
-        // pdf.save(filename);
-      });
+
+    //   const filename = 'task.pdf';
+    //  // tc.style.left = "0px";
+    //   // tc.style.left = "0px"; 
+    //   $('#task-config').css({
+    //     position: 'fixed',
+    //     left: 0,
+    //     top: 0,
+    //   });
+    //   html2canvas(tc, {
+    //     // scale: 3,
+    //     width: 2481,
+    //     height: 3507,
+    //     backgroundColor: "#FFFFFF",
+    //     // x: 630,
+    //     // y: 20,
+    //   }
+
+    //   ).then(canvas => {
+    //     //document.body.appendChild(canvas);
+    //     var image = canvas.toDataURL('image/png');
+    //     window.open(image);
+    //     let pdf = new jsPDF('p', 'mm', 'a4');
+    //     // pdf.addImage(image, 'PNG', 0, 0, 297, 210);
+    //     // pdf.save(filename);
+    //   });
     });
 
 
