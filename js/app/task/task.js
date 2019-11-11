@@ -159,6 +159,8 @@ function(taskBoard, Turnpoint, fullBoard, param, optimizer, taskAdvisor, taskExp
     else {
       taskInfo.num--;
     }
+    taskInfo.turn = (taskInfo.num % 2 == 0) ? 'right' : 'left';
+
     taskChange();
   }
 
