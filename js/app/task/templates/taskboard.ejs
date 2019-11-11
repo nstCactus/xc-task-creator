@@ -79,6 +79,11 @@
         <% if ( turnpoints[i].type == "start" ) {  %>
         <%- turnpoints[i].mode.toUpperCase() %>
         <% } %>
+
+        <% if ( turnpoints[i].type == "goal" ) {  %>
+          <%- turnpoints[i].goalType.toUpperCase() %>
+          <% } %>
+
         <span class="turnpointDistance">
           <% if ( taskInfo.distances[i - 1] ) { %>
           <%- taskInfo.distances[i-1].toFixed(1) + ' km' %>
