@@ -17,7 +17,7 @@
 
   @page {
     size: landscape;
-    margin:0.3mm;
+    margin:0.0mm;
   }
   button {
     visibility: hidden;
@@ -36,6 +36,7 @@
     left:0;
     top:0;
   }
+  body { margin: 1mm; }
 
 
   /* #taskboard {
