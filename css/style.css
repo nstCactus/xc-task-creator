@@ -17,7 +17,7 @@
 
   @page {
     size: landscape;
-    margin:5mm;
+    margin:0.3mm;
   }
   button {
     visibility: hidden;
