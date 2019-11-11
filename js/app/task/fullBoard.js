@@ -42,7 +42,14 @@ define(['jquery', 'app/helper', 'app/param', 'rejs!task/templates/fullboardTurnp
     $(document).on('click', '#print-task', function (e) {
 
       const filename = 'task.pdf';
-      html2canvas(document.querySelector('#task-config'), {
+      var tc = document.querySelector('#task-config');
+      // tc.style.left = "0px"; 
+      $('#task-config').css({
+        position: 'fixed',
+        left: 0,
+        top: 0,
+      });
+      html2canvas(tc, {
         // scale: 3,
         width: 2481,
         height: 3507,
