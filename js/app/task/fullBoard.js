@@ -86,6 +86,7 @@ define(['jquery', 'app/helper', 'app/param', 'rejs!task/templates/fullboardTurnp
     //     // pdf.addImage(image, 'PNG', 0, 0, 297, 210);
     //     // pdf.save(filename);
     //   });
+    
     });
 
 

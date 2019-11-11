@@ -2,7 +2,7 @@
  * @file
  * Taskboard module for the task creator.
  */
-define(['rejs!task/templates/taskboard', 'jquery', 'jquery-ui'], function (taskBoard, $) {
+define(['rejs!task/templates/taskboard', 'app/param', 'jquery', 'jquery-ui'], function (taskBoard, param, $) {
 
   $(document).on('click', '#taskboard li', function (e) {
     var index = $(this).index();
@@ -12,8 +12,6 @@ define(['rejs!task/templates/taskboard', 'jquery', 'jquery-ui'], function (taskB
     });
     document.dispatchEvent(e);
   });
-
-
 
 
 
@@ -71,6 +69,41 @@ define(['rejs!task/templates/taskboard', 'jquery', 'jquery-ui'], function (taskB
     });
   }
 
+  let showCumulativeDistances = localStorage.getItem('showCumulativeDistances');
+  if (showCumulativeDistances != null) {
+    param.showCumulativeDistances = showCumulativeDistances;
+  }
+
+  var updateDistaceType = function () {
+    var link_show_cumulative = $("#show-cumulative");
+    if (link_show_cumulative.length > 0) {
+      if (param.showCumulativeDistances) {
+        link_show_cumulative.html("Cumulative distances");
+      }
+      else {
+        link_show_cumulative.html("Partial distances");
+      }
+      link_show_cumulative.click(function (e) {
+        localStorage.setItem('showCumulativeDistances', !param.showCumulativeDistances);
+        param.showCumulativeDistances = !param.showCumulativeDistances;
+
+
+
+        if (param.showCumulativeDistances) {
+          link_show_cumulative.html("Cumulative distances");
+        }
+        else {
+          link_show_cumulative.html("Partial distances");
+        }
+
+        var ev = document.createEvent("CustomEvent");
+        ev.initCustomEvent('taskChanged', false, false, {});
+        document.dispatchEvent(ev);
+
+      });
+    }
+  }
+
   var rebuildTask = function (turnpoints, taskInfo) {
     $("#taskboard-content").html(taskBoard({
       turnpoints: turnpoints,
@@ -78,6 +111,8 @@ define(['rejs!task/templates/taskboard', 'jquery', 'jquery-ui'], function (taskB
     }));
 
     makeItSortable();
+    updateDistaceType();
+
   }
 
   return {
