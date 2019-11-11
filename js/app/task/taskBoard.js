@@ -69,7 +69,9 @@ define(['rejs!task/templates/taskboard', 'app/param', 'jquery', 'jquery-ui'], fu
     });
   }
 
-  let showCumulativeDistances = localStorage.getItem('showCumulativeDistances');
+   //localStorage.clear()
+
+  let showCumulativeDistances = localStorage.getItem('showCumulativeDistances') == "true";
   if (showCumulativeDistances != null) {
     param.showCumulativeDistances = showCumulativeDistances;
   }
@@ -84,8 +86,8 @@ define(['rejs!task/templates/taskboard', 'app/param', 'jquery', 'jquery-ui'], fu
         link_show_cumulative.html("Partial distances");
       }
       link_show_cumulative.click(function (e) {
-        localStorage.setItem('showCumulativeDistances', !param.showCumulativeDistances);
         param.showCumulativeDistances = !param.showCumulativeDistances;
+        localStorage.setItem('showCumulativeDistances', param.showCumulativeDistances? "true" : "false");
 
 
 
