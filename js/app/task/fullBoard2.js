@@ -117,7 +117,7 @@ define(['jquery', 'app/helper', 'app/param', 'rejs!task/templates/fullboard2'],
 
       replace(html, "RANGE!F4", deadline);
 
-      replace(html, "RANGE!C5", start_open);
+      replace(html, "RANGE!B5", start_open);
 
 
 
@@ -129,21 +129,21 @@ define(['jquery', 'app/helper', 'app/param', 'rejs!task/templates/fullboard2'],
           m -= 60;
           h++;
         }
-        replace(html, "RANGE!D5", h.pad(2) + ":" + m.pad(2));
+        replace(html, "RANGE!C5", h.pad(2) + ":" + m.pad(2));
         if (taskInfo.ngates > 2) {
           m += Number(taskInfo.gateint);
           if (m >= 60) {
             m -= 60;
             h++;
           }
-          replace(html, "RANGE!E5", h.pad(2) + ":" + m.pad(2));
+          replace(html, "RANGE!D5", h.pad(2) + ":" + m.pad(2));
           if (taskInfo.ngates > 3) {
             m += Number(taskInfo.gateint);
             if (m >= 60) {
               m -= 60;
               h++;
             }
-            replace(html, "RANGE!F5", h.pad(2) + ":" + m.pad(2));
+            replace(html, "RANGE!E5", h.pad(2) + ":" + m.pad(2));
           }
         }
       }
@@ -190,6 +190,15 @@ define(['jquery', 'app/helper', 'app/param', 'rejs!task/templates/fullboard2'],
       }
 
       replace(html, "RANGE!F19",  (Math.round(taskInfo.distance) / 1000).toFixed(1) );
+
+
+      var textbox = "<input style='border:none;width:95%;font-size:18.0pt;font-weight:700;text-align:center;' value=''></input>";
+      var textbox30 = "<input style='border:none;width:95%;font-size:18.0pt;font-weight:700;text-align:center;' value='30'></input>";
+      replace(html, "RANGE!C2",textbox);
+      replace(html, "RANGE!D2",textbox);
+      replace(html, "RANGE!F3",textbox30);
+
+
 
       var str = taskInfo.info.replace(/(?:\r\n|\r|\n)/g, '<br>');
       replace(html, "RANGE!B19", str);
