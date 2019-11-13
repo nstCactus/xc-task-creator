@@ -2,8 +2,8 @@
  * @file
  * Task Module for the task creator.
  */
-define(['task/taskBoard', 'task/turnpoint', 'task/fullBoard', 'app/param', 'task/taskOptimiser', 'task/taskAdvisor', 'task/taskExporter'],
-  function (taskBoard, Turnpoint, fullBoard, param, optimizer, taskAdvisor, taskExporter) {
+define(['task/taskBoard', 'task/turnpoint', 'task/fullBoard', 'task/fullBoard2', 'app/param', 'task/taskOptimiser', 'task/taskAdvisor', 'task/taskExporter'],
+  function (taskBoard, Turnpoint, fullBoard, fullBoard2 , param, optimizer, taskAdvisor, taskExporter) {
     var turnpoints = [];
     var taskInfo = param.task.default;
     taskInfo.id = 0;
@@ -125,6 +125,13 @@ define(['task/taskBoard', 'task/turnpoint', 'task/fullBoard', 'app/param', 'task
     }
 
 
+    var onOpenTaskFullBoard2= function (e) {
+      fullBoard2.open({
+        turnpoints: turnpoints,
+        taskInfo: taskInfo,
+      });
+    }
+
     var onchangeTaskNumber = function (e) {
       var forward = e.detail.forward;
       if (forward) {
@@ -235,6 +242,7 @@ define(['task/taskBoard', 'task/turnpoint', 'task/fullBoard', 'app/param', 'task
     document.addEventListener('changeTaskDate', onchangeTaskDate);
     document.addEventListener('changeTaskInfo', onchangeTaskInfo);
     document.addEventListener('taskChanged', onTaskChanged);
+    document.addEventListener('openTaskFullBoard2', onOpenTaskFullBoard2);
 
 
     

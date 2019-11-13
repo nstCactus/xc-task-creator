@@ -8,6 +8,8 @@ define(['jquery', 'app/helper', 'app/param', 'rejs!task/templates/fullboardTurnp
     var link = $("#full-board");
     var link1 = $("#export-task");
     var linkPrint = $("#print");
+    var link2 = $("#full-board2");
+
 
     link.click(function (e) {
       var e = document.createEvent("CustomEvent");
@@ -22,6 +24,7 @@ define(['jquery', 'app/helper', 'app/param', 'rejs!task/templates/fullboardTurnp
 
 
     var toggleLink = function (bool) {
+      (bool == true) ? link2.removeClass('hide') : link2.addClass('hide');
       (bool == true) ? link.removeClass('hide') : link.addClass('hide');
       (bool == true) ? link1.removeClass('hide') : link1.addClass('hide');
       (bool == true) ? linkPrint.removeClass('hide') : linkPrint.addClass('hide');
