@@ -42,21 +42,15 @@ define(['jquery', 'app/helper', 'app/param', 'rejs!task/templates/fullboard2'],
       $printSection.appendChild(domClone);
       window.print();
       $printSection.innerHTML = '';
-
     }
 
 
     $(document).on('click', '#print-task2', function (e) {
-
       var tc = document.querySelector('#task-config2');
       document.body.style.visibility = "hidden";
       printElement(tc);
       document.body.style.visibility = "visible";
       $("#task-config2").modal('hide')
-
-
-
-
     });
 
     function replace(doc, key, value) {
@@ -150,71 +144,73 @@ define(['jquery', 'app/helper', 'app/param', 'rejs!task/templates/fullboard2'],
 
       let start_index = 7;
       let tp = 1;
-      for (let i= 0; i< turnpoints.length;i++) {
+      for (let i = 0; i < turnpoints.length; i++) {
         let index = start_index;
-        if ( turnpoints[i].type == "end-of-speed-section") {
+        if (turnpoints[i].type == "end-of-speed-section") {
           index = 17;
-          replace(html, "RANGE!A"+index, "ESS");
+          replace(html, "RANGE!A" + index, "ESS");
         }
-        if ( turnpoints[i].type == "goal") {
+        if (turnpoints[i].type == "goal") {
           index = 18;
-          replace(html, "RANGE!A"+index, "GOAL");
-          replace(html, "RANGE!D"+index, turnpoints[i].goalType.toUpperCase());
+          replace(html, "RANGE!A" + index, "GOAL");
+          replace(html, "RANGE!D" + index, turnpoints[i].goalType.toUpperCase());
         }
-        if ( turnpoints[i].type == "start") {
-          replace(html, "RANGE!A"+index, "START");
-          replace(html, "RANGE!D"+index, turnpoints[i].mode.toUpperCase());
+        if (turnpoints[i].type == "start") {
+          replace(html, "RANGE!A" + index, "START");
+          replace(html, "RANGE!D" + index, turnpoints[i].mode.toUpperCase());
           start_index++;
         }
-        if ( turnpoints[i].type == "takeoff") {
-          replace(html, "RANGE!A"+index, "TAKEOFF");
+        if (turnpoints[i].type == "takeoff") {
+          replace(html, "RANGE!A" + index, "TAKEOFF");
 
           start_index++;
 
         }
-        if ( turnpoints[i].type == "turnpoint") {
-          replace(html, "RANGE!A"+index, "TP"+tp);
+        if (turnpoints[i].type == "turnpoint") {
+          replace(html, "RANGE!A" + index, "TP" + tp);
           tp++;
           start_index++;
         }
-                  
-        replace(html, "RANGE!B"+index, turnpoints[i].id);
-        replace(html, "RANGE!E"+index, turnpoints[i].radius);
 
-        if ( i > 0 ) {
-          replace(html, "RANGE!F"+(index), taskInfo.distances[i-1].toFixed(1));
+        replace(html, "RANGE!B" + index, turnpoints[i].id);
+        replace(html, "RANGE!E" + index, turnpoints[i].radius);
+
+        if (i > 0) {
+          replace(html, "RANGE!F" + (index), taskInfo.distances[i - 1].toFixed(1));
 
         }
 
 
       }
 
-      replace(html, "RANGE!F19",  (Math.round(taskInfo.distance) / 1000).toFixed(1) );
+      replace(html, "RANGE!F19", (Math.round(taskInfo.distance) / 1000).toFixed(1));
 
 
       var textbox = "<input style='border:none;width:95%;font-size:18.0pt;font-weight:700;text-align:center;' value=''></input>";
       var textbox30 = "<input style='border:none;width:95%;font-size:18.0pt;font-weight:700;text-align:center;' value='30'></input>";
-      replace(html, "RANGE!C2",textbox);
-      replace(html, "RANGE!D2",textbox);
-      replace(html, "RANGE!F3",textbox30);
+      replace(html, "RANGE!C2", textbox);
+      replace(html, "RANGE!D2", textbox);
+      replace(html, "RANGE!F3", textbox30);
 
 
 
       var str = taskInfo.info.replace(/(?:\r\n|\r|\n)/g, '<br>');
       replace(html, "RANGE!B19", str);
 
-      
 
 
 
-      var win = window.open("");
-      win.document.body.innerHTML = html.documentElement.innerHTML;
+      if (true) {
+        var win = window.open("");
+        win.document.body.innerHTML = html.documentElement.innerHTML;
+      }
+      else {
+        $('body').append(content);
+        $("#task-config2").modal();
+      }
 
 
 
-
-      // $('body').append(content);
-      // $("#task-config2").modal();
     }
 
 
