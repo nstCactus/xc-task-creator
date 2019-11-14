@@ -2,8 +2,8 @@
  * @file
  * Full Board2 Module for the task Creator.
  */
-define(['jquery', 'app/helper', 'app/param', 'rejs!task/templates/fullboard2'],
-  function ($, helper, param, fullTemplate) {
+define(['jquery', 'simplemodal' ,'app/helper', 'app/param', 'rejs!task/templates/fullboard2'],
+  function ($, simplemodal,helper, param, fullTemplate) {
 
     Number.prototype.pad = function (size) {
       var s = String(this);
@@ -205,8 +205,7 @@ define(['jquery', 'app/helper', 'app/param', 'rejs!task/templates/fullboard2'],
         win.document.body.innerHTML = html.documentElement.innerHTML;
       }
       else {
-        $('body').append(content);
-        $("#task-config2").modal();
+        $.modal(html.documentElement.innerHTML)
       }
 
 

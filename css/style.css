@@ -73,7 +73,11 @@
 }
 
 
-
+#simplemodal-container {
+  /* height: 100%;
+  width: 100%; */
+  background-color: #FFFFFF;
+}
 
 html, body {
   height: 100%;

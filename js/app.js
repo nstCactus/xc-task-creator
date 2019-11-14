@@ -24,6 +24,7 @@ requirejs.config({
     jquery : "jquery/dist/jquery",
     'jquery-ui' : "../js/lib/jquery-ui-1.12.1.custom/jquery-ui",
     'jquery-qrcode' : "jquery-qrcode/jquery.qrcode.min",
+    simplemodal : "../js/lib/simplemodal/jquery.simplemodal",
     rejs : 'requirejs-ejs-plugin/rejs',
     styles : "../../css",
     task : "../js/app/task",
@@ -34,6 +35,9 @@ requirejs.config({
     'xml-formatter': 'xml-formatter/xml-formatter'
   },
   shim : {
+    simplemodal: {
+      deps : ['jquery'],
+    },
     bootstrap : {
       deps : ['jquery'],
     },
