@@ -32,7 +32,8 @@ requirejs.config({
     tracks : "../js/app/tracks",
     waypoints : "../js/app/waypoints",
     jgrowl : "jGrowl/jquery.jgrowl.min",
-    'xml-formatter': 'xml-formatter/xml-formatter'
+    'xml-formatter': 'xml-formatter/xml-formatter',
+    geographiclib: "../js/lib/geographiclib/geographiclib.min"
   },
   shim : {
     simplemodal: {

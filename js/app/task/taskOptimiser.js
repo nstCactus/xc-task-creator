@@ -2,8 +2,9 @@
  * @file.
  * Task optimiser module for the task creator.
  */
-define(["app/param"], function (param) {
+define(["app/param","geographiclib"], function (param,GeographicLib) {
 
+  var geod = GeographicLib.Geodesic.WGS84;
 
 
   // Fast Polyline
@@ -62,16 +63,20 @@ define(["app/param"], function (param) {
         pastTurnpoint = turnpoints[i];
       }
 
-      var lastLegHeading = google.maps.geometry.spherical.computeHeading(pastTurnpoint.latLng, turnpoints[g].latLng);
+      //var lastLegHeading = google.maps.geometry.spherical.computeHeading(pastTurnpoint.latLng, turnpoints[g].latLng);
+      var lastLegHeading = computeHeading(pastTurnpoint.latLng, turnpoints[g].latLng);
       if (lastLegHeading < 0) lastLegHeading += 360;
       // Add 90° to this heading to have a perpendicular.
       var heading = lastLegHeading + 90;
       // Getting a first point 50m further. 
-      var firstPoint = google.maps.geometry.spherical.computeOffset(turnpoints[g].latLng, turnpoints[g].radius, heading);
+      // var firstPoint = google.maps.geometry.spherical.computeOffset(turnpoints[g].latLng, turnpoints[g].radius, heading);
+      var firstPoint = computeOffset(turnpoints[g].latLng, turnpoints[g].radius, heading);
+
       // Reversing the heading.
       heading += 180;
       // And now completing the line with a point 100m further.
-      var secondPoint = google.maps.geometry.spherical.computeOffset(firstPoint, 2 * turnpoints[g].radius, heading);
+      // var secondPoint = google.maps.geometry.spherical.computeOffset(firstPoint, 2 * turnpoints[g].radius, heading);
+      var secondPoint = computeOffset(firstPoint, 2 * turnpoints[g].radius, heading);
 
       var p1 = degrees2utm(firstPoint.lng(), firstPoint.lat(), zone);
       var p2 = degrees2utm(secondPoint.lng(), secondPoint.lat(), zone);
@@ -177,7 +182,8 @@ define(["app/param"], function (param) {
     var n = 0;
     while (n < 10000) {
       n++;
-      fastPoint = google.maps.geometry.spherical.computeOffset(three.latLng, dist, heading);
+      // fastPoint = google.maps.geometry.spherical.computeOffset(three.latLng, dist, heading);
+      fastPoint = computeOffset(three.latLng, dist, heading);
       var distance = computeDistanceBetween(two.latLng, fastPoint);
       if (two.mode == "entry" && distance >= two.radius) {
         return fastPoint;
@@ -584,11 +590,28 @@ define(["app/param"], function (param) {
     return n * Math.PI / 180;
   };
 
+  function computeHeading(latLng1, latLng2) {
+    return geod.Inverse(latLng1.lat(),latLng1.lng(), latLng2.lat(), latLng2.lng()).azi1 ;
+  }
+
+
+  function computeOffset(latLng1, radius, heading) { 
+    let gl =  new GeographicLib.GeodesicLine.GeodesicLine(geod,latLng1.lat(),latLng1.lng(),heading);
+    let p = gl.GenPosition(false,radius);
+    return new google.maps.LatLng(p.lat2, p.lon2);
+
+  }
+
   function computeDistanceBetween(wpt1, wpt2) {
-    return distVincenty(wpt1.lat(), wpt1.lng(), wpt2.lat(), wpt2.lng())
+    return distGeographicLib(wpt1.lat(), wpt1.lng(), wpt2.lat(), wpt2.lng())
+    //return distVincenty(wpt1.lat(), wpt1.lng(), wpt2.lat(), wpt2.lng())
     // return distHaversine(wpt1.lat(), wpt1.lng(), wpt2.lat(), wpt2.lng())
 
   };
+
+  function distGeographicLib(lat1, lon1, lat2, lon2) {
+    return geod.Inverse(lat1, lon1, lat2, lon2).s12;
+  }
 
 
   function distHaversine(lat1, lon1, lat2, lon2) {

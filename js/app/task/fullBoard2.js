@@ -2,8 +2,8 @@
  * @file
  * Full Board2 Module for the task Creator.
  */
-define(['jquery', 'simplemodal' ,'app/helper', 'app/param', 'rejs!task/templates/fullboard2'],
-  function ($, simplemodal,helper, param, fullTemplate) {
+define(['jquery', 'simplemodal', 'app/helper', 'app/param', 'rejs!task/templates/fullboard2'],
+  function ($, simplemodal, helper, param, fullTemplate) {
 
     Number.prototype.pad = function (size) {
       var s = String(this);
