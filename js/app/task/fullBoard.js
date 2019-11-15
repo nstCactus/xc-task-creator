@@ -2,8 +2,8 @@
  * @file
  * Full Board Module for the task Creator.
  */
-define(['jquery', 'app/helper', 'app/param', 'rejs!task/templates/fullboardTurnpoint', 'rejs!task/templates/fullboard'],
-  function ($, helper, param, turnpointTemplate, fullTemplate) {
+define(['jquery', 'app/helper', 'app/param', 'html2canvas','rejs!task/templates/fullboardTurnpoint', 'rejs!task/templates/fullboard'],
+  function ($, helper, param, html2canvas, turnpointTemplate, fullTemplate) {
 
     var link = $("#full-board");
     var link1 = $("#export-task");

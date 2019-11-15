@@ -34,7 +34,8 @@ requirejs.config({
     jgrowl : "jGrowl/jquery.jgrowl.min",
     'xml-formatter': 'xml-formatter/xml-formatter',
     geographiclib: "../js/lib/geographiclib/geographiclib.min",
-    proj4: "../js/lib/proj4/proj4"
+    proj4: "../js/lib/proj4/proj4",
+    html2canvas: "../js/lib/html2canvas/html2canvas.min"
   },
   shim : {
     simplemodal: {
