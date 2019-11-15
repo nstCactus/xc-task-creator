@@ -19,7 +19,7 @@ requirejs.config({
     bootstrap : "bootstrap/dist/js/bootstrap.min",
     css: "require-css/css",
     Dropzone : "dropzone/dist/dropzone-amd-module",
-    ejs : 'ejs/ejs',
+    ejs : 'ejs/ejs.min',
     formats : '../js/app/formats', 
     jquery : "jquery/dist/jquery",
     'jquery-ui' : "../js/lib/jquery-ui-1.12.1.custom/jquery-ui",
