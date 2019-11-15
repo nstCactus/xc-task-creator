@@ -2,7 +2,7 @@
  * @file
  * Task turnpoint module for the task creator.
  */
-define(['app/param', 'waypoints/waypoint'], function (param, Waypoint) {
+define(['app/param', 'waypoints/waypoint','app/geoCalc'], function (param, Waypoint,geoCalc) {
 
 
   // function drawSector(lat, lng, r, azimuth, width,map) { 
@@ -138,16 +138,16 @@ define(['app/param', 'waypoints/waypoint'], function (param, Waypoint) {
           i--;
           pastTurnpoint = turnpoints[i];
         }
-        var lastLegHeading = google.maps.geometry.spherical.computeHeading(pastTurnpoint.latLng, this.latLng);
+        var lastLegHeading = geoCalc.computeHeading(pastTurnpoint.latLng, this.latLng);
         if (lastLegHeading < 0) lastLegHeading += 360;
         // Add 90° to this heading to have a perpendicular.
         var heading = lastLegHeading + 90;
         // Getting a first point 50m further. 
-        var firstPoint = google.maps.geometry.spherical.computeOffset(this.latLng, this.radius, heading);
+        var firstPoint = geoCalc.computeOffset(this.latLng, this.radius, heading);
         // Reversing the heading.
         heading += 180;
         // And now completing the line with a point 100m further.
-        var secondPoint = google.maps.geometry.spherical.computeOffset(firstPoint, 2*this.radius, heading);
+        var secondPoint = geoCalc.computeOffset(firstPoint, 2*this.radius, heading);
 
         //this.mapElement = drawSector(this.latLng.lat, this.latLng.lng, this.radius, heading, 180 ,map)
 
