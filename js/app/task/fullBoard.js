@@ -38,21 +38,21 @@ define(['jquery', 'app/helper', 'app/param', 'rejs!task/templates/fullboardTurnp
 
     function printElement(elem) {
       var domClone = elem.cloneNode(true);
-      
+
       var $printSection = document.getElementById("printSection");
-      
+
       if (!$printSection) {
-          var $printSection = document.createElement("div");
-          $printSection.id = "printSection";
-          document.body.appendChild($printSection);
+        var $printSection = document.createElement("div");
+        $printSection.id = "printSection";
+        document.body.appendChild($printSection);
       }
-      
+
       $printSection.innerHTML = "";
       $printSection.appendChild(domClone);
       window.print();
       $printSection.innerHTML = '';
 
-  }
+    }
 
 
     $(document).on('click', '#print-task', function (e) {
@@ -64,32 +64,32 @@ define(['jquery', 'app/helper', 'app/param', 'rejs!task/templates/fullboardTurnp
       $("#task-config").modal('hide')
 
 
-    //   const filename = 'task.pdf';
-    //  // tc.style.left = "0px";
-    //   // tc.style.left = "0px"; 
-    //   $('#task-config').css({
-    //     position: 'fixed',
-    //     left: 0,
-    //     top: 0,
-    //   });
-    //   html2canvas(tc, {
-    //     // scale: 3,
-    //     width: 2481,
-    //     height: 3507,
-    //     backgroundColor: "#FFFFFF",
-    //     // x: 630,
-    //     // y: 20,
-    //   }
+      //   const filename = 'task.pdf';
+      //  // tc.style.left = "0px";
+      //   // tc.style.left = "0px"; 
+      //   $('#task-config').css({
+      //     position: 'fixed',
+      //     left: 0,
+      //     top: 0,
+      //   });
+      //   html2canvas(tc, {
+      //     // scale: 3,
+      //     width: 2481,
+      //     height: 3507,
+      //     backgroundColor: "#FFFFFF",
+      //     // x: 630,
+      //     // y: 20,
+      //   }
 
-    //   ).then(canvas => {
-    //     //document.body.appendChild(canvas);
-    //     var image = canvas.toDataURL('image/png');
-    //     window.open(image);
-    //     let pdf = new jsPDF('p', 'mm', 'a4');
-    //     // pdf.addImage(image, 'PNG', 0, 0, 297, 210);
-    //     // pdf.save(filename);
-    //   });
-    
+      //   ).then(canvas => {
+      //     //document.body.appendChild(canvas);
+      //     var image = canvas.toDataURL('image/png');
+      //     window.open(image);
+      //     let pdf = new jsPDF('p', 'mm', 'a4');
+      //     // pdf.addImage(image, 'PNG', 0, 0, 297, 210);
+      //     // pdf.save(filename);
+      //   });
+
     });
 
 
@@ -134,6 +134,19 @@ define(['jquery', 'app/helper', 'app/param', 'rejs!task/templates/fullboardTurnp
     });
 
     var build = function (task) {
+
+      var tc = document.querySelector('#map-canvas');
+      html2canvas(tc, {
+        useCORS: true,
+        scale: 1,
+        backgroundColor: "#FFFFFF",
+      }).then(canvas => {
+        //document.body.appendChild(canvas);
+        var image = canvas.toDataURL('image/png');
+        document.getElementById("task_map").src=image;
+      });
+
+
       // Refresh Fullboard Template.
       $("#task-config").remove();
       var content = fullTemplate({});
@@ -160,10 +173,21 @@ define(['jquery', 'app/helper', 'app/param', 'rejs!task/templates/fullboardTurnp
           turnpoint: turnpoints[i],
           taskInfo: taskInfo
         }));
-        if (type == 'end-of-speed-section' || type == 'goal' || type == 'takeoff' || type == 'start') {
+
+        var g = "";
+        if (taskInfo.ngates > 1) {
+          g = " Gates: " + taskInfo.ngates + "  +" + taskInfo.gateint + "m";
+        }
+        if (type == 'start') {
+          $("#fullboard-" + type + "-open").html(turnpoints[i].open + g);
+        }
+
+        if (type == 'goal' || type == 'takeoff') {
           $("#fullboard-" + type + "-close").html(turnpoints[i].close);
           $("#fullboard-" + type + "-open").html(turnpoints[i].open);
         }
+
+
       }
 
       // Show it via modal.

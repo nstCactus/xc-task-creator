@@ -10,7 +10,7 @@
       <div id="fullboard-content" class="modal-body">
         <form action="#" autocomplete="off" id="task-form-config">
           <div class="row">
-            <div class="col-xs-7" class="row">
+            <div class="col-xs-6" class="row">
               <div class="container-fluid">
                 <div id="fullboard-takeoff">
                   <h5><i class="fa fa-plane"></i>Take off</h5>
@@ -41,8 +41,14 @@
                   <ol></ol>
                 </span>
               </div>
+              <div class="container-fluid">
+                <h5>Distance</h5>
+                <div>
+                  <span id="fullboard-distance" class="label label-danger">Goal close</span>
+                </div>
+              </div>
             </div>
-            <div class="col-xs-5">
+            <div class="col-xs-6">
               <div class="container-fluid">
                 <div class="form-group">
                   <div class="form-group row" id="fullboard-type">
@@ -84,17 +90,17 @@
                         id="fullboard-start-open"></span>
                     </div>
                     <div>
-                      <span class="label label-default">ESS close</span><span
-                        id="fullboard-end-of-speed-section-close"></span>
-                    </div>
-                    <div>
                       <span class="label label-default">Goal close</span> <span id="fullboard-goal-close"></span>
                     </div>
                   </div>
                 </div>
+                
+
                 <div class="container-fluid">
-                  <h5>Distance</h5>
-                  <div id="fullboard-distance"></div>
+                  <h5>MAP</h5>
+                  <div>
+                    <img id="task_map" src="images/android-icon-96x96.png" alt="task" height="100%" width="100%">
+                  </div>
                 </div>
               </div>
             </div>
@@ -109,9 +115,9 @@
             <span class="glyphicon glyphicon-print" aria-hidden="true"></span> Print
           </button>
 
-          <button type="button" id="export-task" class="btn btn-default">
+          <!-- <button type="button" id="export-task" class="btn btn-default">
             <span class="glyphicon glyphicon-save-file" aria-hidden="true"></span> Export
-          </button>
+          </button> -->
           <button type="button" id="edit-task" class="btn btn-default">
             <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Edit
           </button>

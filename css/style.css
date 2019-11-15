@@ -40,7 +40,7 @@
   html, body {
     margin: 1mm;
     height: 100%;
-    font-family :  Arial, sans-serif;
+    font-family :  Consolas, sans-serif;
     margin: 0 !important; 
     padding: 0 !important;
     overflow: hidden;
@@ -81,7 +81,7 @@
 
 html, body {
   height: 100%;
-  font-family :  Arial, sans-serif;
+  font-family :  Consolas, sans-serif;
 }
 
 
@@ -90,7 +90,7 @@ html, body {
 }
 
 #sidebar {
-  font-family : Consolas, Arial, sans-serif;
+  font-family : Consolas,  sans-serif;
 
  background-color: #3b5998;
  color : #FFF;
@@ -298,6 +298,8 @@ a:hover {
   margin-bottom: 5px;
 }
 
+
+
 /**
  * Fullboard
  */
@@ -307,29 +309,44 @@ a:hover {
 
 #task-config .container-fluid {
   border : 1px solid #CCC;
-  margin : 10px 0px;
+  margin : 1px 0px;
 }
 
 #task-config .form-group {
   padding-top : 10px; 
 }
 
-#task-config .tp-name {
-  font-size : 0.8em;
+#task-config  {
+  font-size : 1.0em;
 } 
+
 
 #task-config i {
   margin-right : 10px;
 }
 
 #task-config ol, #task-config ul {
-  padding-left : 15px;
+  padding-left : 0px;
 }
 
 #task-config ol li, #task-config ul li {
   list-style-type : none;
   list-style-image : none;
 }
+
+
+/* .modal-body {
+  width: 800px;
+}
+
+.modal{
+  width:800px;
+} */
+.modal-dialog{
+  width:700px;
+}
+
+
 
 #fullboard-arrow, #fullboard-turn-word {
   text-align : center;
@@ -341,7 +358,7 @@ a:hover {
 }
 
 #fullboard-turnpoint ol li:before {
-  content: 'B' counter(item, decimal) ' ';
+  content: 'TP' counter(item, decimal) ' ';
   counter-increment: item;
   font-weight : bold;
 }
@@ -358,12 +375,19 @@ a:hover {
   margin-left : 10px;
 }
 
+#task-config {
+  color : #000000;
+  font-size: 1.2em;
+}
+
+
 #task-config h5, #task-config label {
   text-transform : uppercase;
 }
 
 #task-config h5 {
   color : #ac2925;
+  font-size: 1.2em;
 }
 
 #fullboard-content span.tp-id {

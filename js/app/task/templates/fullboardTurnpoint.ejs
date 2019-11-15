@@ -1,7 +1,7 @@
 <% if (turnpoint.type == 'takeoff') { %>
   <li class="turnpoint tp-takeoff" index="<%- turnpoint.index %>">
     <span class="tp-id label label-default"><%- turnpoint.id %></span> 
-    <span class="tp-name"><%- turnpoint.name %></span>
+    <!-- <span class="tp-name"><%- turnpoint.name %></span> -->
     <span class="tp-radius label label-info"><%- turnpoint.radius %>m</span>
     <% if (taskInfo.distances[turnpoint.index - 1]) { %>
       <span class="tp-distance label label-default"><%- taskInfo.distances[turnpoint.index - 1] %> Km</span>
@@ -12,8 +12,8 @@
 <% if (turnpoint.type == 'start') { %>
   <li class="turnpoint tp-start" index="<%- turnpoint.index %>">
     <span class="tp-id label label-default"><%- turnpoint.id %></span>
-    <span class="tp-name"><%- turnpoint.name %></span>
-    <span class="tp-<%- turnpoint.mode %> label label-warning"><%- turnpoint.mode %></span>
+    <!-- <span class="tp-name"><%- turnpoint.name %></span> -->
+    <span class="tp-<%- turnpoint.mode %> label label-warning"><%- turnpoint.mode.toUpperCase() %></span>
     <span class="tp-radius label label-info"><%- turnpoint.radius %>m</span>
     <% if (taskInfo.distances[turnpoint.index - 1]) { %>
       <span class="tp-distance label label-default"><%- taskInfo.distances[turnpoint.index - 1] %> Km</span>
@@ -23,11 +23,11 @@
 
 <% if (turnpoint.type == 'turnpoint') { %>
   <li class="turnpoint tp-turnpoint" index="<%- turnpoint.index %>">
-    <span class="tp-id label label-default"><%- turnpoint.id %></span>
-    <span class="tp-name"><%- turnpoint.name %></span>
-    <span class="tp-radius label label-info"><%- turnpoint.radius %>m</span>
+    <span  class="tp-id label label-default"><%- turnpoint.id %></span>
+    <!-- <span class="tp-name"><%- turnpoint.name %></span> -->
+    <span  class="tp-radius label label-info"><%- turnpoint.radius %>m</span>
     <% if (taskInfo.distances[turnpoint.index - 1]) { %>
-      <span class="tp-distance label label-default"><%- taskInfo.distances[turnpoint.index - 1] %> Km</span>
+      <span  class="tp-distance label label-default"><%- taskInfo.distances[turnpoint.index - 1] %> Km</span>
     <% } %>
   </li>
 <% } %>
@@ -35,8 +35,7 @@
 <% if (turnpoint.type == 'end-of-speed-section') { %>
   <li class="turnpoint tp-end-of-speed-section" index="<%- turnpoint.index %>">
     <span class="tp-id label label-default"><%- turnpoint.id %></span>
-    <span class="tp-name"><%- turnpoint.name %></span>
-    <span class="tp-<%- turnpoint.mode %> label label-warning"><%- turnpoint.mode %></span>
+    <!-- <span class="tp-name"><%- turnpoint.name %></span> -->
     <span class="tp-radius label label-info"><%- turnpoint.radius %>m</span>
     <% if (taskInfo.distances[turnpoint.index - 1]) { %>
       <span class="tp-distance label label-default"><%- taskInfo.distances[turnpoint.index - 1] %> Km</span>
@@ -47,8 +46,8 @@
 <% if (turnpoint.type == 'goal') { %>
   <li class="turnpoint tp-goal" index="<%- turnpoint.index %>">
     <span class="tp-id label label-default"><%- turnpoint.id %></span>
-    <span class="tp-name"><%- turnpoint.name %></span>
-    <span class="tp-<%- turnpoint.goalType %> label label-warning"><%- turnpoint.goalType %></span>
+    <!-- <span class="tp-name"><%- turnpoint.name %></span> -->
+    <span class="tp-<%- turnpoint.goalType %> label label-warning"><%- turnpoint.goalType.toUpperCase() %></span>
     <% if (turnpoint.goalType != 'line') { %>
       <span class="tp-radius label label-info"><%- turnpoint.radius %>m</span>
     <% } %>
