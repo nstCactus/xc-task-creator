@@ -2,7 +2,7 @@
  * @file
  * geoCalc module for the task creator.
  */
-define(["app/param","geographiclib"], function (param,GeographicLib) {
+define(["app/param","geographiclib","proj4"], function (param,GeographicLib,proj4) {
 
   var geod = GeographicLib.Geodesic.WGS84;
 
@@ -11,7 +11,7 @@ define(["app/param","geographiclib"], function (param,GeographicLib) {
     return n * Math.PI / 180;
   };
 
-  
+
   function getUtmZoneFromPosition(lon, lat) {
     return (Math.floor((lon + 180) / 6) % 60) + 1;
   };
