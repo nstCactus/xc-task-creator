@@ -21,7 +21,7 @@ requirejs.config({
     Dropzone : "dropzone/dist/dropzone-amd-module",
     ejs : 'ejs/ejs.min',
     formats : '../js/app/formats', 
-    jquery : "jquery/dist/jquery",
+    jquery : "jquery/dist/jquery.min",
     'jquery-ui' : "../js/lib/jquery-ui-1.12.1.custom/jquery-ui",
     'jquery-qrcode' : "jquery-qrcode/jquery.qrcode.min",
     simplemodal : "../js/lib/simplemodal/jquery.simplemodal",
