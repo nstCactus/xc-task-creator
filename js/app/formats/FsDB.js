@@ -49,6 +49,8 @@ define(['rejs!formats/export/FsTask', 'app/helper', 'jgrowl', 'xml-formatter'], 
 
     var tasks = jsonDB.Fs.FsCompetition.FsTasks.FsTask;
 
+    var utc_offset = Number(jsonDB.Fs.FsCompetition._utc_offset);
+
     var taskN = window.prompt("Tasks in file : " + tasks.length + "\nSelect task number or cancel not to load a task and just load the competition DB", "1");
 
     if (isNaN(taskN) || taskN <= 0 || taskN > tasks.length) {
@@ -56,6 +58,9 @@ define(['rejs!formats/export/FsTask', 'app/helper', 'jgrowl', 'xml-formatter'], 
     }
 
     var jsonObj = tasks[taskN - 1];
+
+    var jumpTheGun = Number(jsonObj.FsScoreFormula._jump_the_gun_max);
+    var turnpointTollerance = Number(jsonObj.FsScoreFormula._turnpoint_radius_tolerance);
 
     var ss = jsonObj.FsTaskDefinition._ss;
     var es = jsonObj.FsTaskDefinition._es;
@@ -125,6 +130,9 @@ define(['rejs!formats/export/FsTask', 'app/helper', 'jgrowl', 'xml-formatter'], 
         'ngates': ngates,
         'gateint': gateint,
         'turnpoints': tps,
+        'utcOffset' : utc_offset,
+        'jumpTheGun': jumpTheGun,
+        'turnpointTollerance': turnpointTollerance,
       },
       'waypoints': wps,
     }

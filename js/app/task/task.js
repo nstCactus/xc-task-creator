@@ -206,7 +206,8 @@ define(['task/taskBoard', 'task/turnpoint', 'task/fullBoard', 'task/fullBoard2',
     var onNewTask = function (e) {
       var waypoints = e.detail.waypoints;
       var tps = e.detail.task.turnpoints;
-      taskInfo = e.detail.task;
+      // taskInfo = e.detail.task;
+      taskInfo = Object.assign(taskInfo,e.detail.task);
       taskInfo.info = param.task.default.info;
       taskInfo.turn = taskInfo.date.substr(0, 2) % 2 == 0 ? "Right" : "Left";
       if (tps) {

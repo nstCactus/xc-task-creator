@@ -36,9 +36,18 @@ define(['jquery'], function ($) {
 
   var container = $("#track-handler ul");
   $(document).on('click', '#tracknameList', function (e) {
-    var name = $(this).attr('class');
+    var name = $(this).attr('name');
     var e = document.createEvent("CustomEvent");
     e.initCustomEvent('tracknameRemoved', false, false, {
+      filename: name,
+    });
+    document.dispatchEvent(e);
+  });
+
+  $(document).on('click', '#trackcolor', function (e) {
+    var name = $(this).attr('name');
+    var e = document.createEvent("CustomEvent");
+    e.initCustomEvent('trackChangeColor', false, false, {
       filename: name,
     });
     document.dispatchEvent(e);
@@ -51,7 +60,9 @@ define(['jquery'], function ($) {
         let bgColor = tracks[i].color;
         let color = lightOrDark(bgColor);
 
-        html += '<li id="tracknameList" style="color:' + color + ';background-color:' + bgColor + ';" class="' + tracks[i].filename + '"><i class="fa fa-trash"></i> ' + tracks[i].filename + '</li>';
+        html += '<li  style="color:' + color + ';background-color:' + bgColor + ';" class="' + tracks[i].filename + '">' + tracks[i].filename ;
+        html += '<i id="tracknameList" class="fa fa-trash" name="' + tracks[i].filename + '" ></i>  ';
+        html += '<i id="trackcolor" class="fa fa-eye" name="' + tracks[i].filename + '" ></i> </li>';
       }
       container.html(html);
       container.addClass('populated');

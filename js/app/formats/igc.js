@@ -30,6 +30,9 @@ define([], function() {
     for (var i = 0; i < lines.length; i++) {
       // Replace all bad formated whitespace at the begining and end of the line..
       lines[i] = lines[i].replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+      if (lines[i].split(":").length == 2 && lines[i].split(":")[0] == "HFPLTPILOT" ) {
+        filename = lines[i].split(":")[1].toUpperCase();
+      }
       // If the first character is a "B" and total # of charaters = 35.
       if (lines[i].length >= 35 && lines[i].charAt(0) == 'B') {
         var point = {

@@ -37,7 +37,6 @@ define([], function() {
         fast : '#204d74',
       },
       default : {
-        // date : day + '-' + date.getUTCMonth() + '-' + date.getUTCFullYear(),
         date : day.pad(2) + '-' + (date.getUTCMonth()+1).pad(2) + '-' + date.getUTCFullYear(),
         num : 1,
         type : 'race',
@@ -46,7 +45,10 @@ define([], function() {
         bbox : false,
         ngates : 1,
         gateint :  15,
-        info: "TaskInfo:"
+        info: "TaskInfo:",
+        utcOffset: 2,
+        jumpTheGun: 0,
+        turnpointTollerance: 0,
       }
     },
     turnpoint : {

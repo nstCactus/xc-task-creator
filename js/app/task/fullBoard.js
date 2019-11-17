@@ -2,7 +2,7 @@
  * @file
  * Full Board Module for the task Creator.
  */
-define(['jquery', 'app/helper', 'app/param', 'html2canvas','rejs!task/templates/fullboardTurnpoint', 'rejs!task/templates/fullboard'],
+define(['jquery', 'app/helper', 'app/param', 'html2canvas', 'rejs!task/templates/fullboardTurnpoint', 'rejs!task/templates/fullboard'],
   function ($, helper, param, html2canvas, turnpointTemplate, fullTemplate) {
 
     var link = $("#full-board");
@@ -63,33 +63,6 @@ define(['jquery', 'app/helper', 'app/param', 'html2canvas','rejs!task/templates/
       document.body.style.visibility = "visible";
       $("#task-config").modal('hide')
 
-
-      //   const filename = 'task.pdf';
-      //  // tc.style.left = "0px";
-      //   // tc.style.left = "0px"; 
-      //   $('#task-config').css({
-      //     position: 'fixed',
-      //     left: 0,
-      //     top: 0,
-      //   });
-      //   html2canvas(tc, {
-      //     // scale: 3,
-      //     width: 2481,
-      //     height: 3507,
-      //     backgroundColor: "#FFFFFF",
-      //     // x: 630,
-      //     // y: 20,
-      //   }
-
-      //   ).then(canvas => {
-      //     //document.body.appendChild(canvas);
-      //     var image = canvas.toDataURL('image/png');
-      //     window.open(image);
-      //     let pdf = new jsPDF('p', 'mm', 'a4');
-      //     // pdf.addImage(image, 'PNG', 0, 0, 297, 210);
-      //     // pdf.save(filename);
-      //   });
-
     });
 
 
@@ -135,15 +108,13 @@ define(['jquery', 'app/helper', 'app/param', 'html2canvas','rejs!task/templates/
 
     var build = function (task) {
 
-      var tc = document.querySelector('#map-canvas');
-      html2canvas(tc, {
+      html2canvas(document.querySelector('#map-canvas'), {
         useCORS: true,
         scale: 1,
         backgroundColor: "#FFFFFF",
       }).then(canvas => {
-        //document.body.appendChild(canvas);
         var image = canvas.toDataURL('image/png');
-        document.getElementById("task_map").src=image;
+        document.getElementById("task_map").src = image;
       });
 
 
