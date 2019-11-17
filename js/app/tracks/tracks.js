@@ -40,7 +40,10 @@ define(['tracks/track', 'tracks/trackList', 'app/helper'], function (Track, Trac
   var removeTrack = function (track) {
     for (var i = 0; i < tracks.length; i++) {
       if (tracks[i].filename == track) {
-        tracks[i].polyline.setMap(null)
+        tracks[i].graphic.polyline.setMap(null)
+        for (let j=0; j< tracks[i].graphic.markes.length;j++) {
+          tracks[i].graphic.markes[j].setMap(null)
+        }
         tracks.splice(i, 1);
         TrackList.rebuild(tracks);
       }
@@ -64,7 +67,7 @@ define(['tracks/track', 'tracks/trackList', 'app/helper'], function (Track, Trac
     for (var i = 0; i < tracks.length; i++) {
       if (tracks[i].filename == filename) {
         tracks[i].color = color
-        tracks[i].polyline.setOptions({
+        tracks[i].graphic.polyline.setOptions({
           strokeColor: color,
         });
       }

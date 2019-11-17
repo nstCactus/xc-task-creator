@@ -183,7 +183,7 @@ define(["app/param", 'app/geoCalc'], function (param,geoCalc ) {
       n++;
       // fastPoint = google.maps.geometry.spherical.computeOffset(three.latLng, dist, heading);
       fastPoint = geoCalc.computeOffset(three.latLng, dist, heading);
-      var distance = geoCalc.computeDistanceBetween(two.latLng, fastPoint);
+      var distance = geoCalc.computeDistanceBetweenLatLng(two.latLng, fastPoint);
       if (two.mode == "entry" && distance >= two.radius) {
         return fastPoint;
       }
@@ -209,7 +209,7 @@ define(["app/param", 'app/geoCalc'], function (param,geoCalc ) {
     if (startIndex == -1 || startIndex == turnpoints.length - 1) {
       return;
     }
-    var distance = geoCalc.computeDistanceBetween(turnpoints[startIndex].latLng, turnpoints[startIndex + 1].latLng);
+    var distance = geoCalc.computeDistanceBetweenLatLng(turnpoints[startIndex].latLng, turnpoints[startIndex + 1].latLng);
     if (distance > turnpoints[startIndex].radius) {
       turnpoints[startIndex].mode = 'exit';
     }
@@ -228,8 +228,8 @@ define(["app/param", 'app/geoCalc'], function (param,geoCalc ) {
     if (waypoints.length > 1) {
       for (var i = 0; i < waypoints.length - 1; i++) {
         var distance;
-        //distance = google.maps.geometry.spherical.computeDistanceBetween(waypoints[i], waypoints[i + 1]);
-        distance = geoCalc.computeDistanceBetween(waypoints[i], waypoints[i + 1]);
+        //distance = google.maps.geometry.spherical.computeDistanceBetweenLatLng(waypoints[i], waypoints[i + 1]);
+        distance = geoCalc.computeDistanceBetweenLatLng(waypoints[i], waypoints[i + 1]);
         //distance = distVincenty(waypoints[i].lat(), waypoints[i].lng(), waypoints[i + 1].lat(), waypoints[i + 1].lng());
 
 

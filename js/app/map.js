@@ -48,7 +48,7 @@ function(param, geolocation, google, task, keyboard) {
   var onNewTrackFile = function(e) {
     var tracks = e.detail.tracks;
     for (var i = 0; i < tracks.length; i++) {
-      var polyline = tracks[i].drawPolyline(map, google);
+      var polyline = tracks[i].drawGraphics(map, google);
       polylines.push(polyline);   
     }
   }

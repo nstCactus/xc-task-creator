@@ -53,12 +53,19 @@ define(["app/param","geographiclib","proj4"], function (param,GeographicLib,proj
 
   }
 
-  function computeDistanceBetween(wpt1, wpt2) {
+
+  function computeDistanceBetweenLatLng(wpt1, wpt2) {
     return distGeographicLib(wpt1.lat(), wpt1.lng(), wpt2.lat(), wpt2.lng())
     //return distVincenty(wpt1.lat(), wpt1.lng(), wpt2.lat(), wpt2.lng())
     // return distHaversine(wpt1.lat(), wpt1.lng(), wpt2.lat(), wpt2.lng())
-
   };
+
+  function computeDistanceBetween(lat1, lng1,lat2,lng2) {
+    return distGeographicLib(lat1, lng1,lat2,lng2)
+    //return distVincenty(wpt1.lat(), wpt1.lng(), wpt2.lat(), wpt2.lng())
+    // return distHaversine(wpt1.lat(), wpt1.lng(), wpt2.lat(), wpt2.lng())
+  };
+  
 
   function distGeographicLib(lat1, lon1, lat2, lon2) {
     return geod.Inverse(lat1, lon1, lat2, lon2).s12;
@@ -134,6 +141,7 @@ define(["app/param","geographiclib","proj4"], function (param,GeographicLib,proj
     degrees2utm:degrees2utm,
     utm2degress:utm2degress,
     computeHeading:computeHeading,
+    computeDistanceBetweenLatLng:computeDistanceBetweenLatLng,
     computeDistanceBetween:computeDistanceBetween,
     computeOffset:computeOffset,
 
