@@ -5,9 +5,13 @@
 define(['app/helper', 'task/task', 'app/geoCalc', 'jquery', 'jgrowl'], function (helper, task, geoCalc, $) {
 
 
+
   class Track {
 
     constructor(info) {
+      this.lineSymbol = {
+        path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW
+      };
       this.points = info.points;
       this.filename = info.filename;
       this.graphic = { polyline: null, markes: [] };
@@ -22,7 +26,12 @@ define(['app/helper', 'task/task', 'app/geoCalc', 'jquery', 'jgrowl'], function 
         geodesic: true,
         strokeColor: color,
         strokeOpacity: 1.0,
-        strokeWeight: 2
+        strokeWeight: 2,
+        icons: [{
+          icon: this.lineSymbol,
+          offset: '0',
+          repeat: '200px'
+        }],
       });
       if (task.getTurnpoints().length > 0) {
         this.checkTask(task.getTurnpoints(), task.getTaskInfo());
@@ -45,7 +54,7 @@ define(['app/helper', 'task/task', 'app/geoCalc', 'jquery', 'jgrowl'], function 
         }
         let newStatus = (dist > turnpoints[itp].radius * tollerance) ? 1 : 0;
 
-        if (turnpoints[itp].type == 'takeoff') {
+        if (itp == 'takeoff') {
           if (newStatus == 0) {
             console.log("takeoff " + ip);
             this.addMarker(this.points[ip], itp);
@@ -58,7 +67,7 @@ define(['app/helper', 'task/task', 'app/geoCalc', 'jquery', 'jgrowl'], function 
         else {
           if (tpStatus != -1 && newStatus != tpStatus) {
             console.log("wpt :" + itp + " pts: " + ip);
-            this.addMarker(this.points[ip], itp);
+            this.addMarker(this.points[ip], turnpoints[itp].shortName.toUpperCase(),this.points[ip].time);
             itp++;
             tpStatus = -1;
             tollerance = 1;
@@ -74,11 +83,12 @@ define(['app/helper', 'task/task', 'app/geoCalc', 'jquery', 'jgrowl'], function 
 
     }
 
-    addMarker(points, itp) {
+    addMarker(points, itp, label) {
       var latLng = new google.maps.LatLng(points.x, points.y);
       var marker = new google.maps.Marker({
         position: latLng,
-        title: String(itp),
+        title: String(label),
+        label:String(itp),
       });
       this.graphic.markes.push(marker);
     }

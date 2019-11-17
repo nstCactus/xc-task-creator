@@ -175,27 +175,27 @@ define(["app/param", 'app/geoCalc'], function (param,geoCalc ) {
     }
   }
 
-  function calcStartIntersection(google, three, two, heading) {
-    var dist = three.radius;
-    var fastPoint;
-    var n = 0;
-    while (n < 10000) {
-      n++;
-      // fastPoint = google.maps.geometry.spherical.computeOffset(three.latLng, dist, heading);
-      fastPoint = geoCalc.computeOffset(three.latLng, dist, heading);
-      var distance = geoCalc.computeDistanceBetweenLatLng(two.latLng, fastPoint);
-      if (two.mode == "entry" && distance >= two.radius) {
-        return fastPoint;
-      }
-      if (two.mode == "exit" && distance <= two.radius) {
-        return fastPoint;
-      }
-      dist += 10;
-    }
+  // function calcStartIntersection(google, three, two, heading) {
+  //   var dist = three.radius;
+  //   var fastPoint;
+  //   var n = 0;
+  //   while (n < 10000) {
+  //     n++;
+  //     // fastPoint = google.maps.geometry.spherical.computeOffset(three.latLng, dist, heading);
+  //     fastPoint = geoCalc.computeOffset(three.latLng, dist, heading);
+  //     var distance = geoCalc.computeDistanceBetweenLatLng(two.latLng, fastPoint);
+  //     if (two.mode == "entry" && distance >= two.radius) {
+  //       return fastPoint;
+  //     }
+  //     if (two.mode == "exit" && distance <= two.radius) {
+  //       return fastPoint;
+  //     }
+  //     dist += 10;
+  //   }
 
-    return null;
+  //   return null;
 
-  }
+  // }
 
   function checkStartDirection( turnpoints) {
 
