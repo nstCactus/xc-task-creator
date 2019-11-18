@@ -2,9 +2,14 @@
  * @file
  * Track module for the task creator.
  */
-define(['app/helper', 'task/task', 'app/geoCalc', 'jquery', 'jgrowl'], function (helper, task, geoCalc, $) {
+define(['app/helper', 'task/task', 'app/geoCalc', 'app/map', 'jquery', 'jgrowl'], function (helper, task, geoCalc, map, $) {
 
-
+  var markerImage = {
+    url: "https://maps.google.com/mapfiles/kml/paddle/ylw-circle-lv.png", // url
+    scaledSize: new google.maps.Size(32, 32), // scaled size
+    origin: new google.maps.Point(0, 0), // origin
+    anchor: new google.maps.Point(16, 16) // anchor
+  };
 
   class Track {
 
@@ -12,6 +17,8 @@ define(['app/helper', 'task/task', 'app/geoCalc', 'jquery', 'jgrowl'], function 
       this.lineSymbol = {
         path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW
       };
+      this.allCrossings = [];
+      this.validCrossings = [];
       this.points = info.points;
       this.filename = info.filename;
       this.graphic = { polyline: null, markes: [] };
@@ -38,64 +45,152 @@ define(['app/helper', 'task/task', 'app/geoCalc', 'jquery', 'jgrowl'], function 
       }
     }
 
+    igcToSeconds(strTime, taskInfo) {
+      return Number(strTime.substring(0, 2)) * 3600 + Number(strTime.substring(2, 4)) * 60 + Number(strTime.substring(4)) + taskInfo.utcOffset * 3600;
+    }
+
+    taskTimeToSeconds(strTime) {
+      return Number(strTime.substring(0, 2)) * 3600 + Number(strTime.substring(3, 5)) * 60;
+    }
+
+    secondsToTime(sec_num) {
+      var hours = Math.floor(sec_num / 3600);
+      var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+      var seconds = sec_num - (hours * 3600) - (minutes * 60);
+      if (hours < 10) { hours = "0" + hours; }
+      if (minutes < 10) { minutes = "0" + minutes; }
+      if (seconds < 10) { seconds = "0" + seconds; }
+      return hours + ":" + minutes + ":" + seconds
+    }
+
+
+
     checkTask(turnpoints, taskInfo) {
 
-      let ip = 0;
-      let itp = 0;
-      let tollerance = 1;
-      let tpStatus = -1; // -1 undefined, 0=in, 1=out;
-      while (ip < this.points.length && itp < turnpoints.length) {
-        let dist = geoCalc.computeDistanceBetween(turnpoints[itp].y, turnpoints[itp].x, this.points[ip].y, this.points[ip].x);
-        if (tpStatus == 0) {
-          tollerance = 1 - taskInfo.turnpointTollerance;
-        }
-        if (tpStatus == 1) {
-          tollerance = 1 + taskInfo.turnpointTollerance;
-        }
-        let newStatus = (dist > turnpoints[itp].radius * tollerance) ? 1 : 0;
+      let start_ip = 0;
 
-        if (itp == 'takeoff') {
-          if (newStatus == 0) {
-            console.log("takeoff " + ip);
-            this.addMarker(this.points[ip], itp);
-            itp++;
-            tpStatus = -1;
-            tollerance = 1;
-            continue;
+      for (let itp = 0; itp < turnpoints.length; itp++) {
+
+        let validCrossing = null;
+
+        for (let ip = start_ip; ip < this.points.length - 1; ip++) {
+
+          const d1 = geoCalc.computeDistanceBetween(turnpoints[itp].x, turnpoints[itp].y, this.points[ip].x, this.points[ip].y);
+          const d2 = geoCalc.computeDistanceBetween(turnpoints[itp].x, turnpoints[itp].y, this.points[ip + 1].x, this.points[ip + 1].y);
+          const RL = turnpoints[itp].radius - Math.max(turnpoints[itp].radius * taskInfo.turnpointTollerance, 5);
+          const RG = turnpoints[itp].radius + Math.max(turnpoints[itp].radius * taskInfo.turnpointTollerance, 5);
+
+          if ((RL <= d1 && d1 <= RG) || (RL <= d2 && d2 <= RG) || (d1 < RL && d2 > RG) || (d2 < RL && d1 > RG)) {
+            const seconds = this.igcToSeconds(this.points[ip].time, taskInfo);
+            const time = this.secondsToTime(seconds);
+            const mode = (d1 < d2) ? "exit" : "entry";
+            const newCrossing = {
+              tpNum: itp,
+              tpId: turnpoints[itp].id,
+              time: time,
+              seconds: seconds,
+              igcTime: this.points[ip].time,
+              point1: this.points[ip],
+              point2: this.points[ip + 1],
+              mode: mode,
+            };
+            this.allCrossings.push(newCrossing);
+
+            if (['takeoff', 'turnpoint', 'end-of-speed-section', 'goal'].includes(turnpoints[itp].type)) {
+              if (validCrossing == null) {
+                validCrossing = {
+                  tpNum: itp,
+                  tpId: turnpoints[itp].id,
+                  time: time,
+                  seconds: seconds,
+                  igcTime: this.points[ip].time,
+                  point1: this.points[ip],
+                  point2: this.points[ip + 1],
+                  mode: mode,
+                };
+                this.validCrossings.push(validCrossing);
+                start_ip = ip;
+                this.addMarker(this.points[ip], turnpoints[itp].shortName.toUpperCase(), time, validCrossing);
+                //console.log("Crossing " + " tp : " + turnpoints[itp].id + " point: " + String(ip) + " Time: " + time);
+                break;
+              }
+            }
+
+            if (['start'].includes(turnpoints[itp].type)) {
+              if (validCrossing == null) {
+                if (turnpoints[itp].mode == mode) {
+                  const start_seconds = this.taskTimeToSeconds(turnpoints[itp].open);
+                  if (start_seconds <= seconds) {
+                    validCrossing = {
+                      tpNum: itp,
+                      tpId: turnpoints[itp].id,
+                      time: time,
+                      seconds: seconds,
+                      igcTime: this.points[ip].time,
+                      point1: this.points[ip],
+                      point2: this.points[ip + 1],
+                      mode: mode,
+                    };
+                    this.validCrossings.push(validCrossing);
+                    start_ip = ip;
+                    this.addMarker(this.points[ip], turnpoints[itp].shortName.toUpperCase(), time, validCrossing);
+                    //console.log("Crossing " + " tp : " + turnpoints[itp].id + " point: " + String(ip) + " Time: " + time);
+                    break;
+                  }
+
+                }
+              }
+            }
+
+
+            //console.log("Crossing " + " tp : " + turnpoints[itp].id + " point: " + String(ip) + " Time: " + time);
+
           }
-        }
-        else {
-          if (tpStatus != -1 && newStatus != tpStatus) {
-            console.log("wpt :" + itp + " pts: " + ip);
-            this.addMarker(this.points[ip], turnpoints[itp].shortName.toUpperCase(),this.points[ip].time);
-            itp++;
-            tpStatus = -1;
-            tollerance = 1;
-            continue;
-          }
+
+          start_ip = ip;
+
         }
 
-
-
-        tpStatus = newStatus;
-        ip++;
+        //console.log(JSON.stringify(this.validCrossings));
       }
+
 
     }
 
-    addMarker(points, itp, label) {
-      var latLng = new google.maps.LatLng(points.x, points.y);
-      var marker = new google.maps.Marker({
+    addMarker(point, itp, label, infoContent) {
+      let latLng = new google.maps.LatLng(point.x, point.y);
+
+
+
+      let marker = new google.maps.Marker({
         position: latLng,
         title: String(label),
-        label:String(itp),
+        label: String(itp),
+        // icon: {
+        //   path: google.maps.SymbolPath.CIRCLE,
+        //   scale: 5
+        // },    
+        icon:markerImage,
+      });
+      let container = '<div >';
+      container += '<div class="item"> TP: ' + infoContent.tpNum + '</div>';
+      container += '<div class="item"> ID: ' + infoContent.tpId + '</div>';
+      container += '<div class="item"> Time: ' + infoContent.time + '</div>';
+      container += '<div class="item"> Mode: ' + infoContent.mode + '</div>';
+      container += '</div>';
+      let infowindow = new google.maps.InfoWindow({
+        content: container
+      });
+      marker.addListener('click', function () {
+        infowindow.open(map, marker);
       });
       this.graphic.markes.push(marker);
     }
 
+
     drawGraphics(map, google) {
       this.graphic.polyline.setMap(map);
-      for (let i=0; i< this.graphic.markes.length;i++) {
+      for (let i = 0; i < this.graphic.markes.length; i++) {
         this.graphic.markes[i].setMap(map)
       }
       console.log(this.graphic.markes.length);
