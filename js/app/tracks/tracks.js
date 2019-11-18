@@ -88,5 +88,6 @@ define(['tracks/track', 'tracks/trackList', 'app/helper'], function (Track, Trac
 
   return {
     'addTrack': addTrack,
+    'tracks' : tracks,
   }
 });

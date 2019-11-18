@@ -73,6 +73,18 @@
 }
 
 
+.colorbox {
+  float: left;
+  width: 10px;
+  height: 10px;
+  margin: 5px;
+  margin-left: 20px;
+  border: 1px solid rgba(0, 0, 0, .2);
+  background: #13b4ff;
+}
+
+
+
 #simplemodal-container {
   /* height: 100%;
   width: 100%; */

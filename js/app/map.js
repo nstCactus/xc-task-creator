@@ -2,8 +2,8 @@
  * @file
  * Map module for the task creator
  */
-define(['app/param', 'app/geolocation', 'app/gMap', 'task/task', 'app/keyboard'],
-function(param, geolocation, google, task, keyboard) {
+define(['app/param', 'app/geolocation', 'app/gMap', 'task/task', 'tracks/tracks' ,  'app/keyboard'],
+function(param, geolocation, google, task, tracks, keyboard) {
   var startX = param.map.startX;
   var startY = param.map.startY;
   
@@ -114,12 +114,17 @@ function(param, geolocation, google, task, keyboard) {
     task.drawCourse(google, map);
     
     turnpointElements = [];
-    for (var i = 0; i < turnpoints.length; i++) {
+    for (let  i = 0; i < turnpoints.length; i++) {
       var mapElement = turnpoints[i].renderTurnpoint(google, map, turnpoints);
       turnpointElements.push(mapElement);
     }
     zoomBeforeBounds = map.getZoom();
     fitToBounds('circles', turnpointElements);
+
+    for(let i=0; i< tracks.tracks.length;i++) {
+      tracks.tracks[i].checkTask(task.getTurnpoints(), task.getTaskInfo());
+      tracks.tracks[i].drawGraphics(map, google)
+    }
   }
 
   var onTaskChange = function(e) {

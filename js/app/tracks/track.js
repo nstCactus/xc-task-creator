@@ -5,7 +5,7 @@
 define(['app/helper', 'task/task', 'app/geoCalc', 'app/map', 'jquery', 'jgrowl'], function (helper, task, geoCalc, map, $) {
 
   var markerImage = {
-    url: "https://maps.google.com/mapfiles/kml/pal5/icon31.png", // url
+    url: "images/green-x-md.png", // url
     scaledSize: new google.maps.Size(16, 16), // scaled size
     origin: new google.maps.Point(0, 0), // origin
     anchor: new google.maps.Point(8, 8) // anchor
@@ -34,6 +34,7 @@ define(['app/helper', 'task/task', 'app/geoCalc', 'app/map', 'jquery', 'jgrowl']
         strokeColor: color,
         strokeOpacity: 1.0,
         strokeWeight: 2,
+        map:map,
         icons: [{
           icon: this.lineSymbol,
           offset: '0',
@@ -112,6 +113,7 @@ define(['app/helper', 'task/task', 'app/geoCalc', 'app/map', 'jquery', 'jgrowl']
                   point1: this.points[ip],
                   point2: this.points[ip + 1],
                   mode: mode,
+                  map:map,
                 };
                 this.validCrossings.push(validCrossing);
                 start_ip = ip;
@@ -137,6 +139,7 @@ define(['app/helper', 'task/task', 'app/geoCalc', 'app/map', 'jquery', 'jgrowl']
                       point1: this.points[ip],
                       point2: this.points[ip + 1],
                       mode: mode,
+                      map:map,
                     };
                     this.validCrossings.push(validCrossing);
                     start_ip = ip;
@@ -167,8 +170,6 @@ define(['app/helper', 'task/task', 'app/geoCalc', 'app/map', 'jquery', 'jgrowl']
     }
 
     addMarker(point, itp, label, infoContent) {
-
-      console.log("added marker");
 
       let latLng = new google.maps.LatLng(point.x, point.y);
 

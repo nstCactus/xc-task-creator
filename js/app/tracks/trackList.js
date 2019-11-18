@@ -60,9 +60,13 @@ define(['jquery'], function ($) {
         let bgColor = tracks[i].color;
         let color = lightOrDark(bgColor);
 
-        html += '<li  style="color:' + color + ';background-color:' + bgColor + ';" class="' + tracks[i].filename + '">' + tracks[i].filename ;
-        html += '<i id="tracknameList" class="fa fa-trash" name="' + tracks[i].filename + '" ></i>  ';
-        html += '<i id="trackcolor" class="fa fa-eye" name="' + tracks[i].filename + '" ></i> </li>';
+        html +=  '<div class="row">';
+        html += '<div style="color:' + color + ';background-color:' + bgColor + ';" id="trackcolor" class="col-4 colorbox" name="' + tracks[i].filename + '" ></div>';
+                html += '<div id="tracknameList" class="fa fa-trash" name="' + tracks[i].filename + '" ></div>  ';
+
+        html +=  '<div class="col-6">' + tracks[i].filename + '</div>';
+        html += '</div>';
+
       }
       container.html(html);
       container.addClass('populated');

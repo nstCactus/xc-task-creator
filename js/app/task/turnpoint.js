@@ -118,6 +118,7 @@ define(['app/param', 'app/geoCalc', 'waypoints/waypoint', 'app/geoCalc'], functi
             paths: coords,
           };
           this.mapElement = new google.maps.Polygon(circleOptions);
+
           // var circleOptions = {
           //   strokeColor: param.turnpoint.strokeColor[this.type],
           //   strokeOpacity: 0.8,
@@ -131,6 +132,7 @@ define(['app/param', 'app/geoCalc', 'waypoints/waypoint', 'app/geoCalc'], functi
           //   turnpoint: this,
           // };
           //this.mapElement = new google.maps.Circle(circleOptions);
+          
         }
         else {
           // Render goalLine.
