@@ -5,10 +5,10 @@
 define(['app/helper', 'task/task', 'app/geoCalc', 'app/map', 'jquery', 'jgrowl'], function (helper, task, geoCalc, map, $) {
 
   var markerImage = {
-    url: "https://maps.google.com/mapfiles/kml/paddle/ylw-circle-lv.png", // url
-    scaledSize: new google.maps.Size(32, 32), // scaled size
+    url: "https://maps.google.com/mapfiles/kml/pal5/icon31.png", // url
+    scaledSize: new google.maps.Size(16, 16), // scaled size
     origin: new google.maps.Point(0, 0), // origin
-    anchor: new google.maps.Point(16, 16) // anchor
+    anchor: new google.maps.Point(8, 8) // anchor
   };
 
   class Track {
@@ -67,6 +67,11 @@ define(['app/helper', 'task/task', 'app/geoCalc', 'app/map', 'jquery', 'jgrowl']
 
     checkTask(turnpoints, taskInfo) {
 
+      for (let i = 0; i < this.graphic.markes.length; i++) {
+        this.graphic.markes[i].setMap(null)
+      }
+      this.graphic.markes = [];
+
       let start_ip = 0;
 
       for (let itp = 0; itp < turnpoints.length; itp++) {
@@ -111,6 +116,8 @@ define(['app/helper', 'task/task', 'app/geoCalc', 'app/map', 'jquery', 'jgrowl']
                 this.validCrossings.push(validCrossing);
                 start_ip = ip;
                 this.addMarker(this.points[ip], turnpoints[itp].shortName.toUpperCase(), time, validCrossing);
+                // this.addMarker(this.points[ip+1], turnpoints[itp].shortName.toUpperCase(), time, validCrossing);
+
                 //console.log("Crossing " + " tp : " + turnpoints[itp].id + " point: " + String(ip) + " Time: " + time);
                 break;
               }
@@ -134,6 +141,8 @@ define(['app/helper', 'task/task', 'app/geoCalc', 'app/map', 'jquery', 'jgrowl']
                     this.validCrossings.push(validCrossing);
                     start_ip = ip;
                     this.addMarker(this.points[ip], turnpoints[itp].shortName.toUpperCase(), time, validCrossing);
+                    // this.addMarker(this.points[ip+1], turnpoints[itp].shortName.toUpperCase(), time, validCrossing);
+
                     //console.log("Crossing " + " tp : " + turnpoints[itp].id + " point: " + String(ip) + " Time: " + time);
                     break;
                   }
@@ -158,14 +167,15 @@ define(['app/helper', 'task/task', 'app/geoCalc', 'app/map', 'jquery', 'jgrowl']
     }
 
     addMarker(point, itp, label, infoContent) {
+
+      console.log("added marker");
+
       let latLng = new google.maps.LatLng(point.x, point.y);
-
-
 
       let marker = new google.maps.Marker({
         position: latLng,
         title: String(label),
-        label: String(itp),
+        //label: String(itp),
         // icon: {
         //   path: google.maps.SymbolPath.CIRCLE,
         //   scale: 5
