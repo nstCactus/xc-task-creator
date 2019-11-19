@@ -4,16 +4,21 @@
  */
 define(['app/helper', 'task/task', 'app/geoCalc', 'app/map', 'jquery', 'jgrowl'], function (helper, task, geoCalc, map, $) {
 
-  var markerImage = {
-    url: "images/green-x-md.png", // url
-    scaledSize: new google.maps.Size(16, 16), // scaled size
-    origin: new google.maps.Point(0, 0), // origin
-    anchor: new google.maps.Point(8, 8) // anchor
-  };
+
 
   class Track {
 
+
     constructor(info) {
+
+      this.markerImage = {
+        url: "images/green-x-md.png", // url
+        scaledSize: new google.maps.Size(16, 16), // scaled size
+        origin: new google.maps.Point(0, 0), // origin
+        anchor: new google.maps.Point(8, 8) // anchor
+      };
+
+
       this.lineSymbol = {
         path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW
       };
@@ -98,6 +103,7 @@ define(['app/helper', 'task/task', 'app/geoCalc', 'app/map', 'jquery', 'jgrowl']
               pointN: ip,
               tpNum: itp,
               tpId: turnpoints[itp].id,
+              tpShortName:turnpoints[itp].shortName,
               time: time,
               seconds: seconds,
               igcTime: this.points[ip].time,
@@ -107,7 +113,7 @@ define(['app/helper', 'task/task', 'app/geoCalc', 'app/map', 'jquery', 'jgrowl']
             };
             this.allCrossings[itp].push(newCrossing)
             //this.allCrossings.push(newCrossing);
-            console.log("All Crossing " + " tp : " + turnpoints[itp].id + " point: " + String(ip) + " Time: " + time);
+            //console.log("All Crossing " + " tp : " + turnpoints[itp].id + " point: " + String(ip) + " Time: " + time);
             //this.addMarker(this.points[ip], turnpoints[itp].shortName.toUpperCase(), time, newCrossing);
           }
         }
@@ -132,6 +138,7 @@ define(['app/helper', 'task/task', 'app/geoCalc', 'app/map', 'jquery', 'jgrowl']
                 pointN: this.allCrossings[itp][c].pointN,
                 tpNum: this.allCrossings[itp][c].tpNum,
                 tpId: this.allCrossings[itp][c].tpId,
+                tpShortName: this.allCrossings[itp][c].tpShortName,
                 time: this.allCrossings[itp][c].time,
                 seconds: this.allCrossings[itp][c].seconds,
                 igcTime: this.allCrossings[itp][c].igcTime,
@@ -155,6 +162,7 @@ define(['app/helper', 'task/task', 'app/geoCalc', 'app/map', 'jquery', 'jgrowl']
                 pointN: this.allCrossings[itp][c].pointN,
                 tpNum: this.allCrossings[itp][c].tpNum,
                 tpId: this.allCrossings[itp][c].tpId,
+                tpShortName: this.allCrossings[itp][c].tpShortName,
                 time: this.allCrossings[itp][c].time,
                 seconds: this.allCrossings[itp][c].seconds,
                 igcTime: this.allCrossings[itp][c].igcTime,
@@ -174,24 +182,101 @@ define(['app/helper', 'task/task', 'app/geoCalc', 'app/map', 'jquery', 'jgrowl']
 
       if (itp < turnpoints.length && ['start'].includes(turnpoints[itp].type)) {
         const start_seconds = this.taskTimeToSeconds(turnpoints[itp].open);
-        let nGoodTP = 0;
+        let maxGoodTP = 0;
+        let maxGoodIndex = -1;
         for (let s = this.allCrossings[itp].length - 1; s >= 0; s--) {
+          let nGoodTP = 0;
           let theTime = this.allCrossings[itp][s].seconds;
-          if (start_seconds <= theTime) {
-            for (let ntp = itp + 1; ntp = turnpoints.length; ntp++) {
+          if (start_seconds <= theTime && turnpoints[itp].mode == this.allCrossings[itp][s].mode) {
+            for (let ntp = itp + 1; ntp < turnpoints.length; ntp++) {
               for (let j = 0; j < this.allCrossings[ntp].length; j++) {
-                if ( this.allCrossings[ntp][j].time > theTime) {
-                  theTime = this.allCrossings[ntp][j].time;
+                if ( this.allCrossings[ntp][j].seconds > theTime) {
+                  theTime = this.allCrossings[ntp][j].seconds;
                   nGoodTP++;
                   break;
                 }
               }
             }
           }
+          if ( nGoodTP > maxGoodTP) {
+            maxGoodTP = nGoodTP;
+            maxGoodIndex = s;
+          }
+          //console.log('s: ' + s + ' nGoodTP: ' + nGoodTP);
+        }
+        //console.log('maxGoodIndex: ' + maxGoodIndex );
+        if ( maxGoodIndex != -1 ) {
+          let validCrossing = {
+            pointN: this.allCrossings[itp][maxGoodIndex].pointN,
+            tpNum: this.allCrossings[itp][maxGoodIndex].tpNum,
+            tpId: this.allCrossings[itp][maxGoodIndex].tpId,
+            tpShortName: this.allCrossings[itp][maxGoodIndex].tpShortName,
+            time: this.allCrossings[itp][maxGoodIndex].time,
+            seconds: this.allCrossings[itp][maxGoodIndex].seconds,
+            igcTime: this.allCrossings[itp][maxGoodIndex].igcTime,
+            point1: this.allCrossings[itp][maxGoodIndex].point1,
+            point2: this.allCrossings[itp][maxGoodIndex].point2,
+            mode: this.allCrossings[itp][maxGoodIndex].mode,
+            map: this.allCrossings[itp][maxGoodIndex].map,
+          };
+          this.validCrossings.push(validCrossing);
+          this.addMarker(validCrossing.point1, validCrossing.tpId.toUpperCase(), validCrossing.time, validCrossing);
+          current_time = validCrossing.seconds;
         }
       }
 
+      for (itp = itp+1; itp < turnpoints.length; itp++) {
 
+        if (['turnpoint','end-of-speed-section'].includes(turnpoints[itp].type)) {
+          for (let c = 0; c < this.allCrossings[itp].length; c++) {
+            if (this.allCrossings[itp][c].seconds >= current_time) {
+              let validCrossing = {
+                pointN: this.allCrossings[itp][c].pointN,
+                tpNum: this.allCrossings[itp][c].tpNum,
+                tpId: this.allCrossings[itp][c].tpId,
+                tpShortName: this.allCrossings[itp][c].tpShortName,
+                time: this.allCrossings[itp][c].time,
+                seconds: this.allCrossings[itp][c].seconds,
+                igcTime: this.allCrossings[itp][c].igcTime,
+                point1: this.allCrossings[itp][c].point1,
+                point2: this.allCrossings[itp][c].point2,
+                mode: this.allCrossings[itp][c].mode,
+                map: this.allCrossings[itp][c].map,
+              };
+              this.validCrossings.push(validCrossing);
+              this.addMarker(validCrossing.point1, validCrossing.tpId.toUpperCase(), validCrossing.time, validCrossing);
+              current_time = validCrossing.seconds;
+              break;
+            }
+          }
+        }
+
+        if (['goal',].includes(turnpoints[itp].type)) {
+          const close_seconds = this.taskTimeToSeconds(turnpoints[itp].close);
+
+          for (let c = 0; c < this.allCrossings[itp].length; c++) {
+            if (this.allCrossings[itp][c].seconds >= current_time &&  this.allCrossings[itp][c].seconds < close_seconds ) {
+              let validCrossing = {
+                pointN: this.allCrossings[itp][c].pointN,
+                tpNum: this.allCrossings[itp][c].tpNum,
+                tpId: this.allCrossings[itp][c].tpId,
+                tpShortName: this.allCrossings[itp][c].tpShortName,
+                time: this.allCrossings[itp][c].time,
+                seconds: this.allCrossings[itp][c].seconds,
+                igcTime: this.allCrossings[itp][c].igcTime,
+                point1: this.allCrossings[itp][c].point1,
+                point2: this.allCrossings[itp][c].point2,
+                mode: this.allCrossings[itp][c].mode,
+                map: this.allCrossings[itp][c].map,
+              };
+              this.validCrossings.push(validCrossing);
+              this.addMarker(validCrossing.point1, validCrossing.tpId.toUpperCase(), validCrossing.time, validCrossing);
+              current_time = validCrossing.seconds;
+              break;
+            }
+          }
+        }
+      }
 
     }
 
@@ -319,7 +404,7 @@ define(['app/helper', 'task/task', 'app/geoCalc', 'app/map', 'jquery', 'jgrowl']
         //   path: google.maps.SymbolPath.CIRCLE,
         //   scale: 5
         // },    
-        icon: markerImage,
+        icon: this.markerImage,
       });
       let container = '<div >';
       container += '<div class="item"> TP: ' + infoContent.tpNum + '</div>';
