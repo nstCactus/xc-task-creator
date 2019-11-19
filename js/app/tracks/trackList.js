@@ -35,7 +35,8 @@ define(['jquery'], function ($) {
 
 
   var container = $("#track-handler ul");
-  $(document).on('click', '#tracknameList', function (e) {
+
+  $(document).on('click', '#trackdelete', function (e) {
     var name = $(this).attr('name');
     var e = document.createEvent("CustomEvent");
     e.initCustomEvent('tracknameRemoved', false, false, {
@@ -43,6 +44,16 @@ define(['jquery'], function ($) {
     });
     document.dispatchEvent(e);
   });
+
+  $(document).on('click', '#trackname', function (e) {
+    var name = $(this).attr('name');
+    var e = document.createEvent("CustomEvent");
+    e.initCustomEvent('trackNameclicked', false, false, {
+      filename: name,
+    });
+    document.dispatchEvent(e);
+  });
+  
 
   $(document).on('click', '#trackcolor', function (e) {
     var name = $(this).attr('name');
@@ -60,11 +71,10 @@ define(['jquery'], function ($) {
         let bgColor = tracks[i].color;
         let color = lightOrDark(bgColor);
 
-        html +=  '<div class="row">';
+        html += '<div class="row">';
         html += '<div style="color:' + color + ';background-color:' + bgColor + ';" id="trackcolor" class="col-4 colorbox" name="' + tracks[i].filename + '" ></div>';
-                html += '<div id="tracknameList" class="fa fa-trash" name="' + tracks[i].filename + '" ></div>  ';
-
-        html +=  '<div class="col-6">' + tracks[i].filename + '</div>';
+        html += '<div id="trackdelete" class="fa fa-trash" name="' + tracks[i].filename + '" ></div>  ';
+        html += '<div id="trackname" name="' + tracks[i].filename + '" class="col-6">' + tracks[i].filename + '</div>';
         html += '</div>';
 
       }

@@ -2,7 +2,7 @@
  * @file
  * Track module for the task creator.
  */
-define(['app/helper', 'task/task', 'app/geoCalc', 'app/map', 'jquery', 'jgrowl'], function (helper, task, geoCalc, map, $) {
+define(['app/helper', 'task/task', 'app/geoCalc',  'app/map', 'jquery', 'jgrowl'], function (helper, task, geoCalc,  map, $) {
 
   var markerImage = {
     url: "images/green-x-md.png", // url
@@ -68,6 +68,9 @@ define(['app/helper', 'task/task', 'app/geoCalc', 'app/map', 'jquery', 'jgrowl']
 
     checkTask(turnpoints, taskInfo) {
 
+      this.allCrossings = [];
+      this.validCrossings = [];
+
       for (let i = 0; i < this.graphic.markes.length; i++) {
         this.graphic.markes[i].setMap(null)
       }
@@ -105,6 +108,7 @@ define(['app/helper', 'task/task', 'app/geoCalc', 'app/map', 'jquery', 'jgrowl']
             if (['takeoff', 'turnpoint', 'end-of-speed-section', 'goal'].includes(turnpoints[itp].type)) {
               if (validCrossing == null) {
                 validCrossing = {
+                  pointN:ip,
                   tpNum: itp,
                   tpId: turnpoints[itp].id,
                   time: time,
@@ -131,6 +135,7 @@ define(['app/helper', 'task/task', 'app/geoCalc', 'app/map', 'jquery', 'jgrowl']
                   const start_seconds = this.taskTimeToSeconds(turnpoints[itp].open);
                   if (start_seconds <= seconds) {
                     validCrossing = {
+                      pointN:ip,
                       tpNum: itp,
                       tpId: turnpoints[itp].id,
                       time: time,

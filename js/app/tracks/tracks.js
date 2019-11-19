@@ -73,18 +73,40 @@ define(['tracks/track', 'tracks/trackList', 'app/helper'], function (Track, Trac
       }
     }
     TrackList.rebuild(tracks);
-
   }
 
+  var onTrackNameclicked = function (e) {
+    var filename = e.detail.filename;
+    for (var i = 0; i < tracks.length; i++) {
+      if (tracks[i].filename == filename) {
+        html = '<div><h2>Track :' + tracks[i].filename + '</h2><div>';
+        html += '<div>Points: ' + tracks[i].points.length + '</div>';
+        html += '<div>Valid Crossing:</div>';
+        for ( let vc=0; vc< tracks[i].validCrossings.length;vc++) {
+          html += '<div>TP:'+ tracks[i].validCrossings[vc].tpNum + ' ' + tracks[i].validCrossings[vc].tpId + 
+          ' Point: ' + String(tracks[i].validCrossings[vc].pointN.toLocaleString('en-US', {minimumIntegerDigits: 5, useGrouping:false})) +
+          ' Time: ' + tracks[i].validCrossings[vc].time  + '</div>';
+        }
+        html += '<div></div>';
+        html += '<div></div>';
+        html += '<div></div>';
+        html += '<div></div>';
 
+        $.modal(html)
+      }
+    }
+  }
+
+  
 
 
 
   document.addEventListener('tracknameRemoved', onTracknameRemoved);
   document.addEventListener('trackColorChanged', onTrackColorChanged);
   document.addEventListener('trackChangeColor', onTrackChangeColor);
+  document.addEventListener('trackNameclicked', onTrackNameclicked);
 
-
+  
 
   return {
     'addTrack': addTrack,

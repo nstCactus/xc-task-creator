@@ -196,7 +196,7 @@ select {
  cursor: pointer;
 }
 
-#tracknameList {
+#trackdelete {
   margin-right: 20px;
   list-style: none;
   padding : 5px 0px 5px 20px;
@@ -204,6 +204,14 @@ select {
   float: right;
  }
 
+ #trackname {
+  margin-right: 20px;
+  list-style: none;
+  /* padding : 5px 0px 5px 20px; */
+  cursor: pointer;
+  float: left;
+ }
+ 
  #trackcolor {
   list-style: none;
   padding : 5px 0px 5px 20px;
@@ -215,9 +223,14 @@ select {
   text-decoration : underline;
 }
 
-#tracknameList:hover {
+#trackdelete:hover {
   text-decoration : underline;
 }
+
+#trackname:hover {
+  text-decoration : underline;
+}
+
 
 #export-waypoints {
   margin-bottom : 10px;
