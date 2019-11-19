@@ -209,7 +209,7 @@ define(['app/helper', 'task/task', 'app/geoCalc',  'app/map', 'jquery', 'jgrowl'
       for (let i = 0; i < this.graphic.markes.length; i++) {
         this.graphic.markes[i].setMap(map)
       }
-      console.log(this.graphic.markes.length);
+      //console.log(this.graphic.markes.length);
     }
 
   }
