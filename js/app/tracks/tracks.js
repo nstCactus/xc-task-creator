@@ -79,8 +79,8 @@ define(['tracks/track', 'tracks/trackList', 'app/helper'], function (Track, Trac
     var filename = e.detail.filename;
     for (let  i = 0; i < tracks.length; i++) {
       if (tracks[i].filename == filename) {
-        html = '<div><h2>Track :' + tracks[i].filename + '</h2><div>';
-        html += '<div>Points: ' + tracks[i].points.length + '</div>';
+        html = '<div><h3>' + tracks[i].filename + '</h3><div>';
+        html += '<div>Distance: ' + tracks[i].distance + ' km ' + tracks[i].goal + '</div>';
         html += '<div>Valid Crossing:</div>';
         for ( let vc=0; vc< tracks[i].validCrossings.length;vc++) {
           html += '<div>' +  tracks[i].validCrossings[vc].tpShortName.toUpperCase() + ' :'+ tracks[i].validCrossings[vc].tpNum + ' ' + tracks[i].validCrossings[vc].tpId + 
