@@ -2,7 +2,7 @@
  * @file
  * Track module for the task creator.
  */
-define(['app/helper', 'app/param', 'task/task', 'app/geoCalc', 'app/map', 'jquery', 'jgrowl'], function (helper, param , task, geoCalc, map, $) {
+define(['app/helper', 'app/param', 'task/task', 'app/geoCalc', 'app/map', 'jquery', 'jgrowl'], function (helper, param, task, geoCalc, map, $) {
 
 
 
@@ -73,22 +73,45 @@ define(['app/helper', 'app/param', 'task/task', 'app/geoCalc', 'app/map', 'jquer
 
     calcTrackStatistics(turnpoints, taskInfo) {
       let d = 0;
-      if ( param.showCumulativeDistances ) {
-        d = taskInfo.distances[this.validCrossings.length-2] 
+
+      if (param.showCumulativeDistances) {
+        d = taskInfo.distances[this.validCrossings.length - 2]
       }
       else {
-        for (let i=0; i< this.validCrossings.length-1;i++) {
+        for (let i = 0; i < this.validCrossings.length - 1; i++) {
           d += taskInfo.distances[i];
         }
         // ....
       }
-      this.distance = d;
-      if ( this.validCrossings.length == turnpoints.length ) {
-        this.goal="(GOAL)";
+
+      if (this.validCrossings.length == turnpoints.length) {
+        this.goal = "(GOAL)";
       }
       else {
-        this.goal="";
+        this.goal = "";
+        let lastLeg = taskInfo.distances[this.validCrossings.length - 1];
+        if (param.showCumulativeDistances) {
+          lastLeg -= d;
+        }
+        let mindist = lastLeg;
+        for (let i = this.points.length - 1; i >= 0; i--) {
+          if (this.igcToSeconds(this.points[i].time, taskInfo) < this.validCrossings[this.validCrossings.length - 1].seconds) {
+            break;
+          }
+          const d = geoCalc.computeDistanceBetween(
+            taskInfo.fastWaypoints[this.validCrossings.length ].lat(),
+            taskInfo.fastWaypoints[this.validCrossings.length ].lng(),
+            this.points[i].x, this.points[i].y) / 1000.;
+          if (d < mindist) {
+            mindist = d;
+          }
+        }
+        d = d + lastLeg - mindist;
       }
+
+      this.distance = d;
+
+      //taskInfo.fastWaypoints
     }
 
     checkTask(turnpoints, taskInfo) {
@@ -123,7 +146,7 @@ define(['app/helper', 'app/param', 'task/task', 'app/geoCalc', 'app/map', 'jquer
               pointN: ip,
               tpNum: itp,
               tpId: turnpoints[itp].id,
-              tpShortName:turnpoints[itp].shortName,
+              tpShortName: turnpoints[itp].shortName,
               time: time,
               seconds: seconds,
               igcTime: this.points[ip].time,
@@ -210,7 +233,7 @@ define(['app/helper', 'app/param', 'task/task', 'app/geoCalc', 'app/map', 'jquer
           if (start_seconds <= theTime && turnpoints[itp].mode == this.allCrossings[itp][s].mode) {
             for (let ntp = itp + 1; ntp < turnpoints.length; ntp++) {
               for (let j = 0; j < this.allCrossings[ntp].length; j++) {
-                if ( this.allCrossings[ntp][j].seconds > theTime) {
+                if (this.allCrossings[ntp][j].seconds > theTime) {
                   theTime = this.allCrossings[ntp][j].seconds;
                   nGoodTP++;
                   break;
@@ -218,14 +241,14 @@ define(['app/helper', 'app/param', 'task/task', 'app/geoCalc', 'app/map', 'jquer
               }
             }
           }
-          if ( nGoodTP > maxGoodTP) {
+          if (nGoodTP > maxGoodTP) {
             maxGoodTP = nGoodTP;
             maxGoodIndex = s;
           }
           //console.log('s: ' + s + ' nGoodTP: ' + nGoodTP);
         }
         //console.log('maxGoodIndex: ' + maxGoodIndex );
-        if ( maxGoodIndex != -1 ) {
+        if (maxGoodIndex != -1) {
           let validCrossing = {
             pointN: this.allCrossings[itp][maxGoodIndex].pointN,
             tpNum: this.allCrossings[itp][maxGoodIndex].tpNum,
@@ -246,11 +269,11 @@ define(['app/helper', 'app/param', 'task/task', 'app/geoCalc', 'app/map', 'jquer
       }
 
       let found = true;
-      for (itp = itp+1; itp < turnpoints.length; itp++) {
-        if ( !found) {
+      for (itp = itp + 1; itp < turnpoints.length; itp++) {
+        if (!found) {
           break;
         }
-        if (['turnpoint','end-of-speed-section'].includes(turnpoints[itp].type)) {
+        if (['turnpoint', 'end-of-speed-section'].includes(turnpoints[itp].type)) {
           found = false;
           for (let c = 0; c < this.allCrossings[itp].length; c++) {
             if (this.allCrossings[itp][c].seconds >= current_time) {
@@ -280,7 +303,7 @@ define(['app/helper', 'app/param', 'task/task', 'app/geoCalc', 'app/map', 'jquer
           const close_seconds = this.taskTimeToSeconds(turnpoints[itp].close);
 
           for (let c = 0; c < this.allCrossings[itp].length; c++) {
-            if (this.allCrossings[itp][c].seconds >= current_time &&  this.allCrossings[itp][c].seconds < close_seconds ) {
+            if (this.allCrossings[itp][c].seconds >= current_time && this.allCrossings[itp][c].seconds < close_seconds) {
               let validCrossing = {
                 pointN: this.allCrossings[itp][c].pointN,
                 tpNum: this.allCrossings[itp][c].tpNum,
