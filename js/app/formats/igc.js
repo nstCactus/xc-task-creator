@@ -2,7 +2,7 @@
  * @file 
  * IGC parser module for the task creator.
  */
-define([], function() {
+define(['app/geoCalc'], function(geoCalc) {
   
   /**
    * @todo
@@ -26,7 +26,10 @@ define([], function() {
   var parse = function(text, filename) {
     var lines = text.split("\n");
     var points = [];
+    var count = 0;
     // for each lines.
+    var prev_point = null;
+    var inAir = false;
     for (var i = 0; i < lines.length; i++) {
       // Replace all bad formated whitespace at the begining and end of the line..
       lines[i] = lines[i].replace(/^\s\s*/, '').replace(/\s\s*$/, '');
@@ -43,8 +46,39 @@ define([], function() {
           'z' : parseInt(lines[i].substring(25, 30), 10),
           'zGps' : parseInt(lines[i].substring(30, 35), 10),
         }
-        points.push(point);
+        if ( prev_point != null ) {
+          let vel = velocity(point,prev_point) ;
+          if ( !inAir &&  vel > 15 ) {
+            count++;
+            if ( count > 5 ) {
+              inAir = true;
+              count = 0;
+            }
+          }
+          if ( inAir &&  vel < 1 ) {
+            count++;
+          }
+          if ( count > 5 ) {
+            inAir = false;
+            count = 0;
+            break;
+          }
+          if ( inAir ) {
+            points.push(point);
+          }
+        }
+        prev_point = point;
       }
+    }
+
+    function velocity(point,prev_point) {
+      let dist = geoCalc.computeDistanceBetween(point.x,point.y,prev_point.x,prev_point.y)
+      let time = igcToSeconds(point.time) - igcToSeconds(prev_point.time);
+      return time==0?0:(dist*3600)/(time*1000.0);
+    }
+
+    function igcToSeconds(strTime) {
+      return Number(strTime.substring(0, 2)) * 3600 + Number(strTime.substring(2, 4)) * 60 + Number(strTime.substring(4)) ;
     }
 
     return {

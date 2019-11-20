@@ -80,10 +80,17 @@ define(['tracks/track', 'tracks/trackList', 'app/helper'], function (Track, Trac
     for (let  i = 0; i < tracks.length; i++) {
       if (tracks[i].filename == filename) {
         html = '<div><h3>' + tracks[i].filename + '</h3><div>';
-        html += '<div>Distance: ' + tracks[i].distance + ' km ' + tracks[i].goal + '</div>';
+        html += '<div>Distance: ' + tracks[i].distance.toFixed(3) + ' km ' + tracks[i].goal + '</div>';
+
+        html += '<div>Started Speedsection: ' + tracks[i].ss +  '</div>';
+        html += '<div>Ended Speedsection: ' + tracks[i].es +  '</div>';
+        html += '<div>Time in Speedsection: ' + tracks[i].ts +  '</div>';
+
+        html += '<br>';
+
         html += '<div>Valid Crossing:</div>';
         for ( let vc=0; vc< tracks[i].validCrossings.length;vc++) {
-          html += '<div>' +  tracks[i].validCrossings[vc].tpShortName.toUpperCase() + ' :'+ tracks[i].validCrossings[vc].tpNum + ' ' + tracks[i].validCrossings[vc].tpId + 
+          html += '<div>' +  tracks[i].validCrossings[vc].tpShortName.toUpperCase() + ' :'+ tracks[i].validCrossings[vc].tpID + ' '  + 
           ' Point: ' + String(tracks[i].validCrossings[vc].pointN.toLocaleString('en-US', {minimumIntegerDigits: 5, useGrouping:false})) +
           ' Time: ' + tracks[i].validCrossings[vc].time  + '</div>';
         }
