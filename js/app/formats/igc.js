@@ -45,6 +45,7 @@ define(['app/geoCalc'], function(geoCalc) {
             if ( count > 0 ) {
               inAir = true;
               count = 0;
+              points.push(prev_point);
             }
           }
           if ( inAir &&  vel < 1 ) {
