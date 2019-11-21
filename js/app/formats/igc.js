@@ -9,16 +9,8 @@ define(['app/geoCalc'], function(geoCalc) {
    * Perform Better check : If there is a line with B and 35 char.
    */
   var check = function(text, filename) {
-    var lines = text.split("\n");
-    var words = [];
-    // for each lines.
-    for (var i = 0; i < lines.length; i++) {
-      // Replace all bad formated whitespace at the begining and end of the line..
-      lines[i] = lines[i].replace(/^\s\s*/, '').replace(/\s\s*$/, '');
-      // If the first character is a "B" and total # of charaters = 35.
-      if (lines[i].length == 35 && lines[i].charAt(0) == 'B') {
-        return true;
-      }
+    if (filename.split('.').pop().toLowerCase() == 'igc') {
+      return true;
     }
     return false;
   };
