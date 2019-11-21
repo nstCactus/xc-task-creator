@@ -92,7 +92,9 @@ define(['app/helper', 'app/param', 'task/task', 'app/geoCalc', 'app/map', 'jquer
           this.es = this.secondsToTime(tes);
         }
       }
-      this.ts = this.secondsToTime(tes-tss);
+      if ( tss != 0 && tes != 0) {
+        this.ts = this.secondsToTime(tes-tss);
+      }
 
 
       // distance 
