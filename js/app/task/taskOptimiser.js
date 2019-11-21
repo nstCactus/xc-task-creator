@@ -126,21 +126,21 @@ define(["app/param", 'app/geoCalc'], function (param,geoCalc ) {
 
 
     var markerImageSS = {
-      url: "https://maps.google.com/mapfiles/kml/pal5/icon26.png", // url
+      url: "images/markers/PNG/Centered/32x32/icon26.png", // url
       scaledSize: new google.maps.Size(16, 16), // scaled size
       origin: new google.maps.Point(0, 0), // origin
       anchor: new google.maps.Point(8, 8) // anchor
     };
 
     var markerImage = {
-      url: "https://maps.google.com/mapfiles/kml/shapes/placemark_circle.png", // url
+      url: "images/markers/PNG/Centered/32x32/placemark_circle.png", // url
       scaledSize: new google.maps.Size(16, 16), // scaled size
       origin: new google.maps.Point(0, 0), // origin
       anchor: new google.maps.Point(8, 8) // anchor
     };
 
     var markerImageES = {
-      url: "https://maps.google.com/mapfiles/kml/pal5/icon60.png", // url
+      url: "images/markers/PNG/Centered/32x32/icon60.png", // url
       scaledSize: new google.maps.Size(16, 16), // scaled size
       origin: new google.maps.Point(0, 0), // origin
       anchor: new google.maps.Point(8, 8) // anchor

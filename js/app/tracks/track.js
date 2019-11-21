@@ -254,7 +254,7 @@ define(['app/helper', 'app/param', 'task/task', 'app/geoCalc', 'app/map', 'jquer
         for (let s = this.allCrossings[itp].length - 1; s >= 0; s--) {
           let nGoodTP = 0;
           let theTime = this.allCrossings[itp][s].seconds;
-          if (start_seconds <= theTime && turnpoints[itp].mode == this.allCrossings[itp][s].mode) {
+          if (start_seconds - taskInfo.jumpTheGun <= theTime && turnpoints[itp].mode == this.allCrossings[itp][s].mode) {
             for (let ntp = itp + 1; ntp < turnpoints.length; ntp++) {
               for (let j = 0; j < this.allCrossings[ntp].length; j++) {
                 if (this.allCrossings[ntp][j].seconds > theTime) {
@@ -356,11 +356,6 @@ define(['app/helper', 'app/param', 'task/task', 'app/geoCalc', 'app/map', 'jquer
     }
 
 
-
-
-
-
-
     addMarker(point, itp, label, infoContent) {
 
       let latLng = new google.maps.LatLng(point.x, point.y);
@@ -377,7 +372,7 @@ define(['app/helper', 'app/param', 'task/task', 'app/geoCalc', 'app/map', 'jquer
       });
       let container = '<div >';
       container += '<div class="item"> TP: ' + infoContent.tpNum + '</div>';
-      container += '<div class="item"> ID: ' + infoContent.tpNum + '</div>';
+      container += '<div class="item"> ' + infoContent.tpShortName.toUpperCase() + ': ' + infoContent.tpID + '</div>';
       container += '<div class="item"> Time: ' + infoContent.time + '</div>';
       container += '<div class="item"> Mode: ' + infoContent.mode + '</div>';
       container += '</div>';
