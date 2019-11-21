@@ -42,7 +42,7 @@ define(['app/geoCalc'], function(geoCalc) {
           let vel = velocity(point,prev_point) ;
           if ( !inAir &&  vel > 15 ) {
             count++;
-            if ( count > 5 ) {
+            if ( count > 0 ) {
               inAir = true;
               count = 0;
             }
