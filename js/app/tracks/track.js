@@ -99,8 +99,8 @@ define(['app/helper', 'app/param', 'task/task', 'app/geoCalc', 'app/map', 'jquer
 
       // distance 
       let d = 0;
-
-      if (param.showCumulativeDistances) {
+      this.goal = "";
+      if (param.showCumulativeDistances && this.validCrossings.length > 1 ) {
         d = taskInfo.distances[this.validCrossings.length - 2]
       }
       else {
@@ -113,8 +113,7 @@ define(['app/helper', 'app/param', 'task/task', 'app/geoCalc', 'app/map', 'jquer
       if (this.validCrossings.length == turnpoints.length) {
         this.goal = "(GOAL)";
       }
-      else {
-        this.goal = "";
+      else if (this.validCrossings.length > 0 ) {
         let lastLeg = taskInfo.distances[this.validCrossings.length - 1];
         if (param.showCumulativeDistances) {
           lastLeg -= d;

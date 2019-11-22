@@ -191,10 +191,18 @@ select {
 #filenameList {
  list-style: none;
  padding : 5px 0px 5px 20px;
- cursor: pointer;
+ /* cursor: pointer; */
 }
 
 #trackdelete {
+  margin-right: 35px;
+  list-style: none;
+  padding : 5px 0px 5px 20px;
+  cursor: pointer;
+  float: right;
+ }
+
+ #trash {
   margin-right: 20px;
   list-style: none;
   padding : 5px 0px 5px 20px;
@@ -217,9 +225,9 @@ select {
  }
 
 
-#filenameList:hover {
+/* #filenameList:hover {
   text-decoration : underline;
-}
+} */
 
 #trackdelete:hover {
   text-decoration : underline;
