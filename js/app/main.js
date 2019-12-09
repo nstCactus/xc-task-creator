@@ -16,7 +16,6 @@ define(['app/map', 'app/uploader', 'jquery'], function(map, uploader, $) {
 
 
   if (params.airspaceUrl) {
-    //var filename = params.airspaceUrl.split("/").pop();
     $.get(params.airspaceUrl, function(data) {
       uploader.setFilename("Airspace.kml");
       uploader.parse(data);
