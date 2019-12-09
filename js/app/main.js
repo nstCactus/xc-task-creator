@@ -4,11 +4,7 @@
  */
 define(['app/map', 'app/uploader', 'jquery'], function(map, uploader, $) {
   // Grab param from url...
-
   let params = getJsonFromUrl(location.href);
-
-  
-  //load_params(params.airspaceUrl,params.waypointsUrl);
 
   if (params.waypointsUrl) {
     var filename = params.waypointsUrl.split("/").pop();
@@ -48,33 +44,6 @@ define(['app/map', 'app/uploader', 'jquery'], function(map, uploader, $) {
   }
   
 
-
-  // async function load_params(airspaceUrl,waypointsUrl) {
-
-
-  //   if (waypointsUrl) {
-  //     var filename = params.waypointsUrl.split("/").pop();
-  //     $.get(waypointsUrl, function(data) {
-  //       uploader.setFilename(filename);
-  //       uploader.parse(data);
-  //     } , "text");
-  //   }
-  
-  //   await sleep(2000);
-
-  //   if (airspaceUrl) {
-  //     //var filename = params.airspaceUrl.split("/").pop();
-  //     $.get(airspaceUrl, function(data) {
-  //       uploader.setFilename("Airspace.kml");
-  //       uploader.parse(data);
-  //     } , "text");
-  //   }
-
-  // }
-
-  // function sleep(ms) {
-  //   return new Promise(resolve => setTimeout(resolve, ms));
-  // }
   
   function getJsonFromUrl(url) {
     if(!url) url = location.href;
