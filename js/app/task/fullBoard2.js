@@ -99,7 +99,15 @@ define(['jquery', 'simplemodal', 'app/helper', 'app/param', 'rejs!task/templates
       var content = fullTemplate({});
       var html = new DOMParser().parseFromString(content, "text/html");
 
-      replace(html, "RANGE!A2", taskInfo.num);
+
+
+      var textbox = "<input style='border:none;width:95%;font-size:18.0pt;font-weight:700;text-align:center;' value='"  +  taskInfo.num + "'></input>";
+      replace(html, "RANGE!A2", textbox);
+
+      //replace(html, "RANGE!A2", taskInfo.num);
+
+
+
       replace(html, "RANGE!B2", taskInfo.date);
       replace(html, "RANGE!F1", taskInfo.turn.toUpperCase());
 
