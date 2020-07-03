@@ -40,6 +40,7 @@
   html, body {
     margin: 1mm;
     height: 100%;
+    font-size: 50px;
     font-family :  Consolas, sans-serif;
     margin: 0 !important; 
     padding: 0 !important;
@@ -93,6 +94,11 @@
 html, body {
   height: 100%;
   font-family :  Consolas, sans-serif;
+  font-size: 12px;
+}
+
+.btn {
+  font-size: 12px;
 }
 
 
