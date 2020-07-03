@@ -52,16 +52,29 @@ define(['rejs!formats/export/FsTask', 'app/helper', 'jgrowl', 'xml-formatter'], 
     var utc_offset = Number(jsonDB.Fs.FsCompetition._utc_offset);
 
     var taskN = 0;
+    let nt = 1;
+
     if (tasks != undefined) {
-      taskN = window.prompt("Tasks in file : " + tasks.length + "\nSelect task number or cancel not to load a task and just load the competition DB", "1");
+      if ( tasks.length != undefined) {
+        nt = tasks.length;
+      }
+      taskN = window.prompt("Tasks in file : " + nt + "\nSelect task number or cancel not to load a task and just load the competition DB", "1");
     }
 
 
-    if (isNaN(taskN) || taskN <= 0 || taskN > tasks.length) {
+    if (isNaN(taskN) || taskN <= 0 || taskN > nt) {
       return;
     }
 
-    var jsonObj = tasks[taskN - 1];
+    let jsonObj ;
+    if ( nt ==1 ) {
+      jsonObj = tasks;
+    }
+    else {
+      jsonObj = tasks[taskN - 1];
+    }
+    
+    
 
     var jumpTheGun = Number(jsonObj.FsScoreFormula._jump_the_gun_max);
     var turnpointTollerance = Number(jsonObj.FsScoreFormula._turnpoint_radius_tolerance);
@@ -163,7 +176,12 @@ define(['rejs!formats/export/FsTask', 'app/helper', 'jgrowl', 'xml-formatter'], 
     var tasks = jsonDB.Fs.FsCompetition.FsTasks.FsTask;
     var taskN = 0;
     if (tasks != undefined) {
-      taskN = tasks.length;
+      if ( tasks.length == undefined ) {
+        taskN = 1;
+      }
+      else {
+        taskN = tasks.length;
+      }
     }
 
     var taskID = taskN + 1;
@@ -229,8 +247,16 @@ define(['rejs!formats/export/FsTask', 'app/helper', 'jgrowl', 'xml-formatter'], 
 
 
     if (jsonDB.Fs.FsCompetition.FsTasks.FsTask == undefined) {
-      var empty = { FsTask: [] };
+      var empty = { FsTask: new Array };
       jsonDB.Fs.FsCompetition.FsTasks = empty;
+    }
+
+    if (jsonDB.Fs.FsCompetition.FsTasks.FsTask.length == undefined ) {
+      let t1 = jsonDB.Fs.FsCompetition.FsTasks.FsTask;
+      let ar1 = new Array();
+      ar1.push(t1);
+      jsonDB.Fs.FsCompetition.FsTasks.FsTask = ar1;
+
     }
 
     jsonDB.Fs.FsCompetition.FsTasks.FsTask.push(jsonTask.FsTask);
