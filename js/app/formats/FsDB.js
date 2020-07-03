@@ -228,7 +228,8 @@ define(['rejs!formats/export/FsTask', 'app/helper', 'jgrowl', 'xml-formatter'], 
       starts.push(h.pad(2) + ":" + m.pad(2))
     }
 
-    var theDate = date.getUTCFullYear() + '-' + (date.getUTCMonth() + 1).pad(2) + '-' + day.pad(2)
+    //var theDate = date.getUTCFullYear() + '-' + (date.getUTCMonth() + 1).pad(2) + '-' + day.pad(2)
+    var theDate = taskInfo.date.substring(6,10) + '-' +  taskInfo.date.substring(3,5) + '-' + taskInfo.date.substring(0,2)
 
     var data = exportFsTask({
       turnpoints: turnpoints,
