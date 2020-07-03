@@ -36,7 +36,7 @@ define(['rejs!formats/export/FsTask', 'app/helper', 'jgrowl', 'xml-formatter'], 
     var tps = [];
     var wps = [];
     var gateint = 15;
-    var ngates = 1 ;
+    var ngates = 1;
 
     jsonDB = x2js.xml_str2json(text);
 
@@ -51,7 +51,11 @@ define(['rejs!formats/export/FsTask', 'app/helper', 'jgrowl', 'xml-formatter'], 
 
     var utc_offset = Number(jsonDB.Fs.FsCompetition._utc_offset);
 
-    var taskN = window.prompt("Tasks in file : " + tasks.length + "\nSelect task number or cancel not to load a task and just load the competition DB", "1");
+    var taskN = 0;
+    if (tasks != undefined) {
+      taskN = window.prompt("Tasks in file : " + tasks.length + "\nSelect task number or cancel not to load a task and just load the competition DB", "1");
+    }
+
 
     if (isNaN(taskN) || taskN <= 0 || taskN > tasks.length) {
       return;
@@ -69,11 +73,11 @@ define(['rejs!formats/export/FsTask', 'app/helper', 'jgrowl', 'xml-formatter'], 
     var FsTurnpoints = jsonObj.FsTaskDefinition.FsTurnpoint;
     var FsStartGates = jsonObj.FsTaskDefinition.FsStartGate;
 
-    if ( Array.isArray(FsStartGates) ) {
+    if (Array.isArray(FsStartGates)) {
       ngates = FsStartGates.length;
     }
-    
-    if ( ngates > 1 && FsStartGates.length > 1) {
+
+    if (ngates > 1 && FsStartGates.length > 1) {
       var g1 = FsStartGates[1]._open.substring(11, 13) * 60 + FsStartGates[1]._open.substring(14, 16)
       var g2 = FsStartGates[0]._open.substring(11, 13) * 60 + FsStartGates[0]._open.substring(14, 16)
       gateint = g1 - g2;
@@ -130,7 +134,7 @@ define(['rejs!formats/export/FsTask', 'app/helper', 'jgrowl', 'xml-formatter'], 
         'ngates': ngates,
         'gateint': gateint,
         'turnpoints': tps,
-        'utcOffset' : utc_offset,
+        'utcOffset': utc_offset,
         'jumpTheGun': jumpTheGun,
         'turnpointTollerance': turnpointTollerance,
       },
@@ -154,7 +158,15 @@ define(['rejs!formats/export/FsTask', 'app/helper', 'jgrowl', 'xml-formatter'], 
       UTCOffset = "+" + UTCOffset.pad(2);
     }
     var FsScoreFormula = x2js.json2xml_str({ FsScoreFormula: jsonDB.Fs.FsCompetition.FsScoreFormula });
-    var taskID = jsonDB.Fs.FsCompetition.FsTasks.FsTask.length + 1;
+
+
+    var tasks = jsonDB.Fs.FsCompetition.FsTasks.FsTask;
+    var taskN = 0;
+    if (tasks != undefined) {
+      taskN = tasks.length;
+    }
+
+    var taskID = taskN + 1;
 
     var times = [];
     var starts = [];
@@ -214,8 +226,14 @@ define(['rejs!formats/export/FsTask', 'app/helper', 'jgrowl', 'xml-formatter'], 
     });
 
     var jsonTask = x2js.xml_str2json(data);
-    var tasks = jsonDB.Fs.FsCompetition.FsTasks.FsTask;
-    tasks.push(jsonTask.FsTask)
+
+
+    if (jsonDB.Fs.FsCompetition.FsTasks.FsTask == undefined) {
+      var empty = { FsTask: [] };
+      jsonDB.Fs.FsCompetition.FsTasks = empty;
+    }
+
+    jsonDB.Fs.FsCompetition.FsTasks.FsTask.push(jsonTask.FsTask);
 
 
     var xmlAsStr = '<?xml version="1.0" encoding="utf-8"?>' + (x2js.json2xml_str(jsonDB));
