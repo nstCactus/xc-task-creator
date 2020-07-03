@@ -23,7 +23,7 @@ define(['app/map', 'app/uploader', 'jquery'], function(map, uploader, $) {
   }
 
   if (params.taskUrl) {
-    var filename = taskUrl.split("/").pop();
+    var filename = params.taskUrl.split("/").pop();
     $.get(params.taskUrl, function(data) {
       uploader.setFilename(filename);
       if (typeof(data) !== "string") {

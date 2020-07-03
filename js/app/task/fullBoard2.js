@@ -203,7 +203,8 @@ define(['jquery', 'simplemodal', 'app/helper', 'app/param', 'rejs!task/templates
 
 
       var str = taskInfo.info.replace(/(?:\r\n|\r|\n)/g, '<br>');
-      replace(html, "RANGE!B19", str);
+      var strc = taskInfo.compInfo.replace(/(?:\r\n|\r|\n)/g, '<br>');
+      replace(html, "RANGE!B19", str+ '<br>' + strc);
 
 
 

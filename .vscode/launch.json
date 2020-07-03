@@ -9,6 +9,8 @@
             "request": "launch",
             "name": "Launch Chrome",
             "url": "http://localhost:5500?airspaceUrl=./waypoints/CompetitionAirspace.kml&waypointsUrl=./waypoints/Cucco2019_r01.cup",
+            // "url": "http://localhost:5500?taskUrl=./waypoints/task.tsk",
+
             "webRoot": "${workspaceFolder}"
         },
         {

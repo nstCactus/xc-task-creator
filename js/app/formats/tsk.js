@@ -60,6 +60,17 @@ define(['rejs!formats/export/tsk'], function(exportTSK) {
     // console.log(JSON.stringify(tps, undefined, 2)) 
     // console.log(JSON.stringify(wps, undefined, 2)) 
 
+    let tinfo = ""
+
+    //alert(xmlDoc.getElementsByTagName('info').length);
+    if (xmlDoc.getElementsByTagName('info').length == 1 ) {
+      if (xmlDoc.getElementsByTagName('info')[0].childNodes[0] != undefined) {
+       tinfo = xmlDoc.getElementsByTagName('info')[0].childNodes[0].nodeValue
+      } 
+    }
+   
+
+
     return {
       'task' : {
         'date' : xmlDoc.getElementsByTagName('date')[0].childNodes[0].nodeValue,
@@ -67,6 +78,7 @@ define(['rejs!formats/export/tsk'], function(exportTSK) {
         'num' : xmlDoc.getElementsByTagName('num')[0].childNodes[0].nodeValue,
         'ngates' : xmlDoc.getElementsByTagName('ngates')[0].childNodes[0].nodeValue,
         'gateint' : xmlDoc.getElementsByTagName('gateint')[0].childNodes[0].nodeValue,
+        'info' : tinfo,
         'turnpoints' : tps,
       },
       'waypoints' : wps,

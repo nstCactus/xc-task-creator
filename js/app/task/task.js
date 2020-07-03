@@ -13,7 +13,7 @@ define(['task/taskBoard', 'task/turnpoint', 'task/fullBoard', 'task/fullBoard2',
 
     var taskInformation = localStorage.getItem('taskInformation');
     if (taskInformation != null) {
-      param.task.default.info = taskInformation;
+      param.task.default.compInfo = taskInformation;
     }
 
  
@@ -163,11 +163,20 @@ define(['task/taskBoard', 'task/turnpoint', 'task/fullBoard', 'task/fullBoard2',
     }
 
     var onchangeTaskInfo = function (e) {
-      var info = e.detail.info;
-      taskInfo.info = info;
-      localStorage.setItem('taskInformation', info);
-      //taskChange();
+      //alert("onchangeTaskInfo");
+      taskInfo.info = e.detail.info
+      taskChange();
     }
+
+    var onchangeCompInfo = function (e) {
+      //alert("onchangeCompInfo");
+      var info = e.detail.info;
+      taskInfo.compInfo = info;
+      localStorage.setItem('taskInformation', info);
+    }
+    
+
+
 
     var onTaskChanged= function (e) {
       taskChange();
@@ -242,6 +251,8 @@ define(['task/taskBoard', 'task/turnpoint', 'task/fullBoard', 'task/fullBoard2',
     document.addEventListener('changeTaskTurn', onchangeTaskTurn);
     document.addEventListener('changeTaskDate', onchangeTaskDate);
     document.addEventListener('changeTaskInfo', onchangeTaskInfo);
+    document.addEventListener('changeCompInfo', onchangeCompInfo);
+
     document.addEventListener('taskChanged', onTaskChanged);
     document.addEventListener('openTaskFullBoard2', onOpenTaskFullBoard2);
 

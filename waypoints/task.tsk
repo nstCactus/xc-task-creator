@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx xmlns="http://www.topografix.com/GPX/1/1" version="1.1" creator="Task Planner">
+  <rte>
+    <date>02-07-2020</date>
+    <type>race</type>
+    <num>1</num>
+    <ngates>1</ngates>
+    <gateint>15</gateint>
+
+      <rtept lon="12.749416666666665" lat="43.3577">
+        <close>14:00</close>
+        <!-- <filename>task_02-07-2020.tsk</filename> -->
+        <fileOrigin>Cucco2020_r07.wpt</fileOrigin>
+        <goalType>cylinder</goalType>
+        <id>1CS118</id>
+        <index>0</index>
+        <mode>entry</mode>
+        <name>T CUCCO SUD</name>
+        <open>12:00</open>
+        <radius>400</radius>
+        <type>takeoff</type>
+        <z>1177</z>
+      </rtept>
+    
+      <rtept lon="12.81445" lat="43.239716666666666">
+        <close>19:00</close>
+        <!-- <filename>task_02-07-2020.tsk</filename> -->
+        <fileOrigin>Cucco2020_r07.wpt</fileOrigin>
+        <goalType>cylinder</goalType>
+        <id>SSA132</id>
+        <index>1</index>
+        <mode>entry</mode>
+        <name>M SERRA SANTA</name>
+        <open>14:00</open>
+        <radius>6000</radius>
+        <type>start</type>
+        <z>1320</z>
+      </rtept>
+    
+      <rtept lon="12.81445" lat="43.239716666666666">
+        <close>19:00</close>
+        <!-- <filename>task_02-07-2020.tsk</filename> -->
+        <fileOrigin>Cucco2020_r07.wpt</fileOrigin>
+        <goalType>cylinder</goalType>
+        <id>SSA132</id>
+        <index>2</index>
+        <mode>entry</mode>
+        <name>M SERRA SANTA</name>
+        <open>12:00</open>
+        <radius>1000</radius>
+        <type>turnpoint</type>
+        <z>1320</z>
+      </rtept>
+    
+      <rtept lon="12.778883333333335" lat="42.98833333333334">
+        <close>19:00</close>
+        <!-- <filename>task_02-07-2020.tsk</filename> -->
+        <fileOrigin>Cucco2020_r07.wpt</fileOrigin>
+        <goalType>cylinder</goalType>
+        <id>PAL090</id>
+        <index>3</index>
+        <mode>entry</mode>
+        <name>PALE DI FOLIGNO</name>
+        <open>12:00</open>
+        <radius>1000</radius>
+        <type>turnpoint</type>
+        <z>904</z>
+      </rtept>
+    
+      <rtept lon="12.60806111111111" lat="43.479419444444446">
+        <close>19:00</close>
+        <!-- <filename>task_02-07-2020.tsk</filename> -->
+        <fileOrigin>Cucco2020_r07.wpt</fileOrigin>
+        <goalType>cylinder</goalType>
+        <id>NEV037</id>
+        <index>4</index>
+        <mode>entry</mode>
+        <name>NEVIO LANDING</name>
+        <open>12:00</open>
+        <radius>1000</radius>
+        <type>turnpoint</type>
+        <z>372</z>
+      </rtept>
+    
+      <rtept lon="12.724450000000001" lat="43.34445">
+        <close>19:00</close>
+        <!-- <filename>task_02-07-2020.tsk</filename> -->
+        <fileOrigin>Cucco2020_r07.wpt</fileOrigin>
+        <goalType>cylinder</goalType>
+        <id>5LS048</id>
+        <index>5</index>
+        <mode>entry</mode>
+        <name>L CUCCO SUD</name>
+        <open>12:00</open>
+        <radius>1000</radius>
+        <type>end-of-speed-section</type>
+        <z>476</z>
+      </rtept>
+    
+      <rtept lon="12.724450000000001" lat="43.34445">
+        <close>19:00</close>
+        <!-- <filename>task_02-07-2020.tsk</filename> -->
+        <fileOrigin>Cucco2020_r07.wpt</fileOrigin>
+        <goalType>cylinder</goalType>
+        <id>5LS048</id>
+        <index>6</index>
+        <mode>entry</mode>
+        <name>L CUCCO SUD</name>
+        <open>12:00</open>
+        <radius>400</radius>
+        <type>goal</type>
+        <z>476</z>
+      </rtept>
+    
+  </rte>
+</gpx>

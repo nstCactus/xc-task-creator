@@ -35,7 +35,12 @@ define(['jquery', 'rejs!task/templates/export', 'rejs!task/templates/save', 'app
     var a = document.createElement('a');
     var data = format.exporter(turnpoints, taskInfo);
     a.href = URL.createObjectURL(data);
-    a.download = "task_" + taskInfo.date + format.extension;
+
+    let suffix = "";
+    if (taskInfo.info != "") {
+      suffix = "_" + taskInfo.info;
+    }
+    a.download = "task_" + taskInfo.date +  suffix + format.extension;
     var event = document.createEvent("MouseEvents");
 		event.initMouseEvent("click", true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
 		a.dispatchEvent(event);
