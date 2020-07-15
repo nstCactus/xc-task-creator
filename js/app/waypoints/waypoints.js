@@ -69,6 +69,15 @@ function(Waypoint, param, filenameList, waypointExporter) {
     return false;
   }
 
+  var getWaypointById = function( id) {
+    for (var i = 0; i < waypoints.length; i++) {
+      if (id == waypoints[i].id) {
+        return waypoints[i];
+      }
+    }
+    return false;
+  }
+
   var onWaypointConfigure = function(e) {
     var filename = e.detail.filename;
     var id = e.detail.id;
@@ -141,5 +150,7 @@ function(Waypoint, param, filenameList, waypointExporter) {
     checkFilename : checkFilename,
     getWaypoints : getWaypoints,
     getWaypointByFileAndId : getWaypointByFileAndId,
+    getWaypointById  : getWaypointById ,
+
   }
 })

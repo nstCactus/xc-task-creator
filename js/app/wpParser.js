@@ -73,7 +73,8 @@ function($, waypoints, task, tracks, wpt, oziOld, ozi, cup, igc, geoJson, tsk, g
       if (parseInfo.task.turnpoints.length > 0) {
         for (var i = 0; i < parseInfo.task.turnpoints.length; i++ ) {
           var tp = parseInfo.task.turnpoints[i];
-          var waypoint = waypoints.getWaypointByFileAndId(tp.wp.filename , tp.wp.id);
+          //var waypoint = waypoints.getWaypointByFileAndId(tp.wp.filename , tp.wp.id);
+          var waypoint = waypoints.getWaypointById( tp.wp.id);
           tp.waypoint = waypoint;
         }
       }

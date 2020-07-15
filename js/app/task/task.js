@@ -221,7 +221,9 @@ define(['task/taskBoard', 'task/turnpoint', 'task/fullBoard', 'task/fullBoard2',
       taskInfo.turn = taskInfo.date.substr(0, 2) % 2 == 0 ? "Right" : "Left";
       if (tps) {
         for (var i = 0; i < tps.length; i++) {
-          addTurnpoint(tps[i].waypoint, tps[i]);
+          if ( tps[i].waypoint != false ) {
+            addTurnpoint(tps[i].waypoint, tps[i]);
+          }
         }
       }
     }
