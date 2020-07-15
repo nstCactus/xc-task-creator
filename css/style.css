@@ -253,6 +253,10 @@ select {
   margin-bottom : 10px;
 }
 
+#clear-task{
+  margin-bottom : 10px;
+}
+
 gm-panel li {
   border: none;
 }

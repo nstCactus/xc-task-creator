@@ -69,6 +69,16 @@ function(Waypoint, param, filenameList, waypointExporter) {
     return false;
   }
 
+  var getWaypointByIdAndReplaceFileName = function(filename, id) {
+    for (var i = 0; i < waypoints.length; i++) {
+      if ( id == waypoints[i].id) {
+         waypoints[i].filename = filename;
+        return waypoints[i];
+      }
+    }
+    return false;
+  }
+
   var getWaypointById = function( id) {
     for (var i = 0; i < waypoints.length; i++) {
       if (id == waypoints[i].id) {
@@ -151,6 +161,7 @@ function(Waypoint, param, filenameList, waypointExporter) {
     getWaypoints : getWaypoints,
     getWaypointByFileAndId : getWaypointByFileAndId,
     getWaypointById  : getWaypointById ,
+    getWaypointByIdAndReplaceFileName : getWaypointByIdAndReplaceFileName,
 
   }
 })

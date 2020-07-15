@@ -27,6 +27,14 @@ define(['jquery'], function($) {
     document.dispatchEvent(e);
   });
 
+
+  $(document).on('click', '#clear-task', function(e) {
+    var e = document.createEvent("CustomEvent");
+    e.initCustomEvent('deleteTask', false, false, {});
+    document.dispatchEvent(e);
+    $("#task-config").modal('hide')
+  });
+
   var rebuild = function(filenames) {
     if (filenames.length > 0) {
       var html ='';
@@ -36,10 +44,14 @@ define(['jquery'], function($) {
       container.html(html);
       container.addClass('populated');
       $("#export-waypoints").removeClass('hide');
+      $("#clear-task").removeClass('hide');
+
     } else {
       container.removeClass('populated');
       container.html('');
       $("#export-waypoints").addClass('hide');
+      $("#clear-task").addClass('hide');
+
     }
   }
 

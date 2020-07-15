@@ -75,6 +75,7 @@ function($, waypoints, task, tracks, wpt, oziOld, ozi, cup, igc, geoJson, tsk, g
           var tp = parseInfo.task.turnpoints[i];
           //var waypoint = waypoints.getWaypointByFileAndId(tp.wp.filename , tp.wp.id);
           var waypoint = waypoints.getWaypointById( tp.wp.id);
+          //var waypoint = waypoints.getWaypointByIdAndReplaceFileName(tp.wp.filename , tp.wp.id);
           tp.waypoint = waypoint;
         }
       }
