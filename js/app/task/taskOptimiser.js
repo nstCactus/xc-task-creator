@@ -168,7 +168,8 @@ define(["app/param", 'app/geoCalc'], function (param,geoCalc ) {
     // }
 
     return {
-      distance: d - (turnpoints[0] != undefined ? turnpoints[0].radius : 0),
+      // distance: d - (turnpoints[0] != undefined ? turnpoints[0].radius : 0),
+      distance: d ,
       distances: distances,
       fastWaypoints: fastWaypoints,
       cumulativeDistance: cumulativeDistance,
@@ -233,9 +234,9 @@ define(["app/param", 'app/geoCalc'], function (param,geoCalc ) {
         //distance = distVincenty(waypoints[i].lat(), waypoints[i].lng(), waypoints[i + 1].lat(), waypoints[i + 1].lng());
 
 
-        if (i == 0) {
-          distance -= radius;
-        }
+        // if (i == 0) {
+        //   distance -= radius;
+        // }
         fastDistance += distance;
         if (param.showCumulativeDistances) {
           distances.push(Math.round(fastDistance / 10) / 100)
