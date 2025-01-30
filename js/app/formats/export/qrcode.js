@@ -1,8 +1,8 @@
 /**
  @file
- Task importer / exporter for XCTrack
+ Task importer / exporter for qrcodeex
  **/
-define(['rejs!formats/export/xctrack'], function(exportXCTrack) {
+define(['rejs!formats/export/qrcode'], function(exportqrcode) {
     var date = new Date();
     var day = date.getUTCDate();
     Number.prototype.pad = function(size) {
@@ -112,7 +112,7 @@ define(['rejs!formats/export/xctrack'], function(exportXCTrack) {
                 xcInfo.goalType = converter[turnpoints[i].goalType] ? converter[turnpoints[i].goalType] : turnpoints[i].goalType;
             }
         }
-        var data = exportXCTrack({
+        var data = exportqrcodeex({
             turnpoints: turnpoints,
             taskInfo: taskInfo,
             xcInfo: xcInfo
@@ -123,8 +123,8 @@ define(['rejs!formats/export/xctrack'], function(exportXCTrack) {
     return {
         'check': check,
         'exporter': exporter,
-        'extension': '.xctsk',
-        'name': 'XCTrack',
+        'extension': '.jpg',
+        'name': 'qrcodeex',
         'parse': parse,
     }
 });
