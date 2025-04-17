@@ -4,7 +4,7 @@
  **/
 define(['rejs!formats/export/xctrack'], function(exportXCTrack) {
     var date = new Date();
-    var day = date.getUTCDate();
+
     Number.prototype.pad = function(size) {
         var s = String(this);
         while (s.length < (size || 2)) { s = "0" + s; }
@@ -68,9 +68,16 @@ define(['rejs!formats/export/xctrack'], function(exportXCTrack) {
                     tp.type = "turnpoint";
                 }
             }
+            if (tp.type == "takeoff") {
+                tp.open = String(obj.takeoff.timeOpen).replace('"', '').replace(':00Z', '');
+                tp.close = String(obj.takeoff.timeClose).replace('"', '').replace(':00Z', '');
+            }
             if (tp.type == "start") {
-                tp.open = String(obj.sss.timeGates).replace('"', '').replace('Z', '');
+                tp.open = String(obj.sss.timeGates).replace('"', '').replace(':00Z', '');
                 tp.mode = String(obj.sss.direction).toLowerCase();
+            }
+            if (tp.type == "goal") {
+                tp.close = String(obj.goal.deadline).replace('"', '').replace(':00Z', '');
             }
 
             wps.push(wp);;
@@ -85,7 +92,7 @@ define(['rejs!formats/export/xctrack'], function(exportXCTrack) {
 
         return {
             'task': {
-                'date': day.pad(2) + '-' + date.getUTCMonth().pad(2) + '-' + date.getUTCFullYear(),
+                'date': date.getUTCDate().pad(2) + '-' + (date.getUTCMonth() + 1).pad(2) + '-' + date.getUTCFullYear(),
                 'type': 'race-to-goal',
                 'num': 1,
                 'ngates': 1,
