@@ -48,7 +48,13 @@
         style="background-color : #383838 ;font-size: 1.0em; padding : 2px;">Turn :
         <%- taskInfo.turn %></span>
       <button id="toggle-turn" class="btn btn-primary btn-xs pull-right">T</button>
+    </div>
 
+    <div style="padding : 3px;"> <span class="label label-default"
+        style="background-color : #383838 ;font-size: 1.0em; padding : 2px;">UTC offset :
+        <%- taskInfo.utcOffset %>
+      <button id="increase-utc-offset" class="btn btn-primary btn-xs pull-right">+</button>
+      <button id="decrease-utc-offset" class="btn btn-primary btn-xs pull-right">-</button>
     </div>
 
     <div style="padding : 3px;"> <span class="label label-default"

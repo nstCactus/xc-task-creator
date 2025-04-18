@@ -13,8 +13,6 @@ define(['rejs!task/templates/taskboard', 'app/param', 'jquery', 'jquery-ui'], fu
     document.dispatchEvent(e);
   });
 
-
-
   $(document).on('click', '#increase-task', function (e) {
     var e = document.createEvent("CustomEvent");
     e.initCustomEvent('changeTaskNumber', false, false, {
@@ -22,16 +20,6 @@ define(['rejs!task/templates/taskboard', 'app/param', 'jquery', 'jquery-ui'], fu
     });
     document.dispatchEvent(e);
   });
-
-
-
-
-  $(document).on('click', '#toggle-turn', function (e) {
-    var e = document.createEvent("CustomEvent");
-    e.initCustomEvent('changeTaskTurn', false, false, {});
-    document.dispatchEvent(e);
-  });
-
 
   $(document).on('click', '#decrease-task', function (e) {
     var e = document.createEvent("CustomEvent");
@@ -41,8 +29,27 @@ define(['rejs!task/templates/taskboard', 'app/param', 'jquery', 'jquery-ui'], fu
     document.dispatchEvent(e);
   });
 
+  $(document).on('click', '#toggle-turn', function (e) {
+    var e = document.createEvent("CustomEvent");
+    e.initCustomEvent('changeTaskTurn', false, false, {});
+    document.dispatchEvent(e);
+  });
 
+  $(document).on('click', '#increase-utc-offset', function (e) {
+    var e = document.createEvent("CustomEvent");
+    e.initCustomEvent('changeUtcOffset', false, false, {
+      forward: true,
+    });
+    document.dispatchEvent(e);
+  });
 
+  $(document).on('click', '#decrease-utc-offset', function (e) {
+    var e = document.createEvent("CustomEvent");
+    e.initCustomEvent('changeUtcOffset', false, false, {
+      forward: false,
+    });
+    document.dispatchEvent(e);
+  });
 
   // $(document).on('click', '#change_task_date', function(e) {
   //   $( "#change_task_date" ).datepicker({

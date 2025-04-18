@@ -36,7 +36,8 @@ requirejs.config({
         geographiclib: "../js/lib/geographiclib/geographiclib.min",
         proj4: "../js/lib/proj4/proj4",
         html2canvas: "../js/lib/html2canvas/html2canvas.min",
-        polyline: "../js/app/polyline" // Aggiungi il percorso di polyline
+        polyline: "../js/app/polyline", // Aggiungi il percorso di polyline
+        utils: "../js/utils"
     },
     shim: {
         simplemodal: {
