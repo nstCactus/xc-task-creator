@@ -2,7 +2,7 @@
  @file
  Task importer / exporter for XCTrack
  **/
-define(['rejs!formats/export/xctrack'], function(exportXCTrack) {
+define(['rejs!formats/export/xctrack', 'utils/timeUtils'], function(exportXCTrack, timeUtils) {
     var date = new Date();
 
     Number.prototype.pad = function(size) {
@@ -108,21 +108,28 @@ define(['rejs!formats/export/xctrack'], function(exportXCTrack) {
         var xcInfo = {};
         for (var i = 0; i < turnpoints.length; i++) {
             if (turnpoints[i].type == "start") {
-                xcInfo.timeGates = turnpoints[i].open;
+                xcInfo.timeGates = [];
+                const ngates = parseInt(turnpoints[i].ngates, 10) || 1;
+                const gateint = parseInt(turnpoints[i].gateint, 10) || 15;
+                let openTime = timeUtils.localToUtc(turnpoints[i].open, taskInfo.utcOffset);
+                for (let j = 0; j < ngates; j++) {
+                    xcInfo.timeGates.push(openTime + ':00Z');
+                    openTime = timeUtils.addMinutes(openTime, gateint);
+                }
                 xcInfo.type = converter[taskInfo.type] ? converter[taskInfo.type] : taskInfo.type;;
                 xcInfo.direction = converter[turnpoints[i].mode] ? converter[turnpoints[i].mode] : turnpoints[i].mode;
             }
-        }
-        for (var i = 0; i < turnpoints.length; i++) {
+
             if (turnpoints[i].type == "goal") {
-                xcInfo.deadline = turnpoints[i].close;
+                xcInfo.deadline = timeUtils.localToUtc(turnpoints[i].close, taskInfo.utcOffset) + ':00Z';
                 xcInfo.goalType = converter[turnpoints[i].goalType] ? converter[turnpoints[i].goalType] : turnpoints[i].goalType;
             }
         }
         var data = exportXCTrack({
             turnpoints: turnpoints,
             taskInfo: taskInfo,
-            xcInfo: xcInfo
+            xcInfo: xcInfo,
+            timeUtils: timeUtils,
         });
         return new Blob([data], { 'type': "text/plain" });
     }

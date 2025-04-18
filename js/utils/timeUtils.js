@@ -83,10 +83,22 @@ define(function () {
         return `${localHour.toString().padStart(2, '0')}:${localMinute.toString().padStart(2, '0')}`;
     }
 
+    var addMinutes = function (time, minutes) {
+        // time: "14:09"
+        // minutes: 30
+        const [hour, minute] = time.split(':').map(Number);
+        let totalMinutes = hour * 60 + minute + minutes;
+        totalMinutes = (totalMinutes + 24 * 60) % (24 * 60); // Wrap around if it exceeds 24 hours
+        const newHour = Math.floor(totalMinutes / 60);
+        const newMinute = totalMinutes % 60;
+        return `${newHour.toString().padStart(2, '0')}:${newMinute.toString().padStart(2, '0')}`;
+    }
+
     return {
         utcOffsets: utcOffsets,
         utcZeroIndex: utcZeroIndex,
         localToUtc: localToUtc,
-        utcToLocal: utcToLocal
+        utcToLocal: utcToLocal,
+        addMinutes: addMinutes
     }
 });
