@@ -94,11 +94,28 @@ define(function () {
         return `${newHour.toString().padStart(2, '0')}:${newMinute.toString().padStart(2, '0')}`;
     }
 
+    var convertUtcOffset = function(offset) {
+        // Parse the offset as a float
+        const offsetFloat = parseFloat(offset);
+    
+        // Determine the sign and absolute value
+        const sign = offsetFloat >= 0 ? "+" : "-";
+        const absoluteOffset = Math.abs(offsetFloat);
+    
+        // Extract hours and minutes
+        const hours = Math.floor(absoluteOffset);
+        const minutes = Math.round((absoluteOffset - hours) * 60);
+    
+        // Format the result as HH:MM with the sign
+        return `${sign}${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+    }
+
     return {
         utcOffsets: utcOffsets,
         utcZeroIndex: utcZeroIndex,
         localToUtc: localToUtc,
         utcToLocal: utcToLocal,
-        addMinutes: addMinutes
+        addMinutes: addMinutes,
+        convertUtcOffset: convertUtcOffset
     }
 });
