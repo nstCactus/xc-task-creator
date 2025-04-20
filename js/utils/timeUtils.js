@@ -120,6 +120,15 @@ define(function () {
         return (localOffset < 0 ? "+" : "-") + String(hours).padStart(2, '0') + ":" + String(minutes).padStart(2, '0');
     }
 
+    var getTimeDifference = function (time1, time2) {
+        // time1, time2: "HH:MM"
+        const [hour1, minute1] = time1.split(':').map(Number);
+        const [hour2, minute2] = time2.split(':').map(Number);
+        const totalMinutes1 = hour1 * 60 + minute1;
+        const totalMinutes2 = hour2 * 60 + minute2;
+        return Math.abs(totalMinutes1 - totalMinutes2);
+    }
+
     return {
         utcOffsets: utcOffsets,
         utcZeroIndex: utcZeroIndex,
@@ -128,5 +137,6 @@ define(function () {
         addMinutes: addMinutes,
         convertUtcOffset: convertUtcOffset,
         getLocalOffset: getLocalOffset,
+        getTimeDifference: getTimeDifference,
     }
 });

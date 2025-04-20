@@ -15,8 +15,6 @@ define(['rejs!formats/export/xctrack', 'utils/timeUtils'], function(exportXCTrac
         "entry": "ENTER",
     }
 
-
-
     var check = function(text, filename) {
         if (filename.split('.').pop() == 'xctsk') {
             return true;
@@ -31,12 +29,16 @@ define(['rejs!formats/export/xctrack', 'utils/timeUtils'], function(exportXCTrac
             "ESS": "end-of-speed-section"
         }
 
+        var utcOffset = timeUtils.getLocalOffset();
 
         var obj = JSON.parse(text);
         var wpts = obj.turnpoints;
 
         var tps = [];
         var wps = [];
+
+        var ngates = 1;
+        var gateint = 15;
 
         for (var i = 0; i < wpts.length; i++) {
             var tp = {};
@@ -50,7 +52,6 @@ define(['rejs!formats/export/xctrack', 'utils/timeUtils'], function(exportXCTrac
                 y: wpts[i].waypoint.lon,
                 z: wpts[i].waypoint.altSmoothed,
             }
-
 
             tp['close'] = '00:00:00';
             tp['goalType'] = 'cylinder';
@@ -69,39 +70,43 @@ define(['rejs!formats/export/xctrack', 'utils/timeUtils'], function(exportXCTrac
                 }
             }
             if (tp.type == "takeoff") {
-                tp.open = String(obj.takeoff.timeOpen).replace('"', '').replace(':00Z', '');
-                tp.close = String(obj.takeoff.timeClose).replace('"', '').replace(':00Z', '');
+                tp.open = timeUtils.utcToLocal(String(obj.takeoff.timeOpen).replace('"', '').replace(':00Z', ''), utcOffset);
+                tp.close = timeUtils.utcToLocal(String(obj.takeoff.timeClose).replace('"', '').replace(':00Z', ''), utcOffset);
             }
             if (tp.type == "start") {
-                tp.open = String(obj.sss.timeGates).replace('"', '').replace(':00Z', '');
+                var gates = obj.sss.timeGates;
+                if (gates.length == 1) {
+                    tp.open = timeUtils.utcToLocal(String(gates).replace('"', '').replace(':00Z', ''), utcOffset);
+                } else {
+                    tp.open = timeUtils.utcToLocal(String(gates[0]).replace('"', '').replace(':00Z', ''), utcOffset);
+                    ngates = gates.length;
+                    gateint = timeUtils.getTimeDifference(String(gates[0]).replace('"', '').replace(':00Z', ''), String(gates[1]).replace('"', '').replace(':00Z', ''));
+                }
                 tp.mode = String(obj.sss.direction).toLowerCase();
             }
             if (tp.type == "goal") {
-                tp.close = String(obj.goal.deadline).replace('"', '').replace(':00Z', '');
+                tp.close = timeUtils.utcToLocal(String(obj.goal.deadline).replace('"', '').replace(':00Z', ''), utcOffset);
             }
 
             wps.push(wp);;
             tp.wp = wp;
             tps.push(tp);
-
         }
 
         // console.log(JSON.stringify(tps, undefined, 2)) 
         // console.log(JSON.stringify(wps, undefined, 2)) 
-
 
         return {
             'task': {
                 'date': date.getUTCDate().pad(2) + '-' + (date.getUTCMonth() + 1).pad(2) + '-' + date.getUTCFullYear(),
                 'type': 'race-to-goal',
                 'num': 1,
-                'ngates': 1,
-                'gateint': 15,
+                'ngates': ngates,
+                'gateint': gateint,
                 'turnpoints': tps,
             },
             'waypoints': wps,
         }
-
     }
 
     var exporter = function(turnpoints, taskInfo) {
