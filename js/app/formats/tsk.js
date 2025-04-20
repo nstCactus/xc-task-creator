@@ -69,7 +69,8 @@ define(['rejs!formats/export/tsk', 'utils/timeUtils'], function(exportTSK, timeU
       } 
     }
    
-
+    var utcOffset = xmlDoc.getElementsByTagName('utcoffset').childNode? xmlDoc.getElementsByTagName('utcoffset').childNodes[0].nodeValue 
+      : timeUtils.utcOffsets[timeUtils.utcZeroIndex];
 
     return {
       'task' : {
@@ -78,6 +79,7 @@ define(['rejs!formats/export/tsk', 'utils/timeUtils'], function(exportTSK, timeU
         'num' : xmlDoc.getElementsByTagName('num')[0].childNodes[0].nodeValue,
         'ngates' : xmlDoc.getElementsByTagName('ngates')[0].childNodes[0].nodeValue,
         'gateint' : xmlDoc.getElementsByTagName('gateint')[0].childNodes[0].nodeValue,
+        'utcOffset' : utcOffset,
         'info' : tinfo,
         'turnpoints' : tps,
       },
@@ -89,7 +91,6 @@ define(['rejs!formats/export/tsk', 'utils/timeUtils'], function(exportTSK, timeU
     var data = exportTSK({
       turnpoints : turnpoints,
       taskInfo : taskInfo,
-      timeUtils : timeUtils,
     });
     return new Blob([data], {'type': "text/xml"});
   }
