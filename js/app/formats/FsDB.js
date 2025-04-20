@@ -74,10 +74,8 @@ define(['rejs!formats/export/FsTask', 'app/helper', 'jgrowl', 'xml-formatter', '
       jsonObj = tasks[taskN - 1];
     }
     
-    
-
     var jumpTheGun = Number(jsonObj.FsScoreFormula._jump_the_gun_max);
-    var turnpointTollerance = Number(jsonObj.FsScoreFormula._turnpoint_radius_tolerance);
+    var turnpointTolerance = Number(jsonObj.FsScoreFormula._turnpoint_radius_tolerance);
 
     var ss = jsonObj.FsTaskDefinition._ss;
     var es = jsonObj.FsTaskDefinition._es;
@@ -149,7 +147,7 @@ define(['rejs!formats/export/FsTask', 'app/helper', 'jgrowl', 'xml-formatter', '
         'turnpoints': tps,
         'utcOffset': utc_offset,
         'jumpTheGun': jumpTheGun,
-        'turnpointTollerance': turnpointTollerance,
+        'turnpointTolerance': turnpointTolerance,
       },
       'waypoints': wps,
     }

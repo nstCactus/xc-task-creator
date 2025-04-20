@@ -49,7 +49,7 @@ define(['utils/timeUtils'], function (timeUtils) {
         compInfo: "",
         utcOffset: timeUtils.getLocalOffset(),
         jumpTheGun: 0,
-        turnpointTollerance: 0,
+        turnpointTolerance: 0,
       }
     },
     turnpoint: {
