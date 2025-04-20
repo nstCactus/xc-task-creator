@@ -175,7 +175,7 @@ define(['task/taskBoard', 'task/turnpoint', 'task/fullBoard', 'task/fullBoard2',
     
     var onChangeUtcOffset = function (e) {
       var forward = e.detail.forward;
-      index = timeUtils.utcOffsets.indexOf(taskInfo.utcOffset);
+      var index = timeUtils.utcOffsets.indexOf(taskInfo.utcOffset);
       if (index == -1) {
         index = timeUtils.utcZeroIndex; // Default to UTC+0 if not found
       }
