@@ -2,7 +2,7 @@
   @file
   Task importer for the task creator.
   **/
-define(['rejs!formats/export/tsk'], function(exportTSK) {
+define(['rejs!formats/export/tsk', 'utils/timeUtils'], function(exportTSK, timeUtils) {
   var check = function(text, filename) {
     if (filename.split('.').pop() == 'tsk') {
       return true;
@@ -88,7 +88,8 @@ define(['rejs!formats/export/tsk'], function(exportTSK) {
   var exporter = function(turnpoints, taskInfo) {
     var data = exportTSK({
       turnpoints : turnpoints,
-      taskInfo : taskInfo
+      taskInfo : taskInfo,
+      timeUtils : timeUtils,
     });
     return new Blob([data], {'type': "text/xml"});
   }
