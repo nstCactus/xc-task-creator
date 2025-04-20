@@ -11,11 +11,9 @@ define(['rejs!formats/export/FsTask', 'app/helper', 'jgrowl', 'xml-formatter', '
   }
 
   var x2js = new X2JS();
-
   var jsonDB = null;
-
   var date = new Date();
-  var day = date.getUTCDate();
+
   Number.prototype.pad = function (size) {
     var s = String(this);
     while (s.length < (size || 2)) { s = "0" + s; }
@@ -28,8 +26,6 @@ define(['rejs!formats/export/FsTask', 'app/helper', 'jgrowl', 'xml-formatter', '
     }
     return false;
   }
-
-
 
   var parse = function (text, filename) {
 
@@ -48,8 +44,7 @@ define(['rejs!formats/export/FsTask', 'app/helper', 'jgrowl', 'xml-formatter', '
     });
 
     var tasks = jsonDB.Fs.FsCompetition.FsTasks.FsTask;
-
-    var utc_offset = Number(jsonDB.Fs.FsCompetition._utc_offset);
+    var utc_offset = timeUtils.convertUtcOffset(jsonDB.Fs.FsCompetition._utc_offset ?? 0);
 
     var taskN = 0;
     let nt = 1;
@@ -61,9 +56,12 @@ define(['rejs!formats/export/FsTask', 'app/helper', 'jgrowl', 'xml-formatter', '
       taskN = window.prompt("Tasks in file : " + nt + "\nSelect task number or cancel not to load a task and just load the competition DB", "1");
     }
 
-
     if (isNaN(taskN) || taskN <= 0 || taskN > nt) {
-      return;
+      return {
+        'competition': {
+          'utcOffset': utc_offset,
+        }
+      }  
     }
 
     let jsonObj ;

@@ -188,6 +188,11 @@ define(['task/taskBoard', 'task/turnpoint', 'task/fullBoard', 'task/fullBoard2',
       taskChange(); // Trigger task change event
     };
 
+    var onSetUtcOffset = function (e) {
+      taskInfo.utcOffset = e.detail.utcOffset;
+      taskChange(); // Trigger task change event
+    }
+
     var onTaskChanged= function (e) {
       taskChange();
     }
@@ -265,6 +270,7 @@ define(['task/taskBoard', 'task/turnpoint', 'task/fullBoard', 'task/fullBoard2',
     document.addEventListener('changeTaskInfo', onchangeTaskInfo);
     document.addEventListener('changeCompInfo', onchangeCompInfo);
     document.addEventListener('changeUtcOffset', onChangeUtcOffset);
+    document.addEventListener('setUtcOffset', onSetUtcOffset);
 
     document.addEventListener('taskChanged', onTaskChanged);
     document.addEventListener('openTaskFullBoard2', onOpenTaskFullBoard2);
