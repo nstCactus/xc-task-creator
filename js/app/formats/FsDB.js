@@ -2,7 +2,7 @@
   @file
   Task importer for the task creator.
   **/
-define(['rejs!formats/export/FsTask', 'app/helper', 'jgrowl', 'xml-formatter'], function (exportFsTask, helper, jgrowl, xml_formatter) {
+define(['rejs!formats/export/FsTask', 'app/helper', 'jgrowl', 'xml-formatter', 'utils/timeUtils'], function (exportFsTask, helper, jgrowl, xml_formatter, timeUtils) {
 
   Number.prototype.pad = function (size) {
     var s = String(this);
@@ -163,16 +163,9 @@ define(['rejs!formats/export/FsTask', 'app/helper', 'jgrowl', 'xml-formatter'], 
       return;
     }
 
-    var UTCOffset = Number(jsonDB.Fs.FsCompetition._utc_offset)
-    if (UTCOffset > 0) {
-      UTCOffset = "+" + UTCOffset.pad(2);
-    }
-    else {
-      UTCOffset = "+" + UTCOffset.pad(2);
-    }
+    var utcOffsetNumber = Number(jsonDB.Fs.FsCompetition._utc_offset)
+    var utcOffset = timeUtils.convertUtcOffset(utcOffsetNumber);
     var FsScoreFormula = x2js.json2xml_str({ FsScoreFormula: jsonDB.Fs.FsCompetition.FsScoreFormula });
-
-
     var tasks = jsonDB.Fs.FsCompetition.FsTasks.FsTask;
     var taskN = 0;
     if (tasks != undefined) {
@@ -196,7 +189,7 @@ define(['rejs!formats/export/FsTask', 'app/helper', 'jgrowl', 'xml-formatter'], 
     };
     times.push(time);
 
-    // turnpoints[0] is assumend as Start
+    // turnpoints[1] is assumend as Start
     var time = {
       open: turnpoints[1].open,
       close: turnpoints[turnpoints.length - 1].close
@@ -228,14 +221,13 @@ define(['rejs!formats/export/FsTask', 'app/helper', 'jgrowl', 'xml-formatter'], 
       starts.push(h.pad(2) + ":" + m.pad(2))
     }
 
-    //var theDate = date.getUTCFullYear() + '-' + (date.getUTCMonth() + 1).pad(2) + '-' + day.pad(2)
     var theDate = taskInfo.date.substring(6,10) + '-' +  taskInfo.date.substring(3,5) + '-' + taskInfo.date.substring(0,2)
 
     var data = exportFsTask({
       turnpoints: turnpoints,
       taskInfo: taskInfo,
       thedate: theDate,
-      UTCOffset: UTCOffset,
+      UTCOffset: utcOffset,
       times: times,
       FsScoreFormula: FsScoreFormula,
       starts: starts,
