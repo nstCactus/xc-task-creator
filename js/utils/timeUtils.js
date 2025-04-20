@@ -110,12 +110,23 @@ define(function () {
         return `${sign}${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
     }
 
+    var getLocalOffset = function () {
+        // Get the local timezone offset in minutes
+        const localOffset = new Date().getTimezoneOffset();
+        // Convert to hours and minutes
+        const hours = Math.floor(Math.abs(localOffset) / 60);
+        const minutes = Math.abs(localOffset) % 60;
+        // Format as "+HH:MM" or "-HH:MM"
+        return (localOffset < 0 ? "+" : "-") + String(hours).padStart(2, '0') + ":" + String(minutes).padStart(2, '0');
+    }
+
     return {
         utcOffsets: utcOffsets,
         utcZeroIndex: utcZeroIndex,
         localToUtc: localToUtc,
         utcToLocal: utcToLocal,
         addMinutes: addMinutes,
-        convertUtcOffset: convertUtcOffset
+        convertUtcOffset: convertUtcOffset,
+        getLocalOffset: getLocalOffset,
     }
 });

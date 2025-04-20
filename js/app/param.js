@@ -47,7 +47,7 @@ define(['utils/timeUtils'], function (timeUtils) {
         gateint: 15,
         info: "",
         compInfo: "",
-        utcOffset: timeUtils.utcOffsets[timeUtils.utcZeroIndex],
+        utcOffset: timeUtils.getLocalOffset(),
         jumpTheGun: 0,
         turnpointTollerance: 0,
       }
