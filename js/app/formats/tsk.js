@@ -70,7 +70,7 @@ define(['rejs!formats/export/tsk', 'utils/timeUtils'], function(exportTSK, timeU
     }
    
     var utcOffset = xmlDoc.getElementsByTagName('utcoffset').childNode? xmlDoc.getElementsByTagName('utcoffset').childNodes[0].nodeValue 
-      : timeUtils.utcOffsets[timeUtils.utcZeroIndex];
+      : timeUtils.getLocalOffset();
 
     return {
       'task' : {
