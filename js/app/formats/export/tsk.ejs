@@ -3,14 +3,14 @@
   <rte>
     <date><%- taskInfo.date %></date>
     <utcoffset><%- taskInfo.utcOffset %></utcoffset>
-    <date><%- taskInfo.date %></date>
+    <type><%- taskInfo.date %></type>
     <num><%- taskInfo.num %></num>
     <ngates><%- taskInfo.ngates %></ngates>
     <gateint><%- taskInfo.gateint %></gateint>
     <info><%- taskInfo.info %></info>
     <% for (var i = 0; i < turnpoints.length; i++) { %>
       <rtept lon="<%- turnpoints[i].y %>" lat="<%- turnpoints[i].x %>">
-        <close><%- timeUtils.localToUtc(turnpoints[i].close, taskInfo.utcOffset) %></close>
+        <close><%- turnpoints[i].close %></close>
         <!-- <filename>task_<%- taskInfo.date %>.tsk</filename> -->
         <fileOrigin><%- turnpoints[i].filename %></fileOrigin>
         <goalType><%- turnpoints[i].goalType %></goalType>
@@ -18,7 +18,7 @@
         <index><%- turnpoints[i].index %></index>
         <mode><%- turnpoints[i].mode %></mode>
         <name><%- turnpoints[i].name %></name>
-        <open><%- timeUtils.localToUtc(turnpoints[i].open, taskInfo.utcOffset) %></open>
+        <open><%- turnpoints[i].open %></open>
         <radius><%- turnpoints[i].radius %></radius>
         <type><%- turnpoints[i].type %></type>
         <z><%- turnpoints[i].z %></z>
