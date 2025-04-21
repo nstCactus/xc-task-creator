@@ -108,35 +108,62 @@ define(['jquery-qrcode', 'polyline', 'formats/xctrack'], function(jqueryqrcode, 
         return JSON.stringify(taskV2);
     };
 
-    var exporter = function(turnpoints, taskInfo) {
+    var exporter = async function(turnpoints, taskInfo) {
+        // Get the .xctsk file contents from xctrack.exporter
         var data = xctrack.exporter(turnpoints, taskInfo);
-        var reader = new FileReader();
 
-        reader.onload = function(event) {
-            var jsonString = event.target.result;
-            var data1 = convertTaskV1toV2(jsonString);
-            var data2 = data1.replace(/(\r\n|\n|\r| )/gm, "");;
+        // Convert the Blob to a string
+        const fileContent = await data.text();
 
-            var img = $('#qrcode').qrcode({ width: 512, height: 512, text: data2 });
+        try {
+            // Send a POST request to the xcontest API
+            const response = await fetch('https://tools.xcontest.org/api/xctsk/qr', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: fileContent, // Send the .xctsk file content as JSON
+            });
 
-            setTimeout(() => {
-                var canvas = $('#qrcode canvas')[0]; // Seleziona il canvas dentro #qrcode
-                if (canvas && canvas.toDataURL) { // Controlla che sia un canvas valido
-                    var link = document.createElement('a');
-                    link.href = canvas.toDataURL("image/png"); // Converte in immagine PNG
-                    link.download = "qrcode.png"; // Nome del file scaricato
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                } else {
-                    console.error("QR Code non trovato come canvas. Forse è una tabella.");
-                }
-            }, 500); // Attendi 500ms per permettere la generazione
-        };
-    
-        reader.readAsText(data); // Read the Blob as text
-        return null
-    }
+            if (!response.ok) {
+                throw new Error(`Failed to generate QR code: ${response.statusText}`);
+            }
+
+            // Get the SVG QR code from the response
+            const qrCodeSvg = await response.text();
+
+            // Convert the SVG to a PNG
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const img = new Image();
+
+            img.onload = function() {
+                canvas.width = img.width;
+                canvas.height = img.height;
+                ctx.drawImage(img, 0, 0);
+
+                // Convert the canvas to a PNG data URL
+                const pngDataUrl = canvas.toDataURL('image/png');
+
+                // Create a download link for the PNG
+                const link = document.createElement('a');
+                link.href = pngDataUrl;
+                link.download = 'qrcode.png';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            };
+
+            img.onerror = function() {
+                console.error('Failed to load the SVG as an image.');
+            };
+
+            // Set the SVG as the source of the image
+            img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(qrCodeSvg);
+        } catch (error) {
+            console.error('Error generating QR code:', error);
+        }
+    };
 
     return {
         'exporter': exporter,
