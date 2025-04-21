@@ -27,11 +27,13 @@ define(['rejs!formats/export/FsTask'], function (exportFsTask) {
 
     var ss = jsonObj.FsTask.FsTaskDefinition._ss;
     var es = jsonObj.FsTask.FsTaskDefinition._es;
-    var stop_time = jsonObj.FsTask.FsTaskState._stop_time;
-    var thedate = stop_time.substring(8, 10) + "-" + stop_time.substring(5, 7) + "-" + stop_time.substring(0, 4);
     var FsTurnpoints = jsonObj.FsTask.FsTaskDefinition.FsTurnpoint;
     var FsStartGates = jsonObj.FsTask.FsTaskDefinition.FsStartGate;
-    var c = 15;
+    var dateString = FsTurnpoints[0]._open
+    var thedate = dateString.substring(8, 10) + "-" + dateString.substring(5, 7) + "-" + dateString.substring(0, 4);
+    var day = Number(thedate.split('-')[0]);
+    var turn = (day % 2 == 0) ? 'right' : 'left';
+
     if (FsStartGates.length > 1) {
       let g1 = FsStartGates[1]._open.substring(11, 13) * 60 + FsStartGates[1]._open.substring(14, 16)
       let g2 = FsStartGates[0]._open.substring(11, 13) * 60 + FsStartGates[0]._open.substring(14, 16)
@@ -88,6 +90,7 @@ define(['rejs!formats/export/FsTask'], function (exportFsTask) {
         'num': 1,
         'ngates': FsStartGates.length,
         'gateint': gateint,
+        'turn': turn,
         'turnpoints': tps,
       },
       'waypoints': wps,
@@ -168,5 +171,6 @@ define(['rejs!formats/export/FsTask'], function (exportFsTask) {
     'extension': '.fstask',
     'name': 'FsTask',
     'parse': parse,
+    'parseTask': parseTask,
   }
 });

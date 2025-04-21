@@ -12,8 +12,7 @@ define([], function () {
 
   var date = new Date();
   var day = date.getUTCDate();
-  //var turn = (day % 2 == 0) ? 'right' : 'left';
-  var turn = 'left';
+  var turn = (day % 2 == 0) ? 'right' : 'left';
 
   return {
     showCumulativeDistances: false,
