@@ -232,6 +232,15 @@ define(['task/taskBoard', 'task/turnpoint', 'task/fullBoard', 'task/fullBoard2',
       taskExporter.exporter(turnpoints, taskInfo, e.detail.format);
     }
 
+    var onTaskPublish = function (e) {
+      const turnpoints = getTurnpoints();
+      const taskInfo = getTaskInfo();
+
+      // Call the publish handler in xctrack.js
+      const xctrack = require('formats/xctrack');
+      xctrack.publish(turnpoints, taskInfo);
+    };
+
     var setBbox = function (bbox) {
       taskInfo.bbox = bbox;
     }
@@ -254,6 +263,7 @@ define(['task/taskBoard', 'task/turnpoint', 'task/fullBoard', 'task/fullBoard2',
     document.addEventListener('changeTaskDate', onchangeTaskDate);
     document.addEventListener('changeTaskInfo', onchangeTaskInfo);
     document.addEventListener('changeCompInfo', onchangeCompInfo);
+    document.addEventListener('publishTask', onTaskPublish);
 
     document.addEventListener('taskChanged', onTaskChanged);
     document.addEventListener('openTaskFullBoard2', onOpenTaskFullBoard2);
