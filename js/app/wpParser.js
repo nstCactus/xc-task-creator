@@ -81,6 +81,10 @@ define(['jquery', 'waypoints/waypoints', 'task/task', 'tracks/tracks', 'formats/
                 }
             }
 
+            if (fileInfo.competition) {
+                parseInfo.competition = fileInfo.competition;
+            }
+
             if (fileInfo.KmlLayer) {
                 parseInfo.KmlLayer = fileInfo.KmlLayer;
             }

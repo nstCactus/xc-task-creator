@@ -74,10 +74,23 @@ define(['rejs!formats/export/lk8000'], function(exportTSK) {
   }
   
   var exporter = function(turnpoints, taskInfo) {
+    var xcInfo = {};
+    for (var i = 0; i < turnpoints.length; i++) {
+        if (turnpoints[i].type == "start") {
+          xcInfo.startIndex = i;
+        }
+
+        if (turnpoints[i].type == "goal") {
+          xcInfo.goalIndex = i;
+        }
+    }
+        
     var data = exportTSK({
       turnpoints : turnpoints,
-      taskInfo : taskInfo
+      taskInfo : taskInfo,
+      xcInfo : xcInfo,
     });
+
     return new Blob([data], {'type': "text/xml"});
   }
 

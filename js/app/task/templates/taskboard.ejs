@@ -48,7 +48,13 @@
         style="background-color : #383838 ;font-size: 1.0em; padding : 2px;">Turn :
         <%- taskInfo.turn %></span>
       <button id="toggle-turn" class="btn btn-primary btn-xs pull-right">T</button>
+    </div>
 
+    <div style="padding : 3px;"> <span class="label label-default"
+        style="background-color : #383838 ;font-size: 1.0em; padding : 2px;">UTC offset :
+        <%- taskInfo.utcOffset %>
+      <button id="increase-utc-offset" class="btn btn-primary btn-xs pull-right">+</button>
+      <button id="decrease-utc-offset" class="btn btn-primary btn-xs pull-right">-</button>
     </div>
 
     <div style="padding : 3px;"> <span class="label label-default"
@@ -58,8 +64,7 @@
         style="background-color : #204d74 ;font-size: 1.0em; padding : 2px;">Window close : <%- windows_close %></span>
     </div>
     <div style="padding : 3px;"> <span class="label label-default"
-        style="background-color : #ac2925 ;font-size: 1.0em; padding : 2px;">Start : <%- start_open %>
-        <% if ( taskInfo.ngates > 1 ) { %> Gates:<%- taskInfo.ngates %> +<%- taskInfo.gateint %> Minutes<% 	} %> </span>
+        style="background-color : #ac2925 ;font-size: 1.0em; padding : 2px;">Start : <%- start_open %><% if ( taskInfo.ngates > 1 ) { %>, <%- taskInfo.ngates %> gates, +<%- taskInfo.gateint %> Minutes<% 	} %> </span>
     </div>
     <div style="padding : 3px;"> <span class="label label-default"
       style="background-color : #398439 ;font-size: 1.0em; padding : 2px;">Task deadline : <%- deadline %></span>

@@ -153,11 +153,11 @@ define(['jquery', 'app/helper', 'app/param', 'html2canvas', 'rejs!task/templates
           taskInfo: taskInfo
         }));
 
-        var g = "";
-        if (taskInfo.ngates > 1) {
-          g = " Gates: " + taskInfo.ngates + "  +" + taskInfo.gateint + "m";
-        }
         if (type == 'start') {
+          var g = "";
+          if (taskInfo.ngates > 1) {
+            g = ", " + taskInfo.ngates + " gates, +" + taskInfo.gateint + " minutes";
+          }
           $("#fullboard-" + type + "-open").html(turnpoints[i].open + g);
         }
 

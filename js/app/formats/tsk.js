@@ -2,7 +2,7 @@
   @file
   Task importer for the task creator.
   **/
-define(['rejs!formats/export/tsk'], function(exportTSK) {
+define(['rejs!formats/export/tsk', 'utils/timeUtils'], function(exportTSK, timeUtils) {
   var check = function(text, filename) {
     if (filename.split('.').pop() == 'tsk') {
       return true;
@@ -20,6 +20,10 @@ define(['rejs!formats/export/tsk'], function(exportTSK) {
     var tps = [];
     var wps = [];
     var array = ['close', 'goalType', 'index', 'mode', 'open', 'radius', 'type'];
+
+    var date = xmlDoc.getElementsByTagName('date')[0].childNodes[0] ? xmlDoc.getElementsByTagName('date')[0].childNodes[0].nodeValue : 0;
+    var day = Number(date.split('-')[0]);
+    var turn = (day % 2 == 0) ? 'right' : 'left';
     
     for (var i = 0; i < rtetp.length; i++) {
       var tp = {};
@@ -69,7 +73,8 @@ define(['rejs!formats/export/tsk'], function(exportTSK) {
       } 
     }
    
-
+    var utcOffset = xmlDoc.getElementsByTagName('utcoffset').childNode? xmlDoc.getElementsByTagName('utcoffset').childNodes[0].nodeValue 
+      : timeUtils.getLocalOffset();
 
     return {
       'task' : {
@@ -78,6 +83,8 @@ define(['rejs!formats/export/tsk'], function(exportTSK) {
         'num' : xmlDoc.getElementsByTagName('num')[0].childNodes[0].nodeValue,
         'ngates' : xmlDoc.getElementsByTagName('ngates')[0].childNodes[0].nodeValue,
         'gateint' : xmlDoc.getElementsByTagName('gateint')[0].childNodes[0].nodeValue,
+        'turn' : turn,
+        'utcOffset' : utcOffset,
         'info' : tinfo,
         'turnpoints' : tps,
       },
@@ -88,7 +95,7 @@ define(['rejs!formats/export/tsk'], function(exportTSK) {
   var exporter = function(turnpoints, taskInfo) {
     var data = exportTSK({
       turnpoints : turnpoints,
-      taskInfo : taskInfo
+      taskInfo : taskInfo,
     });
     return new Blob([data], {'type': "text/xml"});
   }
