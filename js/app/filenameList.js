@@ -27,7 +27,6 @@ define(['jquery'], function($) {
     document.dispatchEvent(e);
   });
 
-
   $(document).on('click', '#clear-task', function(e) {
     var e = document.createEvent("CustomEvent");
     e.initCustomEvent('deleteTask', false, false, {});

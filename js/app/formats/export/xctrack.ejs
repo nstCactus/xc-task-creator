@@ -16,13 +16,17 @@
        <% } %>
      }<% if (i < turnpoints.length - 1) { %>,<% } %><% } %>
   ],
+  "takeoff":{
+    "timeOpen": "<%- timeUtils.localToUtc(turnpoints[0].open, taskInfo.utcOffset) %>:00Z",
+    "timeClose": "<%- timeUtils.localToUtc(turnpoints[0].close, taskInfo.utcOffset) %>:00Z"
+  },
   "sss" : {
     "type" : "<%- xcInfo.type.toUpperCase() %>",
     "direction" : "<%- xcInfo.direction.toUpperCase() %>",
-    "timeGates" : ["<%- xcInfo.timeGates %>:00Z"]
+    "timeGates" : <%- JSON.stringify(xcInfo.timeGates) %>
   },  
   "goal" : {
     "type" : "<%- xcInfo.goalType.toUpperCase() %>",
-    "deadline" : "<%- xcInfo.deadline %>:00Z"
+    "deadline": "<%- xcInfo.deadline %>"
   }
 }
