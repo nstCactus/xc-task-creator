@@ -2,7 +2,7 @@
   @file
   Task importer for the task creator.
   **/
-define(['rejs!formats/export/FsTask', 'app/helper', 'jgrowl', 'xml-formatter', 'formats/FsTask'], function (exportFsTask, helper, jgrowl, xml_formatter, FsTask) {
+define(['rejs!formats/export/FsTask', 'utils/timeUtils', 'formats/FsTask'], function (exportFsTask, timeUtils, FsTask) {
 
   Number.prototype.pad = function (size) {
     var s = String(this);
@@ -11,11 +11,8 @@ define(['rejs!formats/export/FsTask', 'app/helper', 'jgrowl', 'xml-formatter', '
   }
 
   var x2js = new X2JS();
-
   var jsonDB = null;
 
-  var date = new Date();
-  var day = date.getUTCDate();
   Number.prototype.pad = function (size) {
     var s = String(this);
     while (s.length < (size || 2)) { s = "0" + s; }
@@ -28,8 +25,6 @@ define(['rejs!formats/export/FsTask', 'app/helper', 'jgrowl', 'xml-formatter', '
     }
     return false;
   }
-
-
 
   var parse = function (text, filename) {
 
@@ -48,8 +43,7 @@ define(['rejs!formats/export/FsTask', 'app/helper', 'jgrowl', 'xml-formatter', '
     });
 
     var tasks = jsonDB.Fs.FsCompetition.FsTasks.FsTask;
-
-    var utc_offset = Number(jsonDB.Fs.FsCompetition._utc_offset);
+    var utc_offset = timeUtils.convertUtcOffset(jsonDB.Fs.FsCompetition._utc_offset ?? 0);
 
     var taskN = 0;
     let nt = 1;
@@ -61,9 +55,12 @@ define(['rejs!formats/export/FsTask', 'app/helper', 'jgrowl', 'xml-formatter', '
       taskN = window.prompt("Tasks in file : " + nt + "\nSelect task number or cancel not to load a task and just load the competition DB", "1");
     }
 
-
     if (isNaN(taskN) || taskN <= 0 || taskN > nt) {
-      return;
+      return {
+        'competition': {
+          'utcOffset': utc_offset,
+        }
+      }  
     }
 
     let jsonObj;
@@ -75,11 +72,9 @@ define(['rejs!formats/export/FsTask', 'app/helper', 'jgrowl', 'xml-formatter', '
     }
 
     var result = FsTask.parseTask(jsonObj, filename);
-    var jumpTheGun = Number(jsonObj.FsTask.FsScoreFormula._jump_the_gun_max);
-    var turnpointTollerance = Number(jsonObj.FsTask.FsScoreFormula._turnpoint_radius_tolerance);
-
-    result.task.jumpTheGun = jumpTheGun;
-    result.task.turnpointTollerance = turnpointTollerance;
+    result.task.jumpTheGun = Number(jsonObj.FsTask.FsScoreFormula._jump_the_gun_max);
+    result.task.turnpointTollerance = Number(jsonObj.FsTask.FsScoreFormula._turnpoint_radius_tolerance);
+    result.task.utcOffset = utc_offset;
 
     return result;
   }
@@ -92,16 +87,9 @@ define(['rejs!formats/export/FsTask', 'app/helper', 'jgrowl', 'xml-formatter', '
       return;
     }
 
-    var UTCOffset = Number(jsonDB.Fs.FsCompetition._utc_offset)
-    if (UTCOffset > 0) {
-      UTCOffset = "+" + UTCOffset.pad(2);
-    }
-    else {
-      UTCOffset = "+" + UTCOffset.pad(2);
-    }
+    var utcOffsetNumber = Number(jsonDB.Fs.FsCompetition._utc_offset)
+    var utcOffset = timeUtils.convertUtcOffset(utcOffsetNumber);
     var FsScoreFormula = x2js.json2xml_str({ FsScoreFormula: jsonDB.Fs.FsCompetition.FsScoreFormula });
-
-
     var tasks = jsonDB.Fs.FsCompetition.FsTasks.FsTask;
     var taskN = 0;
     if (tasks != undefined) {
@@ -125,7 +113,7 @@ define(['rejs!formats/export/FsTask', 'app/helper', 'jgrowl', 'xml-formatter', '
     };
     times.push(time);
 
-    // turnpoints[0] is assumend as Start
+    // turnpoints[1] is assumend as Start
     var time = {
       open: turnpoints[1].open,
       close: turnpoints[turnpoints.length - 1].close
@@ -157,14 +145,13 @@ define(['rejs!formats/export/FsTask', 'app/helper', 'jgrowl', 'xml-formatter', '
       starts.push(h.pad(2) + ":" + m.pad(2))
     }
 
-    //var theDate = date.getUTCFullYear() + '-' + (date.getUTCMonth() + 1).pad(2) + '-' + day.pad(2)
     var theDate = taskInfo.date.substring(6, 10) + '-' + taskInfo.date.substring(3, 5) + '-' + taskInfo.date.substring(0, 2)
 
     var data = exportFsTask({
       turnpoints: turnpoints,
       taskInfo: taskInfo,
       thedate: theDate,
-      UTCOffset: UTCOffset,
+      UTCOffset: utcOffset,
       times: times,
       FsScoreFormula: FsScoreFormula,
       starts: starts,

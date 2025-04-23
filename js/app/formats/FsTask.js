@@ -154,7 +154,7 @@ define(['rejs!formats/export/FsTask'], function (exportFsTask) {
       turnpoints: turnpoints,
       taskInfo: taskInfo,
       thedate: theDate,
-      UTCOffset: '+02',
+      UTCOffset: taskInfo.utcOffset,
       times: times,
       FsScoreFormula: '',
       starts: starts,

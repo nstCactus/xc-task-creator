@@ -50,6 +50,13 @@ define(['Dropzone', 'app/wpParser', 'jquery'], function(Dropzone, wpParser, $) {
       document.dispatchEvent(e); 
     }
 
+    if (parseInfo.competition) {
+      var e = document.createEvent("CustomEvent");
+      e.initCustomEvent('setUtcOffset', false, false, {
+        utcOffset : parseInfo.competition.utcOffset,
+      });
+      document.dispatchEvent(e); 
+    }
   }
 
   reader.onload = function(e) {
