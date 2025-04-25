@@ -2,9 +2,10 @@
  @file
  Task importer / exporter for XCTrack
  **/
-define(['rejs!formats/export/xctrack', 'rejs!formats/templates/publishResultModal', 'utils/timeUtils'],
-    function (exportXCTrack, publishResultModalTemplate, timeUtils) {
+define(['rejs!formats/export/xctrack', 'rejs!formats/templates/publishResultModal', 'rejs!formats/templates/publishAuthorModal', 'utils/timeUtils', 'utils/stringUtils'],
+    function (exportXCTrack, publishResultModalTemplate, publishAuthorModalTemplate, timeUtils, stringUtils) {
         $('body').append(publishResultModalTemplate({}));
+        $('body').append(publishAuthorModalTemplate({}));
 
         var date = new Date();
 
@@ -156,11 +157,39 @@ define(['rejs!formats/export/xctrack', 'rejs!formats/templates/publishResultModa
             var xcInfo = generateXCInfo(turnpoints, taskInfo);
 
             try {
+                // Show the author modal
+                $('#publish-author-modal').modal('show');
+
+                // Focus on the name input field when the modal is shown
+                $('#publish-author-modal').on('shown.bs.modal', function () {
+                    $('#author-name').trigger('focus');
+                });
+
+                // Handle the Enter key to trigger the Submit button
+                $('#author-name').off('keypress').on('keypress', function (e) {
+                    if (e.which === 13) { // 13 is the Enter key code
+                        $('#submit-author').trigger('click');
+                    }
+                });
+
+                // Wait for the user to submit their name
+                const authorName = await new Promise((resolve) => {
+                    $('#submit-author').off('click').on('click', function () {
+                        const name = $('#author-name').val().trim();
+                        resolve(name || ''); // Resolve with the name or an empty string
+                    });
+                });
+                const sanitizedAuthorName = stringUtils.transliterate(authorName); // Transliterate special characters
+
+                // Determine the Author header value
+                const authorHeader = authorName ? `${sanitizedAuthorName} (TaskCreator)` : 'TaskCreator';
+
                 // Send the POST request to publish the task
                 const response = await fetch('https://tools.xcontest.org/api/xctsk/save', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
+                        'Author': authorHeader,
                     },
                     body: fileContent,
                 });
@@ -173,10 +202,10 @@ define(['rejs!formats/export/xctrack', 'rejs!formats/templates/publishResultModa
                 const responseData = await response.json();
                 const taskCode = responseData.taskCode; // Extract the taskCode field
                 const taskUrl = `https://tools.xcontest.org/xctsk/load?taskCode=${taskCode}`; // Construct the task URL
-                const taskMessage = `Task ${taskInfo.num} for ${taskInfo.date} is set:<br>A ${taskInfo.type} over ${(taskInfo.distance / 1000).toFixed(1)} km, launch opens at ${turnpoints[0].open}, start opens at ${xcInfo.firstStartGateLocal}.<br>Xctrack code: ${taskCode}<br>Details: ${taskUrl}`; 
+                const taskMessage = `Task ${taskInfo.num} for ${taskInfo.date} is set:<br>A ${taskInfo.type} over ${(taskInfo.distance / 1000).toFixed(1)} km, launch opens at ${turnpoints[0].open}, start opens at ${xcInfo.firstStartGateLocal}.<br>XCTrack code: ${taskCode}<br>Details: ${taskUrl}`;
 
                 // Close the publish modal
-                $('#publish-modal').modal('hide');
+                $('#publish-author-modal').modal('hide');
 
                 // Show the success modal
                 $('#task-code').text(taskCode); // Display the task code
@@ -198,9 +227,7 @@ define(['rejs!formats/export/xctrack', 'rejs!formats/templates/publishResultModa
                 $('#copy-task-message').off('click').on('click', function () {
                     // Replace <br> tags with \n for proper line breaks in plain text
                     const plainTextMessage = taskMessage.replace(/<br\s*\/?>/g, '\n');
-                    navigator.clipboard.writeText(plainTextMessage).then(() => {
-                        alert('Task message copied to clipboard!');
-                    });
+                    navigator.clipboard.writeText(plainTextMessage)
                 });
             } catch (error) {
                 console.error('Error publishing task:', error);
