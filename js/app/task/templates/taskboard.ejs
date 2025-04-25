@@ -1,144 +1,133 @@
-<% var windows_open = "";
-      var windows_close = "";
-      var start_open = "";
-      var deadline = "";
-      for(var i = 0;  i < turnpoints.length; i++) {
-        if (turnpoints[i].type ==  "takeoff") {
-          windows_open = turnpoints[i].open;
-          windows_close = turnpoints[i].close;
-        }  
-        if (turnpoints[i].type ==  "goal") {
-          deadline = turnpoints[i].close;
-        } 
-        if ( turnpoints[i].type == "start" ) { 
-          start_open = turnpoints[i].open; 
-        }
-      }
-    %>
+<% var windows_open="" ; var windows_close="" ; var start_open="" ; var deadline="" ; for(var i=0; i <
+  turnpoints.length; i++) { if (turnpoints[i].type=="takeoff" ) { windows_open=turnpoints[i].open;
+  windows_close=turnpoints[i].close; } if (turnpoints[i].type=="goal" ) { deadline=turnpoints[i].close; } if (
+  turnpoints[i].type=="start" ) { start_open=turnpoints[i].open; } } %>
 
-<div>
-  <div id="task_header">
-    <div style="padding : 3px;"> <span class="label label-default"
-        style="background-color : #383838 ;font-size: 1.0em; padding : 2px;">Task N :
-        <%- taskInfo.num %></span>
-      <button id="increase-task" class="btn btn-primary btn-xs pull-right">+</button>
-      <button id="decrease-task" class="btn btn-primary btn-xs pull-right">-</button>
+  <div>
+    <div id="task_header">
+      <div style="padding : 3px;"> <span class="label label-default"
+          style="background-color : #383838 ;font-size: 1.0em; padding : 2px;">Task N :
+          <%- taskInfo.num %></span>
+        <button id="increase-task" class="btn btn-primary btn-xs pull-right">+</button>
+        <button id="decrease-task" class="btn btn-primary btn-xs pull-right">-</button>
+      </div>
+
+      <div style="padding : 3px;"> <span class="label label-default"
+          style="background-color : #383838 ;font-size: 1.0em; padding : 2px;">Date :
+          <input type="input" id="taskDate" class="datepicker" value="<%- taskInfo.date %>"
+            style="background-color : #383838 ;font-size: 1.0em; padding : 2px;" />
+          <script>
+            $("#taskDate").datepicker({
+              dateFormat: 'dd-mm-yy',
+              onSelect: function (dateText, inst) {
+                var e = document.createEvent("CustomEvent");
+                e.initCustomEvent('changeTaskDate', false, false, {
+                  date: dateText,
+                });
+                document.dispatchEvent(e);
+              }
+            });
+          </script>
+        </span>
+      </div>
+
+      <div style="padding : 3px;"> <span class="label label-default"
+          style="background-color : #383838 ;font-size: 1.0em; padding : 2px;">UTC offset :
+          <%- taskInfo.utcOffset %>
+            <button id="increase-utc-offset" class="btn btn-primary btn-xs pull-right">+</button>
+            <button id="decrease-utc-offset" class="btn btn-primary btn-xs pull-right">-</button>
+      </div>
+
+      <div style="padding : 3px;"> <span class="label label-default"
+          style="background-color : #383838 ;font-size: 1.0em; padding : 2px;">Turn :
+          <%- taskInfo.turn %></span>
+        <button id="toggle-turn" class="btn btn-primary btn-xs pull-right">T</button>
+      </div>
+
+      <div style="padding : 3px;"> <span class="label label-default"
+          style="background-color : #204d74 ;font-size: 1.0em; padding : 2px;">Takeoff open : <%- windows_open %></span>
+      </div>
+      <div style="padding : 3px;"> <span class="label label-default"
+          style="background-color : #204d74 ;font-size: 1.0em; padding : 2px;">Window close : <%- windows_close
+            %></span>
+      </div>
+      <div style="padding : 3px;"> <span class="label label-default"
+          style="background-color : #ac2925 ;font-size: 1.0em; padding : 2px;">Start : <%- start_open %>
+            <% if ( taskInfo.ngates> 1 ) { %>, <%- taskInfo.ngates %> gates, +<%- taskInfo.gateint %> Minutes<% } %>
+        </span>
+      </div>
+      <div style="padding : 3px;"> <span class="label label-default"
+          style="background-color : #398439 ;font-size: 1.0em; padding : 2px;">Task deadline : <%- deadline %></span>
+      </div>
     </div>
 
-    <div style="padding : 3px;"> <span class="label label-default"
-        style="background-color : #383838 ;font-size: 1.0em; padding : 2px;">Date :
-        <input type="input" id="taskDate" class="datepicker" value="<%- taskInfo.date %>"
-          style="background-color : #383838 ;font-size: 1.0em; padding : 2px;" />
-        <script>
-          $("#taskDate").datepicker({
-            dateFormat: 'dd-mm-yy',
-            onSelect: function (dateText, inst) {
-              var e = document.createEvent("CustomEvent");
-              e.initCustomEvent('changeTaskDate', false, false, {
-                date: dateText,
-              });
-              document.dispatchEvent(e);
-            }
-          });
-        </script>
-      </span>
-    </div>
+    <hr>
 
-    <div style="padding : 3px;"> <span class="label label-default"
-        style="background-color : #383838 ;font-size: 1.0em; padding : 2px;">Turn :
-        <%- taskInfo.turn %></span>
-      <button id="toggle-turn" class="btn btn-primary btn-xs pull-right">T</button>
-    </div>
-
-    <div style="padding : 3px;"> <span class="label label-default"
-        style="background-color : #383838 ;font-size: 1.0em; padding : 2px;">UTC offset :
-        <%- taskInfo.utcOffset %>
-      <button id="increase-utc-offset" class="btn btn-primary btn-xs pull-right">+</button>
-      <button id="decrease-utc-offset" class="btn btn-primary btn-xs pull-right">-</button>
-    </div>
-
-    <div style="padding : 3px;"> <span class="label label-default"
-        style="background-color : #204d74 ;font-size: 1.0em; padding : 2px;">Takeoff open : <%- windows_open %></span>
-    </div>
-    <div style="padding : 3px;"> <span class="label label-default"
-        style="background-color : #204d74 ;font-size: 1.0em; padding : 2px;">Window close : <%- windows_close %></span>
-    </div>
-    <div style="padding : 3px;"> <span class="label label-default"
-        style="background-color : #ac2925 ;font-size: 1.0em; padding : 2px;">Start : <%- start_open %><% if ( taskInfo.ngates > 1 ) { %>, <%- taskInfo.ngates %> gates, +<%- taskInfo.gateint %> Minutes<% 	} %> </span>
-    </div>
-    <div style="padding : 3px;"> <span class="label label-default"
-      style="background-color : #398439 ;font-size: 1.0em; padding : 2px;">Task deadline : <%- deadline %></span>
-  </div>
-  </div>
-
-  <hr>
-
-  <div  id="waypoits">
+    <div id="waypoits">
       <!-- <span  class="label label-default taskboard-item" >Turnpoits</span>  -->
       <a id="show-cumulative" class="pull-right">Partial distances</a>
-    <ul>
-      <% 
-      for(var i = 0;  i < turnpoints.length; i++) { %>
-      <li class="taskboard-item">
-        <span class="label label-default"
-          style="background-color : <%- turnpoints[i].fillColor %>"><%- turnpoints[i].shortName %></span>
-        <%- turnpoints[i].id  + ' [' + turnpoints[i].radius  + ' m] '     %>
-        <% if ( turnpoints[i].type == "start" ) {  %>
-        <%- turnpoints[i].mode.toUpperCase() %>
-        <% } %>
+      <ul>
+        <% for(var i=0; i < turnpoints.length; i++) { %>
+          <li class="taskboard-item">
+            <span class="label label-default" style="background-color : <%- turnpoints[i].fillColor %>"><%-
+                turnpoints[i].shortName %></span>
+            <%- turnpoints[i].id + ' [' + turnpoints[i].radius + ' m] ' %>
+              <% if ( turnpoints[i].type=="start" ) { %>
+                <%- turnpoints[i].mode.toUpperCase() %>
+                  <% } %>
 
-        <% if ( turnpoints[i].type == "goal" ) {  %>
-          <%- turnpoints[i].goalType.toUpperCase() %>
+                    <% if ( turnpoints[i].type=="goal" ) { %>
+                      <%- turnpoints[i].goalType.toUpperCase() %>
+                        <% } %>
+
+                          <span class="turnpointDistance">
+                            <% if ( taskInfo.distances[i - 1] ) { %>
+                              <%- taskInfo.distances[i-1].toFixed(1) + ' km' %>
+                                <% } %>
+                          </span>
+          </li>
           <% } %>
-
-        <span class="turnpointDistance">
-          <% if ( taskInfo.distances[i - 1] ) { %>
-          <%- taskInfo.distances[i-1].toFixed(1) + ' km' %>
-          <% } %>
-        </span>
-      </li>
-      <% } %>
-    </ul>
-  </div>
-
-  <hr>
-  <div style="font-size: 1.2em;">
-    <span class="label label-default">Task optimized distance:</span>
-    <span class="turnpointDistance">
-      <%- (Math.round(taskInfo.distance) / 1000).toFixed(1) %> Km
-    </span>
-  </div>
-  <hr>
-
-
-
-  <div id="task-footer">
-    <!-- <hr> -->
-    <div style="padding : 3px;">
-      <textarea id="taskInfo" placeholder="Task Information" onchange="javascript:taskInfoChanged();"
-        style="width:100%;height:50px;background-color : #383838 ;font-size: 1.0em; padding : 2px;"><%- taskInfo.info %></textarea>
+      </ul>
     </div>
-    <div style="padding : 3px;">
-      <textarea id="compInfo" placeholder="Competition Information" onchange="javascript:compInfoChanged();"
-        style="width:100%;height:30px;background-color : #383838 ;font-size: 1.0em; padding : 2px;"><%- taskInfo.compInfo %></textarea>
+
+    <hr>
+    <div style="font-size: 1.2em;">
+      <span class="label label-default">Task optimized distance:</span>
+      <span class="turnpointDistance">
+        <%- (Math.round(taskInfo.distance) / 1000).toFixed(1) %> Km
+      </span>
     </div>
-    <script>
-      function taskInfoChanged() {
-        var info = document.getElementById("taskInfo").value;
-        var e = document.createEvent("CustomEvent");
-        e.initCustomEvent('changeTaskInfo', false, false, {
-          info: info,
-        });
-        document.dispatchEvent(e);
-      }
-      function compInfoChanged() {
-        var info = document.getElementById("compInfo").value;
-        var e = document.createEvent("CustomEvent");
-        e.initCustomEvent('changeCompInfo', false, false, {
-          info: info,
-        });
-        document.dispatchEvent(e);
-      }
-    </script>
+    <hr>
+
+
+
+    <div id="task-footer">
+      <!-- <hr> -->
+      <div style="padding : 3px;">
+        <textarea id="taskInfo" placeholder="Task Information" onchange="javascript:taskInfoChanged();"
+          style="width:100%;height:50px;background-color : #383838 ;font-size: 1.0em; padding : 2px;"><%- taskInfo.info %></textarea>
+      </div>
+      <div style="padding : 3px;">
+        <textarea id="compInfo" placeholder="Competition Information" onchange="javascript:compInfoChanged();"
+          style="width:100%;height:30px;background-color : #383838 ;font-size: 1.0em; padding : 2px;"><%- taskInfo.compInfo %></textarea>
+      </div>
+      <script>
+        function taskInfoChanged() {
+          var info = document.getElementById("taskInfo").value;
+          var e = document.createEvent("CustomEvent");
+          e.initCustomEvent('changeTaskInfo', false, false, {
+            info: info,
+          });
+          document.dispatchEvent(e);
+        }
+        function compInfoChanged() {
+          var info = document.getElementById("compInfo").value;
+          var e = document.createEvent("CustomEvent");
+          e.initCustomEvent('changeCompInfo', false, false, {
+            info: info,
+          });
+          document.dispatchEvent(e);
+        }
+      </script>
+    </div>
   </div>
-</div>
