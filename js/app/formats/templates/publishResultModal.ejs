@@ -8,12 +8,21 @@
         </button>
       </div>
       <div class="modal-body">
-        <p>Task code: <span id="task-code"></span>
-          <button id="copy-task-code" class="btn btn-secondary btn-sm">Copy</button>
-        </p>
-        <p>Task URL: <a id="task-url" href="#" target="_blank"></a>
-          <button id="copy-task-url" class="btn btn-secondary btn-sm">Copy</button>
-        </p>
+        <div class="task-message-container">
+          <p><strong>Task code</strong></p>
+          <pre id="task-code" class="task-message"></pre>
+          <button id="copy-task-code" class="btn btn-secondary btn-sm copy-task-message-btn">Copy</button>
+        </div>
+        <div class="task-message-container">
+          <p><strong>Task URL</strong></p>
+          <pre><a id="task-url" href="#" target="_blank"></a></pre>
+          <button id="copy-task-url" class="btn btn-secondary btn-sm copy-task-message-btn">Copy</button>
+        </div>
+        <div class="task-message-container">
+          <p><strong>Task message</strong></p>
+          <pre id="task-message" class="task-message"></pre>
+          <button id="copy-task-message" class="btn btn-secondary btn-sm copy-task-message-btn">Copy</button>
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>

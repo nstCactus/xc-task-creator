@@ -112,11 +112,12 @@ define(['rejs!formats/export/xctrack', 'rejs!formats/templates/publishResultModa
             }
         }
 
-        var exporter = function (turnpoints, taskInfo) {
+        var generateXCInfo = function (turnpoints, taskInfo) {
             var xcInfo = {};
             for (var i = 0; i < turnpoints.length; i++) {
                 if (turnpoints[i].type == "start") {
                     xcInfo.timeGates = [];
+                    xcInfo.firstStartGateLocal = turnpoints[i].open
                     const ngates = parseInt(turnpoints[i].ngates, 10) || 1;
                     const gateint = parseInt(turnpoints[i].gateint, 10) || 15;
                     let openTime = timeUtils.localToUtc(turnpoints[i].open, taskInfo.utcOffset);
@@ -134,6 +135,11 @@ define(['rejs!formats/export/xctrack', 'rejs!formats/templates/publishResultModa
                     xcInfo.goalType = converter[turnpoints[i].goalType] ? converter[turnpoints[i].goalType] : turnpoints[i].goalType;
                 }
             }
+            return xcInfo;
+        }
+
+        var exporter = function (turnpoints, taskInfo) {
+            var xcInfo = generateXCInfo(turnpoints, taskInfo);
             var data = exportXCTrack({
                 turnpoints: turnpoints,
                 taskInfo: taskInfo,
@@ -147,6 +153,7 @@ define(['rejs!formats/export/xctrack', 'rejs!formats/templates/publishResultModa
             // Generate the .xctsk file
             const data = exporter(turnpoints, taskInfo);
             const fileContent = await data.text();
+            var xcInfo = generateXCInfo(turnpoints, taskInfo);
 
             try {
                 // Send the POST request to publish the task
@@ -166,13 +173,15 @@ define(['rejs!formats/export/xctrack', 'rejs!formats/templates/publishResultModa
                 const responseData = await response.json();
                 const taskCode = responseData.taskCode; // Extract the taskCode field
                 const taskUrl = `https://tools.xcontest.org/xctsk/load?taskCode=${taskCode}`; // Construct the task URL
+                const taskMessage = `Task ${taskInfo.num} for ${taskInfo.date} is set:<br>A ${taskInfo.type} over ${(taskInfo.distance / 1000).toFixed(1)} km, launch opens at ${turnpoints[0].open}, start opens at ${xcInfo.firstStartGateLocal}.<br>Xctrack code: ${taskCode}<br>Details: ${taskUrl}`; 
 
                 // Close the publish modal
                 $('#publish-modal').modal('hide');
 
                 // Show the success modal
-                $('#task-code').text(taskCode); // Display only the task code
+                $('#task-code').text(taskCode); // Display the task code
                 $('#task-url').text(taskUrl).attr('href', taskUrl); // Set the task URL
+                $('#task-message').html(taskMessage); // Display the task message
                 $('#publish-success-modal').modal('show');
 
                 // Handle the copy-to-clipboard button for the task code
@@ -183,6 +192,15 @@ define(['rejs!formats/export/xctrack', 'rejs!formats/templates/publishResultModa
                 // Handle the copy-to-clipboard button for the task URL
                 $('#copy-task-url').off('click').on('click', function () {
                     navigator.clipboard.writeText(taskUrl);
+                });
+
+                // Handle the copy-to-clipboard button for the task message
+                $('#copy-task-message').off('click').on('click', function () {
+                    // Replace <br> tags with \n for proper line breaks in plain text
+                    const plainTextMessage = taskMessage.replace(/<br\s*\/?>/g, '\n');
+                    navigator.clipboard.writeText(plainTextMessage).then(() => {
+                        alert('Task message copied to clipboard!');
+                    });
                 });
             } catch (error) {
                 console.error('Error publishing task:', error);

@@ -523,4 +523,24 @@ span#fullboard-xm {
   margin: 0 auto; /* Center the container horizontally */
 }
 
+.task-message-container {
+  position: relative;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  margin-bottom: 15px;
+}
 
+.task-message {
+  white-space: pre-wrap; /* Preserve line breaks and spacing */
+  word-wrap: break-word; /* Break long words if necessary */
+  margin: 0;
+  font-family: monospace; /* Use a monospace font for better readability */
+}
+
+.copy-task-message-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
