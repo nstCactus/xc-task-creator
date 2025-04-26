@@ -23,7 +23,9 @@ define(['rejs!formats/export/FsTask'], function (exportFsTask) {
 
     var tps = [];
     var wps = [];
-    var gateint;
+    var gateint = 15;
+    var taskType = 'race';
+    var ngates = 1;
 
     var ss = jsonObj.FsTask.FsTaskDefinition._ss;
     var es = jsonObj.FsTask.FsTaskDefinition._es;
@@ -34,10 +36,16 @@ define(['rejs!formats/export/FsTask'], function (exportFsTask) {
     var day = Number(thedate.split('-')[0]);
     var turn = (day % 2 == 0) ? 'right' : 'left';
 
-    if (FsStartGates.length > 1) {
-      let g1 = FsStartGates[1]._open.substring(11, 13) * 60 + FsStartGates[1]._open.substring(14, 16)
-      let g2 = FsStartGates[0]._open.substring(11, 13) * 60 + FsStartGates[0]._open.substring(14, 16)
-      gateint = g1 - g2;
+    if (!jsonObj.FsTask.FsTaskDefinition.hasOwnProperty('FsStartGate')) {
+      taskType = 'time-trial';
+    }
+    else {
+      ngates = FsStartGates.length
+      if (ngates > 1) {
+        let g1 = FsStartGates[1]._open.substring(11, 13) * 60 + FsStartGates[1]._open.substring(14, 16)
+        let g2 = FsStartGates[0]._open.substring(11, 13) * 60 + FsStartGates[0]._open.substring(14, 16)
+        gateint = g1 - g2;
+      }
     }
 
     for (let i = 0; i < FsTurnpoints.length; i++) {
@@ -86,9 +94,9 @@ define(['rejs!formats/export/FsTask'], function (exportFsTask) {
     return {
       'task': {
         'date': thedate,
-        'type': 'race',
+        'type': taskType,
         'num': 1,
-        'ngates': FsStartGates.length,
+        'ngates': ngates,
         'gateint': gateint,
         'turn': turn,
         'turnpoints': tps,
@@ -136,16 +144,19 @@ define(['rejs!formats/export/FsTask'], function (exportFsTask) {
       times.push(time);
     }
 
-    starts.push([turnpoints[1].open]);
-    let h = Number(turnpoints[1].open.split(':')[0]);
-    let m = Number(turnpoints[1].open.split(':')[1]);
-    for (let i = 1; i < taskInfo.ngates; i++) {
-      m += Number(taskInfo.gateint);
-      if (m >= 60) {
-        m -= 60;
-        h++;
+    // convention in FsComp: Races have start gates, Time Trials do not
+    if (taskInfo.type == 'race') {
+      starts.push([turnpoints[1].open]);
+      let h = Number(turnpoints[1].open.split(':')[0]);
+      let m = Number(turnpoints[1].open.split(':')[1]);
+      for (let i = 1; i < taskInfo.ngates; i++) {
+        m += Number(taskInfo.gateint);
+        if (m >= 60) {
+          m -= 60;
+          h++;
+        }
+        starts.push(h.pad(2) + ":" + m.pad(2))
       }
-      starts.push(h.pad(2) + ":" + m.pad(2))
     }
 
     var theDate = date.getUTCFullYear() + '-' + (date.getUTCMonth() + 1).pad(2) + '-' + day.pad(2)
