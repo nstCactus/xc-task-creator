@@ -137,6 +137,9 @@ define(['task/taskBoard', 'task/turnpoint', 'task/fullBoard', 'task/fullBoard2',
       }
       else {
         taskInfo.num--;
+        if (taskInfo.num < 0) {
+          taskInfo.num = 0;
+        }
       }
       taskChange();
     }
@@ -192,6 +195,11 @@ define(['task/taskBoard', 'task/turnpoint', 'task/fullBoard', 'task/fullBoard2',
       taskInfo.utcOffset = e.detail.utcOffset;
       taskChange(); // Trigger task change event
     }
+
+    var onchangeTaskType = function (e) {
+      taskInfo.type = (taskInfo.type === 'race') ? 'time-trial' : 'race';
+      taskChange();
+    };
 
     var onTaskChanged = function (e) {
       taskChange();
@@ -279,6 +287,7 @@ define(['task/taskBoard', 'task/turnpoint', 'task/fullBoard', 'task/fullBoard2',
     document.addEventListener('changeCompInfo', onchangeCompInfo);
     document.addEventListener('changeUtcOffset', onChangeUtcOffset);
     document.addEventListener('setUtcOffset', onSetUtcOffset);
+    document.addEventListener('changeTaskType', onchangeTaskType);
     document.addEventListener('publishTask', onTaskPublish);
 
     document.addEventListener('taskChanged', onTaskChanged);

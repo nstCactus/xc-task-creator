@@ -51,12 +51,11 @@ define(['rejs!task/templates/taskboard', 'app/param', 'jquery', 'jquery-ui'], fu
     document.dispatchEvent(e);
   });
 
-  // $(document).on('click', '#change_task_date', function(e) {
-  //   $( "#change_task_date" ).datepicker({
-  //     showOn: "button",
-  //       buttonText: "day"
-  //   });
-  // });
+  $(document).on('click', '#toggle-task-type', function (e) {
+    var e = document.createEvent("CustomEvent");
+    e.initCustomEvent('changeTaskType', false, false, {});
+    document.dispatchEvent(e);
+  });
 
   function makeItSortable() {
     $("#taskboard ul").sortable({

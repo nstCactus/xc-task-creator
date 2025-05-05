@@ -28,8 +28,8 @@ define(['utils/timeUtils'], function (timeUtils) {
     },
     task: {
       allowed: {
-        num: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
-        type: ['race-to-goal', 'elapsed-time'],
+        num: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+        type: ['race', 'time-trial'],
         turn: ['left', 'right'],
       },
       courseColor: {

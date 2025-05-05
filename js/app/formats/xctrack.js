@@ -16,6 +16,9 @@ define(['rejs!formats/export/xctrack', 'rejs!formats/templates/publishResultModa
         }
         var converter = {
             "race-to-goal": "RACE",
+            "race": "RACE",
+            "time-trial": "ELAPSED-TIME",
+            "elapsed-time": "ELAPSED-TIME",
             "entry": "ENTER",
         }
 
@@ -30,7 +33,9 @@ define(['rejs!formats/export/xctrack', 'rejs!formats/templates/publishResultModa
             var lookupType = {
                 "TAKEOFF": "takeoff",
                 "SSS": "start",
-                "ESS": "end-of-speed-section"
+                "ESS": "end-of-speed-section",
+                "RACE": "race",
+                "ELAPSED-TIME": "time-trial",
             }
 
             var utcOffset = timeUtils.getLocalOffset();
@@ -43,6 +48,7 @@ define(['rejs!formats/export/xctrack', 'rejs!formats/templates/publishResultModa
 
             var ngates = 1;
             var gateint = 15;
+            var type = lookupType[obj.sss.type];
 
             for (var i = 0; i < wpts.length; i++) {
                 var tp = {};
@@ -57,11 +63,11 @@ define(['rejs!formats/export/xctrack', 'rejs!formats/templates/publishResultModa
                     z: wpts[i].waypoint.altSmoothed,
                 }
 
-                tp['close'] = '00:00:00';
+                tp['close'] = '00:00';
                 tp['goalType'] = 'cylinder';
                 tp['index'] = i;
                 tp['mode'] = 'entry';
-                tp['open'] = '00:00:00';
+                tp['open'] = '00:00';
                 tp['radius'] = wpts[i].radius;
 
                 if (wpts[i].hasOwnProperty('type')) {
@@ -73,9 +79,9 @@ define(['rejs!formats/export/xctrack', 'rejs!formats/templates/publishResultModa
                         tp.type = "turnpoint";
                     }
                 }
-                if (tp.type == "takeoff") {
-                    tp.open = timeUtils.utcToLocal(String(obj.takeoff.timeOpen).replace('"', '').replace(':00Z', ''), utcOffset);
-                    tp.close = timeUtils.utcToLocal(String(obj.takeoff.timeClose).replace('"', '').replace(':00Z', ''), utcOffset);
+                if (tp.type == "takeoff" && obj.hasOwnProperty('takeoff')) {
+                    tp.open = obj.takeoff.hasOwnProperty("timeOpen") ? timeUtils.utcToLocal(String(obj.takeoff.timeOpen).replace('"', '').replace(':00Z', ''), utcOffset) : '12:00';
+                    tp.close = obj.takeoff.hasOwnProperty("timeClose") ? timeUtils.utcToLocal(String(obj.takeoff.timeClose).replace('"', '').replace(':00Z', ''), utcOffset) : '14:00';
                 }
                 if (tp.type == "start") {
                     var gates = obj.sss.timeGates;
@@ -103,7 +109,7 @@ define(['rejs!formats/export/xctrack', 'rejs!formats/templates/publishResultModa
             return {
                 'task': {
                     'date': date.getUTCDate().pad(2) + '-' + (date.getUTCMonth() + 1).pad(2) + '-' + date.getUTCFullYear(),
-                    'type': 'race-to-goal',
+                    'type': type,
                     'num': 1,
                     'ngates': ngates,
                     'gateint': gateint,
