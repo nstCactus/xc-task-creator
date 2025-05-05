@@ -158,8 +158,8 @@ define(['app/helper', 'app/param', 'task/task', 'app/geoCalc', 'app/map', 'jquer
 
           const d1 = geoCalc.computeDistanceBetween(turnpoints[itp].x, turnpoints[itp].y, this.points[ip].x, this.points[ip].y);
           const d2 = geoCalc.computeDistanceBetween(turnpoints[itp].x, turnpoints[itp].y, this.points[ip + 1].x, this.points[ip + 1].y);
-          const RL = turnpoints[itp].radius - Math.max(turnpoints[itp].radius * taskInfo.turnpointTollerance, 5);
-          const RG = turnpoints[itp].radius + Math.max(turnpoints[itp].radius * taskInfo.turnpointTollerance, 5);
+          const RL = turnpoints[itp].radius - Math.max(turnpoints[itp].radius * taskInfo.turnpointTolerance, 5);
+          const RG = turnpoints[itp].radius + Math.max(turnpoints[itp].radius * taskInfo.turnpointTolerance, 5);
 
           if ((RL <= d1 && d1 <= RG) || (RL <= d2 && d2 <= RG) || (d1 < RL && d2 > RG) || (d2 < RL && d1 > RG)) {
             const seconds = this.igcToSeconds(this.points[ip].time, taskInfo);

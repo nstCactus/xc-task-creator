@@ -2,7 +2,7 @@
  @file
  Task importer / exporter for XCTrack
  **/
-define(['rejs!formats/export/xctrack'], function(exportXCTrack) {
+define(['rejs!formats/export/xctrack', 'utils/timeUtils'], function(exportXCTrack, timeUtils) {
     var date = new Date();
 
     Number.prototype.pad = function(size) {
@@ -14,8 +14,6 @@ define(['rejs!formats/export/xctrack'], function(exportXCTrack) {
         "race-to-goal": "RACE",
         "entry": "ENTER",
     }
-
-
 
     var check = function(text, filename) {
         if (filename.split('.').pop() == 'xctsk') {
@@ -31,12 +29,16 @@ define(['rejs!formats/export/xctrack'], function(exportXCTrack) {
             "ESS": "end-of-speed-section"
         }
 
+        var utcOffset = timeUtils.getLocalOffset();
 
         var obj = JSON.parse(text);
         var wpts = obj.turnpoints;
 
         var tps = [];
         var wps = [];
+
+        var ngates = 1;
+        var gateint = 15;
 
         for (var i = 0; i < wpts.length; i++) {
             var tp = {};
@@ -50,7 +52,6 @@ define(['rejs!formats/export/xctrack'], function(exportXCTrack) {
                 y: wpts[i].waypoint.lon,
                 z: wpts[i].waypoint.altSmoothed,
             }
-
 
             tp['close'] = '00:00:00';
             tp['goalType'] = 'cylinder';
@@ -69,60 +70,71 @@ define(['rejs!formats/export/xctrack'], function(exportXCTrack) {
                 }
             }
             if (tp.type == "takeoff") {
-                tp.open = String(obj.takeoff.timeOpen).replace('"', '').replace(':00Z', '');
-                tp.close = String(obj.takeoff.timeClose).replace('"', '').replace(':00Z', '');
+                tp.open = timeUtils.utcToLocal(String(obj.takeoff.timeOpen).replace('"', '').replace(':00Z', ''), utcOffset);
+                tp.close = timeUtils.utcToLocal(String(obj.takeoff.timeClose).replace('"', '').replace(':00Z', ''), utcOffset);
             }
             if (tp.type == "start") {
-                tp.open = String(obj.sss.timeGates).replace('"', '').replace(':00Z', '');
+                var gates = obj.sss.timeGates;
+                if (gates.length == 1) {
+                    tp.open = timeUtils.utcToLocal(String(gates).replace('"', '').replace(':00Z', ''), utcOffset);
+                } else {
+                    tp.open = timeUtils.utcToLocal(String(gates[0]).replace('"', '').replace(':00Z', ''), utcOffset);
+                    ngates = gates.length;
+                    gateint = timeUtils.getTimeDifference(String(gates[0]).replace('"', '').replace(':00Z', ''), String(gates[1]).replace('"', '').replace(':00Z', ''));
+                }
                 tp.mode = String(obj.sss.direction).toLowerCase();
             }
             if (tp.type == "goal") {
-                tp.close = String(obj.goal.deadline).replace('"', '').replace(':00Z', '');
+                tp.close = timeUtils.utcToLocal(String(obj.goal.deadline).replace('"', '').replace(':00Z', ''), utcOffset);
             }
 
             wps.push(wp);;
             tp.wp = wp;
             tps.push(tp);
-
         }
 
         // console.log(JSON.stringify(tps, undefined, 2)) 
         // console.log(JSON.stringify(wps, undefined, 2)) 
-
 
         return {
             'task': {
                 'date': date.getUTCDate().pad(2) + '-' + (date.getUTCMonth() + 1).pad(2) + '-' + date.getUTCFullYear(),
                 'type': 'race-to-goal',
                 'num': 1,
-                'ngates': 1,
-                'gateint': 15,
+                'ngates': ngates,
+                'gateint': gateint,
                 'turnpoints': tps,
             },
             'waypoints': wps,
         }
-
     }
 
     var exporter = function(turnpoints, taskInfo) {
         var xcInfo = {};
         for (var i = 0; i < turnpoints.length; i++) {
             if (turnpoints[i].type == "start") {
-                xcInfo.timeGates = turnpoints[i].open;
+                xcInfo.timeGates = [];
+                const ngates = parseInt(turnpoints[i].ngates, 10) || 1;
+                const gateint = parseInt(turnpoints[i].gateint, 10) || 15;
+                let openTime = timeUtils.localToUtc(turnpoints[i].open, taskInfo.utcOffset);
+                for (let j = 0; j < ngates; j++) {
+                    xcInfo.timeGates.push(openTime + ':00Z');
+                    openTime = timeUtils.addMinutes(openTime, gateint);
+                }
                 xcInfo.type = converter[taskInfo.type] ? converter[taskInfo.type] : taskInfo.type;;
                 xcInfo.direction = converter[turnpoints[i].mode] ? converter[turnpoints[i].mode] : turnpoints[i].mode;
             }
-        }
-        for (var i = 0; i < turnpoints.length; i++) {
+
             if (turnpoints[i].type == "goal") {
-                xcInfo.deadline = turnpoints[i].close;
+                xcInfo.deadline = timeUtils.localToUtc(turnpoints[i].close, taskInfo.utcOffset) + ':00Z';
                 xcInfo.goalType = converter[turnpoints[i].goalType] ? converter[turnpoints[i].goalType] : turnpoints[i].goalType;
             }
         }
         var data = exportXCTrack({
             turnpoints: turnpoints,
             taskInfo: taskInfo,
-            xcInfo: xcInfo
+            xcInfo: xcInfo,
+            timeUtils: timeUtils,
         });
         return new Blob([data], { 'type': "text/plain" });
     }

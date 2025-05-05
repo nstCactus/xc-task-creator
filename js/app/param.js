@@ -2,7 +2,7 @@
  * @file
  * Param module for the task creator.
  */
-define([], function () {
+define(['utils/timeUtils'], function (timeUtils) {
 
   Number.prototype.pad = function (size) {
     var s = String(this);
@@ -47,9 +47,9 @@ define([], function () {
         gateint: 15,
         info: "",
         compInfo: "",
-        utcOffset: 2,
+        utcOffset: timeUtils.getLocalOffset(),
         jumpTheGun: 0,
-        turnpointTollerance: 0,
+        turnpointTolerance: 0,
       }
     },
     turnpoint: {

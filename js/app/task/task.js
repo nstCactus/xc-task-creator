@@ -2,8 +2,8 @@
  * @file
  * Task Module for the task creator.
  */
-define(['task/taskBoard', 'task/turnpoint', 'task/fullBoard', 'task/fullBoard2', 'app/param', 'task/taskOptimiser', 'task/taskAdvisor', 'task/taskExporter'],
-  function (taskBoard, Turnpoint, fullBoard, fullBoard2 , param, optimizer, taskAdvisor, taskExporter) {
+define(['task/taskBoard', 'task/turnpoint', 'task/fullBoard', 'task/fullBoard2', 'app/param', 'task/taskOptimiser', 'task/taskAdvisor', 'task/taskExporter', 'utils/timeUtils'],
+  function (taskBoard, Turnpoint, fullBoard, fullBoard2, param, optimizer, taskAdvisor, taskExporter, timeUtils) {
     var turnpoints = [];
     var taskInfo = param.task.default;
     taskInfo.id = 0;
@@ -15,8 +15,6 @@ define(['task/taskBoard', 'task/turnpoint', 'task/fullBoard', 'task/fullBoard2',
     if (taskInformation != null) {
       param.task.default.compInfo = taskInformation;
     }
-
- 
 
     var addTurnpoint = function (waypoint, turnpointInfo) {
       var turnpoint = new Turnpoint(waypoint);
@@ -125,7 +123,7 @@ define(['task/taskBoard', 'task/turnpoint', 'task/fullBoard', 'task/fullBoard2',
     }
 
 
-    var onOpenTaskFullBoard2= function (e) {
+    var onOpenTaskFullBoard2 = function (e) {
       fullBoard2.open({
         turnpoints: turnpoints,
         taskInfo: taskInfo,
@@ -174,11 +172,28 @@ define(['task/taskBoard', 'task/turnpoint', 'task/fullBoard', 'task/fullBoard2',
       taskInfo.compInfo = info;
       localStorage.setItem('taskInformation', info);
     }
-    
 
+    var onChangeUtcOffset = function (e) {
+      var forward = e.detail.forward;
+      var index = timeUtils.utcOffsets.indexOf(taskInfo.utcOffset);
+      if (index == -1) {
+        index = timeUtils.utcZeroIndex; // Default to UTC+0 if not found
+      }
+      if (forward) {
+        index = (index + 1) % timeUtils.utcOffsets.length;
+      } else {
+        index = (index - 1 + timeUtils.utcOffsets.length) % timeUtils.utcOffsets.length;
+      }
+      taskInfo.utcOffset = timeUtils.utcOffsets[index];
+      taskChange(); // Trigger task change event
+    };
 
+    var onSetUtcOffset = function (e) {
+      taskInfo.utcOffset = e.detail.utcOffset;
+      taskChange(); // Trigger task change event
+    }
 
-    var onTaskChanged= function (e) {
+    var onTaskChanged = function (e) {
       taskChange();
     }
 
@@ -216,12 +231,12 @@ define(['task/taskBoard', 'task/turnpoint', 'task/fullBoard', 'task/fullBoard2',
       var waypoints = e.detail.waypoints;
       var tps = e.detail.task.turnpoints;
       // taskInfo = e.detail.task;
-      taskInfo = Object.assign(taskInfo,e.detail.task);
+      taskInfo = Object.assign(taskInfo, e.detail.task);
       taskInfo.info = param.task.default.info;
       taskInfo.turn = taskInfo.date.substr(0, 2) % 2 == 0 ? "Right" : "Left";
       if (tps) {
         for (var i = 0; i < tps.length; i++) {
-          if ( tps[i].waypoint != false ) {
+          if (tps[i].waypoint != false) {
             addTurnpoint(tps[i].waypoint, tps[i]);
           }
         }
@@ -254,12 +269,14 @@ define(['task/taskBoard', 'task/turnpoint', 'task/fullBoard', 'task/fullBoard2',
     document.addEventListener('changeTaskDate', onchangeTaskDate);
     document.addEventListener('changeTaskInfo', onchangeTaskInfo);
     document.addEventListener('changeCompInfo', onchangeCompInfo);
+    document.addEventListener('changeUtcOffset', onChangeUtcOffset);
+    document.addEventListener('setUtcOffset', onSetUtcOffset);
 
     document.addEventListener('taskChanged', onTaskChanged);
     document.addEventListener('openTaskFullBoard2', onOpenTaskFullBoard2);
 
 
-    
+
     return {
       'addTurnpoint': addTurnpoint,
       'editTurnpooint': editTurnpoint,
