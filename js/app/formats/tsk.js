@@ -20,6 +20,10 @@ define(['rejs!formats/export/tsk', 'utils/timeUtils'], function(exportTSK, timeU
     var tps = [];
     var wps = [];
     var array = ['close', 'goalType', 'index', 'mode', 'open', 'radius', 'type'];
+
+    var date = xmlDoc.getElementsByTagName('date')[0].childNodes[0] ? xmlDoc.getElementsByTagName('date')[0].childNodes[0].nodeValue : 0;
+    var day = Number(date.split('-')[0]);
+    var turn = (day % 2 == 0) ? 'right' : 'left';
     
     for (var i = 0; i < rtetp.length; i++) {
       var tp = {};
@@ -79,6 +83,7 @@ define(['rejs!formats/export/tsk', 'utils/timeUtils'], function(exportTSK, timeU
         'num' : xmlDoc.getElementsByTagName('num')[0].childNodes[0].nodeValue,
         'ngates' : xmlDoc.getElementsByTagName('ngates')[0].childNodes[0].nodeValue,
         'gateint' : xmlDoc.getElementsByTagName('gateint')[0].childNodes[0].nodeValue,
+        'turn' : turn,
         'utcOffset' : utcOffset,
         'info' : tinfo,
         'turnpoints' : tps,

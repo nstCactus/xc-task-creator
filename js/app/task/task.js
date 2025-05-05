@@ -138,8 +138,6 @@ define(['task/taskBoard', 'task/turnpoint', 'task/fullBoard', 'task/fullBoard2',
       else {
         taskInfo.num--;
       }
-      taskInfo.turn = (taskInfo.num % 2 == 0) ? 'right' : 'left';
-
       taskChange();
     }
 
@@ -157,6 +155,8 @@ define(['task/taskBoard', 'task/turnpoint', 'task/fullBoard', 'task/fullBoard2',
     var onchangeTaskDate = function (e) {
       var date = e.detail.date;
       taskInfo.date = date;
+      var day = Number(date.substr(0, 2));
+      taskInfo.turn = (day % 2 == 0) ? 'right' : 'left';
       taskChange();
     }
 
