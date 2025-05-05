@@ -9,6 +9,7 @@ define(['jquery', 'app/helper', 'app/param', 'html2canvas', 'rejs!task/templates
     var link1 = $("#export-task");
     var linkPrint = $("#print");
     var link2 = $("#full-board2");
+    var publish = $("#publish-task");
 
 
     link.click(function (e) {
@@ -28,6 +29,7 @@ define(['jquery', 'app/helper', 'app/param', 'html2canvas', 'rejs!task/templates
       (bool == true) ? link.removeClass('hide') : link.addClass('hide');
       (bool == true) ? link1.removeClass('hide') : link1.addClass('hide');
       (bool == true) ? linkPrint.removeClass('hide') : linkPrint.addClass('hide');
+      (bool == true) ? publish.removeClass('hide') : publish.addClass('hide');
     }
 
     var open = function (task) {
@@ -93,6 +95,12 @@ define(['jquery', 'app/helper', 'app/param', 'html2canvas', 'rejs!task/templates
     $(document).on('click', '#save-task', function (e) {
       var e = document.createEvent("customEvent");
       e.initCustomEvent('saveTask', false, false, {});
+      document.dispatchEvent(e);
+    });
+
+    $(document).on('click', '#publish-task', function (e) {
+      var e = document.createEvent("CustomEvent");
+      e.initCustomEvent('publishTask', false, false, {});
       document.dispatchEvent(e);
     });
 

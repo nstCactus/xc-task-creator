@@ -2,8 +2,8 @@
  * @file
  * Task Module for the task creator.
  */
-define(['task/taskBoard', 'task/turnpoint', 'task/fullBoard', 'task/fullBoard2', 'app/param', 'task/taskOptimiser', 'task/taskAdvisor', 'task/taskExporter', 'utils/timeUtils'],
-  function (taskBoard, Turnpoint, fullBoard, fullBoard2, param, optimizer, taskAdvisor, taskExporter, timeUtils) {
+define(['task/taskBoard', 'task/turnpoint', 'task/fullBoard', 'task/fullBoard2', 'app/param', 'task/taskOptimiser', 'task/taskAdvisor', 'task/taskExporter', 'utils/timeUtils', 'formats/xctrack'],
+  function (taskBoard, Turnpoint, fullBoard, fullBoard2 , param, optimizer, taskAdvisor, taskExporter, timeUtils, xctrack) {
     var turnpoints = [];
     var taskInfo = param.task.default;
     taskInfo.id = 0;
@@ -247,6 +247,14 @@ define(['task/taskBoard', 'task/turnpoint', 'task/fullBoard', 'task/fullBoard2',
       taskExporter.exporter(turnpoints, taskInfo, e.detail.format);
     }
 
+    var onTaskPublish = function (e) {
+      const turnpoints = getTurnpoints();
+      const taskInfo = getTaskInfo();
+
+      // Call the publish handler in xctrack.js
+      xctrack.publish(turnpoints, taskInfo);
+    };
+
     var setBbox = function (bbox) {
       taskInfo.bbox = bbox;
     }
@@ -271,6 +279,7 @@ define(['task/taskBoard', 'task/turnpoint', 'task/fullBoard', 'task/fullBoard2',
     document.addEventListener('changeCompInfo', onchangeCompInfo);
     document.addEventListener('changeUtcOffset', onChangeUtcOffset);
     document.addEventListener('setUtcOffset', onSetUtcOffset);
+    document.addEventListener('publishTask', onTaskPublish);
 
     document.addEventListener('taskChanged', onTaskChanged);
     document.addEventListener('openTaskFullBoard2', onOpenTaskFullBoard2);
