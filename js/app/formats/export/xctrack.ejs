@@ -16,6 +16,10 @@
        <% } %>
      }<% if (i < turnpoints.length - 1) { %>,<% } %><% } %>
   ],
+  "takeoff":{
+    "timeOpen": "<%- turnpoints[0].open %>:00Z",
+    "timeClose": "<%- turnpoints[0].close %>:00Z"
+  },
   "sss" : {
     "type" : "<%- xcInfo.type.toUpperCase() %>",
     "direction" : "<%- xcInfo.direction.toUpperCase() %>",
