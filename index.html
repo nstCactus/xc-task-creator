@@ -42,7 +42,19 @@
 <body>
     <div class="container-fluid">
         <div class="row">
-            <div id="map-canvas" class="col-sm-9"></div>
+            <div id="map-container" style="height: 100%; padding: 0;" class="col-sm-9">
+                <div id="map-canvas"></div>
+                <div style="display: flex; gap: 1em; position: absolute; bottom: 0; left: 0; right: 0; padding: 10px; background-color: #fff; z-index: 1000;">
+                    <button id="playPauseBtn">Play</button>
+                    <select id="speedSelect">
+                        <option value="0.5">0.5x</option>
+                        <option value="1" selected>1x</option>
+                        <option value="2">2x</option>
+                        <option value="4">4x</option>
+                    </select>
+                    <input id="timeline" type="range" min="0" max="0" value="0" style="width: 100%;">
+                </div>
+            </div>
             <div id="sidebar" class="col-sm-3">
                 <div id="sidebar-inner">
                     <form action="#" id="uploader"></form>

@@ -9,7 +9,7 @@ define(["app/param", 'app/geoCalc'], function (param,geoCalc ) {
   // Fast Polyline
   var fastTrack;
   var optimizedMarkers = [];
-  var fastWaypoints = new Array();
+  var fastWaypoints = [];
   var fastDistance = 0;
   var distances = [];
 
@@ -554,10 +554,117 @@ define(["app/param", 'app/geoCalc'], function (param,geoCalc ) {
     }
   }
 
+  // Animation state
+  let sampledPoints = [];
+  let animationFrameId = null;
+  let playing = false;
+  let startTime = null;
+  let playbackSpeed = 1;
+  let currentIndex = 0;
+  let stepMeters = 10;
+  let timelineInput;
+  let playBtn;
+
+  setupPathAnimation({
+    stepMeters: 10,
+    speed: 1,
+    timelineInput: document.getElementById('timeline'),
+    playButton: document.getElementById('playPauseBtn'),
+    speedSelect: document.getElementById('speedSelect'),
+  })
+
+  function buildSampledPoints(path, step = 10) {
+    const points = [];
+
+    for (let i = 0; i < path.length - 1; i++) {
+      const from = path[i];
+      const to = path[i + 1];
+      const segmentLength = google.maps.geometry.spherical.computeDistanceBetween(from, to);
+      const segmentSteps = Math.floor(segmentLength / step);
+
+      for (let j = 0; j < segmentSteps; j++) {
+        const fraction = (j * step) / segmentLength;
+        const point = google.maps.geometry.spherical.interpolate(from, to, fraction);
+        points.push(point);
+      }
+    }
+
+    points.push(path[path.length - 1]);
+    return points;
+  }
+
+  function drawPathUpToIndex(index) {
+    fastTrack.setPath(sampledPoints.slice(0, index + 1));
+  }
+
+  function animate(timestamp) {
+    if (!startTime) startTime = timestamp;
+    const elapsedSeconds = (timestamp - startTime) / 1000;
+    const distance = elapsedSeconds * 1000 * playbackSpeed;
+    currentIndex = Math.floor(distance / stepMeters);
+
+    if (currentIndex >= sampledPoints.length) {
+      currentIndex = sampledPoints.length - 1;
+      stopAnimation();
+    }
+
+    drawPathUpToIndex(currentIndex);
+    timelineInput.value = currentIndex;
+
+    if (playing) {
+      animationFrameId = requestAnimationFrame(animate);
+    }
+  }
+
+  function startAnimation() {
+    sampledPoints = buildSampledPoints(fastWaypoints, stepMeters);
+    timelineInput.max = sampledPoints.length - 1;
+
+
+    playing = true;
+    playBtn.textContent = 'Pause';
+    startTime = performance.now() - (currentIndex / playbackSpeed / 100) * 1000;
+    animationFrameId = requestAnimationFrame(animate);
+  }
+
+  function stopAnimation() {
+    playing = false;
+    playBtn.textContent = 'Play';
+    if (animationFrameId) {
+      cancelAnimationFrame(animationFrameId);
+      animationFrameId = null;
+    }
+  }
+
+  function setupPathAnimation(opts) {
+    // opts: { stepMeters, speed, timelineInput, playButton, speedSelect }
+    stepMeters = opts.stepMeters || 10;
+    playbackSpeed = opts.speed || 1;
+    timelineInput = opts.timelineInput;
+    playBtn = opts.playButton;
+
+    timelineInput.addEventListener('input', () => {
+      stopAnimation();
+      currentIndex = parseInt(timelineInput.value, 10);
+      drawPathUpToIndex(currentIndex);
+    });
+
+    playBtn.addEventListener('click', () => {
+      if (playing) {
+        stopAnimation();
+      } else {
+        startAnimation();
+      }
+    });
+
+    opts.speedSelect.addEventListener('change', (e) => {
+      playbackSpeed = parseFloat(e.target.value);
+    });
+  }
+
 
 
   return {
     optimize: optimizeTask,
   }
 });
-
