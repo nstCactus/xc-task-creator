@@ -18,7 +18,7 @@ function(param, geolocation, google, task, tracks, keyboard) {
 
   var mapOptions = {
     center: new google.maps.LatLng(startX, startY),
-    zoom: 8,
+    zoom: 12,
     mapTypeId: google.maps.MapTypeId.TERRAIN,
     styles : [
        {elementType: 'labels.text.fill', stylers: [{color: '#746855'}]},    

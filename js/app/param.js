@@ -19,8 +19,8 @@ define(['utils/timeUtils'], function (timeUtils) {
     allowCumulativeFiles: true,
     apiKey: 'AIzaSyDNrTc1a1WM07PlACypa2WbEAthHXIk-_A',
     map: {
-      startX: 43.357700,
-      startY: 12.749417,
+      startX: 45.93178,
+      startY: 6.70235,
     },
     waypoints: {
       normalColor: '#FE7569',
